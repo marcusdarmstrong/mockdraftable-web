@@ -8,7 +8,8 @@
     "lint": "eslint ./src",
     "build": "babel src -d lib",
     "postinstall": "npm run lint && npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "flow": "flow"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,7 @@
     "eslint-plugin-jsx-a11y": "1.0.4",
     "eslint-plugin-react": "5.0.1",
     "express": "4.13.4",
+    "flow-bin": "0.24.1",
     "serve-favicon": "2.3.0"
   }
 }
