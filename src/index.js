@@ -1,7 +1,11 @@
+// @flow
+
 import express from 'express';
 import path from 'path';
 import compression from 'compression';
 import favicon from 'serve-favicon';
+
+import layout from './layout';
 
 const app = express();
 
@@ -12,7 +16,7 @@ app.use('/public', express.static(path.join(__dirname, '..', 'public'), {
 }));
 app.use(favicon(`${__dirname}/../public/favicon.ico`));
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.send(layout('MockDraftable', 'Hello World!', {}));
 });
 
 app.listen(app.get('port'));
