@@ -1,12 +1,14 @@
 // @flow
 
-export default function (title: string, body: string, state: Object) {
-  return `<!doctype html>
+export default (title: string, body: string, state: Object, jsBundle: string, cssBundle: string) =>
+  `<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport"
     content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <link rel="stylesheet" href="${cssBundle}">
   <title>${title}</title>
 </head>
 <body>
@@ -14,6 +16,6 @@ export default function (title: string, body: string, state: Object) {
   <script>
     window.INITIAL_STATE = ${JSON.stringify(state)}
   </script>
+  <script src="${jsBundle}"></script>
 </body>
 </html>`;
-}

@@ -1,3 +1,13 @@
 [ignore]
-.*/bin/.*
-.*/public/.*
+<PROJECT_ROOT>/lib/.*
+<PROJECT_ROOT>/public/.*
+.*/react/node_modules/.*
+.*/node_modules/babel.*
+.*/node_modules/bootstrap.*
+.*/node_modules/browserify.*
+.*/node_modules/eslint.*
+.*/node_modules/flow-bin.*
+.*/node_modules/foreman.*
+.*/node_modules/hashmark.*
+.*/node_modules/uglify-js.*
+.*/node_modules/.bin/.*
