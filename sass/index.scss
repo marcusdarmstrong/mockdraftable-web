@@ -1,0 +1,73 @@
+@import "~bootstrap/scss/bootstrap";
+
+.window {
+  margin-top: 4rem;
+}
+
+.navbar img {
+  height: 2.33rem;
+  float: left;
+  padding-right: .67rem;
+}
+
+
+
+
+text.measurable {
+  /*text-anchor: middle;*/
+}
+
+text.measurable textPath {
+  alignment-baseline: after-edge;
+  font-size: 1rem;
+  fill: $gray;
+  text-shadow: 0px 0px 3px white;
+  color: $gray;
+}
+
+path,
+.divider,
+.grid {
+  stroke: $gray;
+  stroke-width: 1;
+  fill-opacity: 0.0;
+  stroke-opacity: 1;
+}
+
+.grid {
+  stroke-opacity: 0.25;
+}
+
+.graph {
+  fill: #0275d8;
+  stroke-width: 2;
+  fill-opacity: .5;
+  stroke-opacity: 1;
+  stroke: #0275d8;
+}
+
+.percentileMarker circle {
+  fill: white;
+  stroke: #0275d8;
+  stroke-width: 2;
+  stroke-opacity: 1;
+}
+
+.percentileMarker text {
+  text-anchor: middle;
+  dominant-baseline: central;
+  font-size: .75rem;
+  fill: $gray;
+  font-family: "Arvo";
+}
+
+.spark-graph svg {
+  height: 3rem;
+}
+
+.spark-text {
+  text-anchor: middle;
+  dominant-baseline: central;
+  font-family: "Arvo";
+  text-shadow: 2px 2px 0 white, -2px -2px 0 white, -2px 2px 0 white, 2px -2px 0 white;
+}
