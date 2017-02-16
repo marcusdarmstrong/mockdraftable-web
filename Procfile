@@ -1,1 +1,1 @@
-web: node lib/index.js
+web: node --trace-warnings lib/index.js

@@ -1,12 +1,8 @@
 // @flow
 
 import React from 'react';
+import type { Point } from '../../types/graphing';
 import round from '../../util/round';
-
-type Point = {
-  x: number,
-  y: number,
-};
 
 type Props = {
   id: number,
@@ -16,7 +12,7 @@ type Props = {
   point: Point,
 };
 
-const generateLine = (scale, offset, point) => {
+const generateLine = (scale, offset, point: Point) => {
   const scaleFactor = scale + offset;
   const xDest = round(point.x + scaleFactor, 2);
   const yDest = round(point.y + scaleFactor, 2);

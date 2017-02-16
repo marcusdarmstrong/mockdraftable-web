@@ -5,30 +5,33 @@ import SpiderGraph from './spider-graph';
 import Axis from './axis';
 import generatePointsAndFactors from '../../logic';
 import type { MeasurablePercentile } from '../../types/graphing';
+import type { Color } from '../../types/domain';
 import round from '../../util/round';
 
 type Props = {
-  percentiles: MeasurablePercentile[];
+  percentiles: Array<MeasurablePercentile>,
+  color: Color,
 };
 
 const scale = 200;
 const offset = 10;
 
-export default ({ percentiles }: Props) => {
+export default ({ percentiles, color }: Props) => {
   const { points, factors } = generatePointsAndFactors(percentiles, scale);
   const count = points.length;
   const pointList = points.map(p => p.point);
 
   let i = 0;
   const circles = [];
-  for (const factor of factors) {
+  factors.forEach((factor) => {
     const x = round((factor * pointList[i].x) + scale + offset, 2);
     const y = round((factor * pointList[i].y) + scale + offset, 2);
     circles.push(<g className="percentileMarker" key={`g${i}`}>
-      <circle key={`c${i}`} cx={x} cy={y} r={offset} />
-      <text key={`t${i}`} x={x} y={y}>{points[i++].percentile}</text>
+      <circle key={`c${i}`} cx={x} cy={y} r={offset} style={{ stroke: color }} />
+      <text key={`t${i}`} x={x} y={y}>{points[i].percentile}</text>
     </g>);
-  }
+    i += 1;
+  });
 
   return (<figure className="spider">
     <svg
@@ -43,7 +46,7 @@ export default ({ percentiles }: Props) => {
           factors={Array(count).fill(f)}
           scale={scale}
           offset={offset}
-        />
+        />,
       )}
       <SpiderGraph
         className="divider"
@@ -60,7 +63,7 @@ export default ({ percentiles }: Props) => {
           offset={offset}
           scale={scale}
           point={p.point}
-        />
+        />,
       )}
       <SpiderGraph
         className="graph"
@@ -68,6 +71,7 @@ export default ({ percentiles }: Props) => {
         factors={factors}
         scale={scale}
         offset={offset}
+        color={color}
       />
       {circles}
     </svg>

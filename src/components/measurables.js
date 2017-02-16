@@ -1,8 +1,12 @@
+// @flow
+
 import React from 'react';
 import type { MeasurablePercentile } from '../types/graphing';
 
 type DisplayableMeasurement = MeasurablePercentile & { display: string };
-type Props = DisplayableMeasurement[];
+type Props = {
+  measurements: DisplayableMeasurement[],
+};
 
 export default ({ measurements }: Props) =>
   <table className="table">

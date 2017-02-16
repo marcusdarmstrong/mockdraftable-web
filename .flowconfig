@@ -11,3 +11,7 @@
 .*/node_modules/hashmark.*
 .*/node_modules/uglify-js.*
 .*/node_modules/.bin/.*
+.*/node_modules/fbjs/.*
+
+[libs]
+libs

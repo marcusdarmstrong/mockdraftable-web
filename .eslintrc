@@ -1,6 +1,6 @@
 {
-  "extends": "airbnb",
   "plugins": ["flowtype"],
+  "extends": ["airbnb", "plugin:flowtype/recommended"],
   "parser": "babel-eslint",
   "env": {
     "browser": true,
@@ -8,23 +8,27 @@
   },
   "rules": {
     "no-console": 0,
-    "flowtype/space-after-type-colon": [
-      2,
-      "always"
-    ],
-    "flowtype/space-before-type-colon": [
-      2,
-      "never"
-    ],
     "flowtype/type-id-match": [
       2,
       "^([A-Z][a-z0-9]+)+$"
     ],
-    "react/jsx-filename-extension": 0
-  },
-  "settings": {
-    "flowtype": {
-      "onlyFilesWithFlowAnnotation": false
-    }
+    "flowtype/require-valid-file-annotation": [
+      2,
+      "always",
+      {
+        "annotationStyle": "line"
+      }
+    ],
+    "react/jsx-filename-extension": 0,
+    "react/no-unused-prop-types": 0,
+    "react/prop-types": [2, { "skipUndeclared": true } ],
+    "quote-props": [
+      2,
+      "as-needed",
+      {
+        "numbers": true
+      }
+    ],
+    "no-confusing-arrow": 0
   }
 }

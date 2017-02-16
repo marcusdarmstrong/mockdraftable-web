@@ -9,9 +9,9 @@ export default (percentiles: MeasurablePercentile[], scale: number): GraphData =
   const points: MeasurablePercentilePoint[] = [];
   const factors = [];
   let i = 0;
-  for (const percentile of percentiles) {
-    const angle = startAngle + (i++ * angleIncrement);
-
+  percentiles.forEach((percentile) => {
+    const angle = startAngle + (i * angleIncrement);
+    i += 1;
     points.push(Object.assign({}, percentile, {
       point: {
         x: round(scale * Math.cos(angle), 2),
@@ -19,7 +19,7 @@ export default (percentiles: MeasurablePercentile[], scale: number): GraphData =
       },
     }));
     factors.push(percentile.percentile / 100);
-  }
+  });
 
   return {
     points,

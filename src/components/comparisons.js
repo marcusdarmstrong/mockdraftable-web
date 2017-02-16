@@ -1,38 +1,57 @@
 // @flow
 
+import { connect } from 'react-redux';
 import React from 'react';
-import SparkGraph from './graphs/spark-graph';
+
+import Comparison from './comparison';
+import type { Player, Position } from '../types/domain';
 import type { MeasurablePercentile } from '../types/graphing';
 
-type Props = {
-  percentiles: MeasurablePercentile[];
+type Comparable = {
+  player: Player,
+  playerPosition: Position,
+  percentiles: Array<MeasurablePercentile>,
+  score: number,
 };
 
-export default (props: Props) =>
+type Props = {
+  comparisons: Array<Comparable>,
+  selectedPosition: Position,
+};
+
+const ComparisonList = ({ comparisons, selectedPosition }: Props) =>
   <div className="list-group">
-    <a href="/p/jamaal-brown" className="list-group-item list-group-item-action">
-      <SparkGraph percentiles={props.percentiles} comparison="83.5%" />
-      <h5 className="list-group-item-heading">Jamaal Brown</h5>
-      <p className="list-group-item-text"><span className="tag tag-primary">OT</span></p>
-    </a>
-    <a href="/p/john-theus" className="list-group-item list-group-item-action">
-      <SparkGraph percentiles={props.percentiles} comparison="82.8%" />
-      <h5 className="list-group-item-heading">John Theus</h5>
-      <p className="list-group-item-text"><span className="tag tag-primary">OT</span></p>
-    </a>
-    <a href="/p/gabe-carimi" className="list-group-item list-group-item-action">
-      <SparkGraph percentiles={props.percentiles} comparison="82.7%" />
-      <h5 className="list-group-item-heading">Gabe Carimi</h5>
-      <p className="list-group-item-text"><span className="tag tag-primary">OT</span></p>
-    </a>
-    <a href="/p/eugene-monroe" className="list-group-item list-group-item-action">
-      <SparkGraph percentiles={props.percentiles} comparison="81.9%" />
-      <h5 className="list-group-item-heading">Eugene Monroe</h5>
-      <p className="list-group-item-text"><span className="tag tag-primary">OT</span></p>
-    </a>
-    <a href="/p/paul-cornick" className="list-group-item list-group-item-action">
-      <SparkGraph percentiles={props.percentiles} comparison="81.5%" />
-      <h5 className="list-group-item-heading">Paul Cornick</h5>
-      <p className="list-group-item-text"><span className="tag tag-primary">OT</span></p>
-    </a>
+    {comparisons && comparisons.map(comp => <Comparison
+      key={comp.player.key}
+      name={comp.player.name}
+      playerPosition={comp.playerPosition}
+      selectedPosition={selectedPosition}
+      id={comp.player.id}
+      percentiles={comp.percentiles}
+      percentage={comp.score}
+    />)}
   </div>;
+
+export default connect(state => ({
+  selectedPosition: state.positions.get(state.selectedPositionId),
+  comparisons:
+    state.comparisons
+      .get(state.selectedPlayerId)
+      .get(state.selectedPositionId)
+      .map(({ playerId, score }) => ({
+        score,
+        player: state.players.get(playerId),
+        playerPosition: state.positions.get(state.players.get(playerId).positions.primary),
+        percentiles:
+          state.percentiles
+            .get(playerId)
+            .get(state.selectedPositionId)
+            .map(({ measurableKey, percentile }) => ({
+              percentile,
+              measurable: {
+                id: measurableKey,
+                name: state.measurables.get(measurableKey).name,
+              },
+            })),
+      })),
+}))(ComparisonList);
