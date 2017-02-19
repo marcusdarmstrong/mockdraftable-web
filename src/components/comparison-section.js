@@ -19,17 +19,20 @@ type Props = {
   selectedPosition: Position,
 };
 
-const ComparisonList = ({ comparisons, selectedPosition }: Props) =>
-  <div className="list-group">
-    {comparisons && comparisons.map(comp => <Comparison
-      key={comp.player.key}
-      name={comp.player.name}
-      playerPosition={comp.playerPosition}
-      selectedPosition={selectedPosition}
-      id={comp.player.id}
-      percentiles={comp.percentiles}
-      percentage={comp.score}
-    />)}
+const ComparisonSection = ({ comparisons, selectedPosition }: Props) =>
+  <div>
+    <h3>Comparisons</h3>
+    <div className="list-group">
+      {comparisons && comparisons.map(comp => <Comparison
+        key={comp.player.key}
+        name={comp.player.name}
+        playerPosition={comp.playerPosition}
+        selectedPosition={selectedPosition}
+        id={comp.player.id}
+        percentiles={comp.percentiles}
+        percentage={comp.score}
+      />)}
+    </div>
   </div>;
 
 export default connect(state => ({
@@ -50,4 +53,4 @@ export default connect(state => ({
               },
             })),
       })),
-}))(ComparisonList);
+}))(ComparisonSection);

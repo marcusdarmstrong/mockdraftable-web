@@ -3,7 +3,7 @@ import React from 'react';
 
 import AboutSection from './about-section';
 import MeasurablesSection from './measurables-section';
-import Comparisons from './comparisons';
+import ComparisonSection from './comparison-section';
 
 export default () => <div className="container-fluid window">
   <div className="container-fluid col-12 col-xl-10 offset-xl-1">
@@ -13,10 +13,7 @@ export default () => <div className="container-fluid window">
       </div>
       <div className="col-12 col-md-5">
         <AboutSection />
-        <div>
-          <h3>Comparisons</h3>
-          <Comparisons />
-        </div>
+        <ComparisonSection />
       </div>
     </div>
   </div>
