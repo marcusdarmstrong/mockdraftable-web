@@ -35,7 +35,7 @@ type UiState = {
   modal?: ModalState,
 };
 
-type AppState = PlayerPageState & SearchPageState & GlobalAppState;
+type AppState = SearchPageState & PlayerPageState & GlobalAppState;
 
 type Domain = {
   players: { [key: PlayerId]: Player },

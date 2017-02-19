@@ -13,14 +13,22 @@ export default async (path: string, args: {[string]: string}): Promise<Action[]>
       actions.push(updateSelectedPosition(args.position));
     }
     // TODO: Sanitize years
-    // TODO: make measurable optional
-    actions.push(updateSearchOptions({
-      beginYear: Number(args.beginYear),
-      endYear: Number(args.endYear),
-      measurableId: args.measurable,
-      sortOrder: (args.sort === Sorts.DESC) ? Sorts.DESC : Sorts.ASC,
-      page: Number(args.page) || 1,
-    }));
+    if (args.measurable) {
+      actions.push(updateSearchOptions({
+        beginYear: Number(args.beginYear),
+        endYear: Number(args.endYear),
+        measurableId: args.measurable,
+        sortOrder: (args.sort === Sorts.DESC) ? Sorts.DESC : Sorts.ASC,
+        page: Number(args.page) || 1,
+      }));
+    } else {
+      actions.push(updateSearchOptions({
+        beginYear: Number(args.beginYear),
+        endYear: Number(args.endYear),
+        sortOrder: (args.sort === Sorts.DESC) ? Sorts.DESC : Sorts.ASC,
+        page: Number(args.page) || 1,
+      }));
+    }
     return actions;
   } else if (path.startsWith('/player/')) {
     const segments = path.split('/');

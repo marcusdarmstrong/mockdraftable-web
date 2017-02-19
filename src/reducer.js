@@ -45,7 +45,10 @@ export default (previousState: State, action: Action): State => {
     return Object.assign({}, previousState, { selectedPositionId: action.positionId });
   }
   if (action.type === actions.UPDATE_SEARCH_OPTIONS) {
-    return Object.assign({}, previousState, { search: action.options });
+    return Object.assign({}, previousState, { searchOptions: action.options });
+  }
+  if (action.type === actions.UPDATE_SEARCH_RESULTS) {
+    return Object.assign({}, previousState, { searchResults: action.results });
   }
   return previousState;
 };

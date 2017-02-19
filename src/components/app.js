@@ -6,9 +6,9 @@ import { connect } from 'react-redux';
 import Nav from './nav';
 import PositionSwitcher from './position-switcher';
 import Modal from './modal';
-import PlayerPage from './playerpage';
-import HomePage from './homepage';
-import SearchPage from './searchpage';
+import PlayerPage from './player-page';
+import HomePage from './home-page';
+import SearchPage from './search-page';
 import Typeahead from './typeahead';
 
 type Props = {

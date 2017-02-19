@@ -12,7 +12,7 @@ type Props = {
   percentiles: Array<MeasurablePercentile>,
   measurements: Array<Measurement>,
   displayPosition: Position,
-  measurables: Map<MeasurableKey, Measurable>,
+  measurables: { [key: MeasurableKey]: Measurable },
 };
 
 const format = (measurement, measurable: ?Measurable) => {

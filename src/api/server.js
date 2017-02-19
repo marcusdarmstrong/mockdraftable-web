@@ -1,12 +1,46 @@
 // @flow
 
 import type { Api } from '../types/api';
-import type { PlayerId, PositionId, Stores } from '../types/domain';
+import type { Player, PlayerId, PositionId, Stores, MeasurableId, Sort } from '../types/domain';
 import type { SearchOptions } from '../types/state';
 
 import { throw500 } from '../http';
 import getComparablePlayersAtPosition from '../services/comparisons/get-comparable-players-at-position';
 import getPercentileAtPosition from '../services/statistics/get-percentile-at-position';
+import { allMeasurables } from '../measurables';
+import { Sorts } from '../types/domain';
+
+const pageSize = 20;
+
+const byName = (sort: Sort) => {
+  if (sort === Sorts.ASC) {
+    return (a: Player, b: Player) => (a.name > b.name) ? 1 : -1;
+  }
+  return (a: Player, b: Player) => (a.name < b.name) ? 1 : -1;
+};
+
+const byMeasurable = (measurableId: MeasurableId, sort: Sort) => {
+  const measurableKey = (
+    allMeasurables.find(measurable => measurable.id === measurableId)
+    || throw500(`Unknown measurable id: ${measurableId}`)
+  ).key;
+  const nameSort = byName(sort);
+  return (a: Player, b: Player) => {
+    const aMeas = a.measurements.find(measurement => measurement.measurableKey === measurableKey);
+    const bMeas = b.measurements.find(measurement => measurement.measurableKey === measurableKey);
+    if (aMeas) {
+      if (bMeas) {
+        return sort === Sorts.ASC
+          ? aMeas.measurement - bMeas.measurement
+          : bMeas.measurement - aMeas.measurement;
+      }
+      return 1;
+    } else if (bMeas) {
+      return -1;
+    }
+    return nameSort(a, b);
+  };
+};
 
 const api: (Stores) => Api =
   ({ playerStore, statisticsStore, positionEligibilityStore, measurementStore }) => {
@@ -30,12 +64,18 @@ const api: (Stores) => Api =
         }));
       },
       fetchSearchResults: async (opts: SearchOptions, pos: PositionId) => {
-        if (opts) {
-          return ['marcus-mariota'];
-        } else if (pos) {
-          return ['aaron-glenn'];
-        }
-        return ['jay-ajayi'];
+        const beginIndex = pageSize * (opts.page - 1);
+        const playerIds = positionEligibilityStore.get(pos)
+          || throw500(`No players found for position: ${pos}`);
+        return playerIds.map(id => (playerStore.get(id) || throw500(`Unknown player id: ${id}`)))
+          .filter(p => p.draft > opts.endYear || p.draft < opts.beginYear)
+          .sort(
+            opts.measurableId
+              ? byMeasurable(opts.measurableId, opts.sortOrder)
+              : byName(opts.sortOrder),
+          )
+          .slice(beginIndex, beginIndex + pageSize)
+          .map(p => p.id);
       },
     };
   };
