@@ -32,6 +32,6 @@ const Nav = ({ title, selectedPosition }: Props) => (
 );
 
 export default connect(state => ({
-  title: state.selectedPlayerId ? state.players.get(state.selectedPlayerId).name : 'MockDraftable',
-  selectedPosition: state.positions.get(state.selectedPositionId),
+  title: state.selectedPlayerId ? state.players[state.selectedPlayerId].name : 'MockDraftable',
+  selectedPosition: state.positions[state.selectedPositionId],
 }))(Nav);

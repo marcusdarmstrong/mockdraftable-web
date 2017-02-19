@@ -1,6 +1,5 @@
 // @flow
 
-import { Map } from 'immutable';
 import type { PlayerId, PositionId, MeasurableId, Player, Position, Measurable, MeasurableKey, Percentiles, Comparisons, Sort } from './domain';
 
 type TypeAheadState = {
@@ -39,11 +38,11 @@ type UiState = {
 type AppState = PlayerPageState & SearchPageState & GlobalAppState;
 
 type Domain = {
-  players: Map<PlayerId, Player>,
-  positions: Map<PositionId, Position>,
-  measurables: Map<MeasurableKey, Measurable>,
-  comparisons: Map<PlayerId, Map<PositionId, Comparisons>>,
-  percentiles: Map<PlayerId, Map<PositionId, Percentiles>>,
+  players: { [key: PlayerId]: Player },
+  positions: { [key: PositionId]: Position },
+  measurables: { [key: MeasurableKey]: Measurable },
+  comparisons: { [key: PlayerId]: { [key: PositionId]: Comparisons } },
+  percentiles: { [key: PlayerId]: { [key: PositionId]: Percentiles } },
 };
 
 export type State = Domain & AppState & UiState;

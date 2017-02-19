@@ -1,6 +1,5 @@
 // @flow
 
-import { Map } from 'immutable';
 import mhsl from 'hsl-to-hex';
 import { PositionTypes } from './types/domain';
 import type { PositionId, PositionKey, Position } from './types/domain';
@@ -88,8 +87,8 @@ const positions: Array<Position> = [
   p(810, 'KR', 'Kick Returner', PositionTypes.ROLE, hsl(10, 10, 55)),
 ];
 
-const positionsById = Map(positions.map(pos => [pos.id, pos]));
-const positionsByKey = Map(positions.map(pos => [pos.key, pos]));
+const positionsById = positions.reduce((a, pos) => Object.assign({}, a, { [pos.id]: pos }), {});
+const positionsByKey = positions.reduce((a, pos) => Object.assign({}, a, { [pos.key]: pos }), {});
 
 class UnknownPositionKey {
   key: number;
@@ -119,8 +118,8 @@ class UnknownPositionId {
 const unknownPositionId = (id) => { throw new UnknownPositionId(id); };
 const unknownPositionKey = (key) => { throw new UnknownPositionKey(key); };
 
-const getById = (id: PositionId): Position => positionsById.get(id) || unknownPositionId(id);
-const getByKey = (key: PositionKey): Position => positionsByKey.get(key) || unknownPositionKey(key);
+const getById = (id: PositionId): Position => positionsById[id] || unknownPositionId(id);
+const getByKey = (key: PositionKey): Position => positionsByKey[key] || unknownPositionKey(key);
 
 const getDefaultPosition = (positionSet: Array<Position>): Position => {
   const defaultPos = positionSet.filter(pos => pos.type === PositionTypes.PRIMARY)

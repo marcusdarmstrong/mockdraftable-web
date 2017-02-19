@@ -58,9 +58,9 @@ const getBestMeasurementsForPlayer = async key => Object.values((await db.many(
     const meas = value.measurable;
     if (!accum[meas]
       || (accum[meas].measurement > value.measurement
-        && defaultSort(Measurables.get(meas).unit) === Sorts.ASC)
+        && defaultSort(Measurables[meas].unit) === Sorts.ASC)
       || (accum[meas].measurement < value.measurement
-        && defaultSort(Measurables.get(meas).unit) === Sorts.DESC)) {
+        && defaultSort(Measurables[meas].unit) === Sorts.DESC)) {
       const retval = Object.assign({}, accum);
       retval[meas] = value;
       return retval;

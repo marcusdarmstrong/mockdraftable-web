@@ -58,8 +58,8 @@ AboutSection.defaultProps = {
 export default connect(state => ({
   selectedPlayerId: state.selectedPlayerId,
   selectedPositionId: state.selectedPositionId,
-  positions: state.players.get(state.selectedPlayerId).positions.all
-    .map(i => state.positions.get(i)),
-  draft: state.players.get(state.selectedPlayerId).draft,
-  school: state.players.get(state.selectedPlayerId).school,
+  positions: state.players[state.selectedPlayerId].positions.all
+    .map(i => state.positions[i]),
+  draft: state.players[state.selectedPlayerId].draft,
+  school: state.players[state.selectedPlayerId].school,
 }))(AboutSection);

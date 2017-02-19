@@ -33,24 +33,20 @@ const ComparisonList = ({ comparisons, selectedPosition }: Props) =>
   </div>;
 
 export default connect(state => ({
-  selectedPosition: state.positions.get(state.selectedPositionId),
+  selectedPosition: state.positions[state.selectedPositionId],
   comparisons:
-    state.comparisons
-      .get(state.selectedPlayerId)
-      .get(state.selectedPositionId)
+    state.comparisons[state.selectedPlayerId][state.selectedPositionId]
       .map(({ playerId, score }) => ({
         score,
-        player: state.players.get(playerId),
-        playerPosition: state.positions.get(state.players.get(playerId).positions.primary),
+        player: state.players[playerId],
+        playerPosition: state.positions[state.players[playerId].positions.primary],
         percentiles:
-          state.percentiles
-            .get(playerId)
-            .get(state.selectedPositionId)
+          state.percentiles[playerId][state.selectedPositionId]
             .map(({ measurableKey, percentile }) => ({
               percentile,
               measurable: {
                 id: measurableKey,
-                name: state.measurables.get(measurableKey).name,
+                name: state.measurables[measurableKey].name,
               },
             })),
       })),

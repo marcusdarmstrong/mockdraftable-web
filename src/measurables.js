@@ -1,6 +1,5 @@
 // @flow
 
-import { Map } from 'immutable';
 import { Units } from './types/domain';
 import type { Measurable } from './types/domain';
 
@@ -23,9 +22,18 @@ const allMeasurables = [
   measurable('60ss', 14, '60 Yard Shuttle', Units.SECONDS),
 ];
 
-const measurablesByKey = Map(allMeasurables.map(m => [m.key, m]));
-const getByKey = (key: number) => measurablesByKey.get(key);
+const measurablesByKey = allMeasurables.reduce(
+  (accum, meas) => Object.assign({}, accum, { [meas.key]: meas }),
+  {},
+);
+
+const getByKey = (key: number) => measurablesByKey[key];
 
 export { getByKey, allMeasurables, measurablesByKey };
 
-export default Map(allMeasurables.map(m => [m.id, m]));
+const measurablesById = allMeasurables.reduce(
+  (a, meas) => Object.assign({}, a, { [meas.id]: meas }),
+  {},
+);
+
+export default measurablesById;

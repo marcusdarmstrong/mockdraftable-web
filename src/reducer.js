@@ -1,6 +1,5 @@
 // @flow
 
-import { Map } from 'immutable';
 import type { State } from './types/state';
 import type { Action } from './actions';
 import * as actions from './actions';
@@ -10,7 +9,7 @@ export default (previousState: State, action: Action): State => {
     return Object.assign(
       {},
       previousState,
-      { players: previousState.players.set(action.player.id, action.player) },
+      { players: Object.assign({}, previousState.players, { [action.player.id]: action.player }) },
     );
   }
   if (action.type === actions.LOAD_COMPARISONS) {
@@ -18,11 +17,11 @@ export default (previousState: State, action: Action): State => {
       {},
       previousState,
       {
-        comparisons: previousState.comparisons.set(
-          action.playerId,
-          previousState.comparisons.get(action.playerId, Map())
-            .set(action.positionId, action.comparisons),
-        ),
+        comparisons: Object.assign({}, previousState.comparisons, {
+          [action.playerId]: Object.assign({}, previousState.comparisons[action.playerId], {
+            [action.positionId]: action.comparisons,
+          }),
+        }),
       },
     );
   }
@@ -31,11 +30,11 @@ export default (previousState: State, action: Action): State => {
       {},
       previousState,
       {
-        percentiles: previousState.percentiles.set(
-          action.playerId,
-          previousState.percentiles.get(action.playerId, Map())
-            .set(action.positionId, action.percentiles),
-        ),
+        percentiles: Object.assign({}, previousState.percentiles, {
+          [action.playerId]: Object.assign({}, previousState.percentiles[action.playerId], {
+            [action.positionId]: action.percentiles,
+          }),
+        }),
       },
     );
   }

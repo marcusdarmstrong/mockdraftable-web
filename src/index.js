@@ -12,7 +12,6 @@ import { createStore, applyMiddleware } from 'redux';
 import type { Store } from 'redux';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
-import { Map } from 'immutable';
 
 import batcher from './redux-batcher';
 import type { BatchedAction } from './redux-batcher';
@@ -44,9 +43,9 @@ init().then((stores) => {
     const store: Store<State, BatchedAction> = createStore(reducer, {
       measurables: measurablesByKey,
       positions,
-      comparisons: new Map(),
-      percentiles: new Map(),
-      players: new Map(),
+      comparisons: {},
+      percentiles: {},
+      players: {},
       selectedPositionId: 'ATH',
     }, applyMiddleware(batcher, thunk.withExtraArgument(api)));
     await store.dispatch(await onError(translate, [])(req.path, req.query));

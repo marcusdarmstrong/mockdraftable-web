@@ -15,7 +15,7 @@ type Props = {
   measurables: Map<MeasurableKey, Measurable>,
 };
 
-const d = (measurement, measurable: ?Measurable) => {
+const format = (measurement, measurable: ?Measurable) => {
   const unit = measurable ? measurable.unit : undefined;
   if (unit === Units.INCHES) {
     return `${measurement}"`;
@@ -31,7 +31,7 @@ const d = (measurement, measurable: ?Measurable) => {
 
 const MeasurablesSection = ({ measurements, percentiles, displayPosition, measurables }: Props) => {
   const keyedMeasurements = measurements.reduce((a, { measurableKey, measurement }) =>
-    Object.assign({}, a, { [measurableKey]: d(measurement, measurables.get(measurableKey)) }),
+    Object.assign({}, a, { [measurableKey]: format(measurement, measurables[measurableKey]) }),
     {},
   );
   const zippedMeasurements = percentiles.map(mwp => ({
@@ -47,17 +47,15 @@ const MeasurablesSection = ({ measurements, percentiles, displayPosition, measur
 };
 
 export default connect(state => ({
-  displayPosition: state.positions.get(state.selectedPositionId),
-  measurements: state.players.get(state.selectedPlayerId).measurements,
+  displayPosition: state.positions[state.selectedPositionId],
+  measurements: state.players[state.selectedPlayerId].measurements,
   measurables: state.measurables,
-  percentiles: state.percentiles
-    .get(state.selectedPlayerId)
-    .get(state.selectedPositionId)
+  percentiles: state.percentiles[state.selectedPlayerId][state.selectedPositionId]
     .map(({ measurableKey, percentile }) => ({
       percentile,
       measurable: {
         id: measurableKey,
-        name: state.measurables.get(measurableKey).name,
+        name: state.measurables[measurableKey].name,
       },
     })),
 }))(MeasurablesSection);

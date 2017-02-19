@@ -1,6 +1,5 @@
 // @flow
 
-import { Map } from 'immutable';
 import type { Dispatch } from 'redux';
 import type { ThunkAction } from 'redux-thunk';
 
@@ -97,10 +96,11 @@ export type Action =
 export const selectPlayer = (id: PlayerId, positionIdOverride: ?PositionId) =>
   async (dispatch: Dispatch<Action>, getState: () => State, api: Api) => {
     const state = getState();
-    const player = state.players.get(id, await api.fetchPlayer(id));
+    const player = state.players[id] || await api.fetchPlayer(id);
     const positionId = positionIdOverride || player.positions.primary;
-    const comparisons = state.comparisons.get(id, Map())
-      .get(positionId, await api.fetchComparisons(id, positionId));
+    const comparisons = ((state.comparisons[id] || {})[positionId])
+      || await api.fetchComparisons(id, positionId);
+
     await Promise.all([
       dispatch(loadPlayer(player)),
       dispatch(loadComparisons(
@@ -111,16 +111,16 @@ export const selectPlayer = (id: PlayerId, positionIdOverride: ?PositionId) =>
       dispatch(loadPercentiles(
         id,
         positionId,
-        state.percentiles.get(id, Map())
-          .get(positionId, await api.fetchPercentiles(id, positionId)),
+        ((state.percentiles[id] || {})[positionId])
+          || await api.fetchPercentiles(id, positionId),
       )),
     ].concat(comparisons.map(async c => [
-      dispatch(loadPlayer(state.players.get(c.playerId, await api.fetchPlayer(c.playerId)))),
+      dispatch(loadPlayer(state.players[c.playerId] || await api.fetchPlayer(c.playerId))),
       dispatch(loadPercentiles(
         c.playerId,
         positionId,
-        state.percentiles.get(c.playerId, new Map())
-          .get(positionId, await api.fetchPercentiles(c.playerId, positionId)),
+        ((state.percentiles[c.playerId] || {})[positionId])
+          || await api.fetchPercentiles(c.playerId, positionId),
       )),
     ])));
     dispatch(updateSelectedPosition(positionId));
