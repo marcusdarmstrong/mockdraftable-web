@@ -2,7 +2,7 @@
 
 import { Sorts } from './types/domain';
 import { HttpRedirect, HttpError, throw404 } from './http';
-import { selectPlayer, updateSelectedPosition, updateSearchOptions } from './actions';
+import { selectPlayer, updateSelectedPosition, selectNewSearch } from './actions';
 import getPlayerByOldId from './services/players/get-player-by-old-id';
 import type { Action } from './actions';
 
@@ -14,7 +14,7 @@ export default async (path: string, args: {[string]: string}): Promise<Action[]>
     }
     // TODO: Sanitize years
     if (args.measurable) {
-      actions.push(updateSearchOptions({
+      actions.push(selectNewSearch({
         beginYear: Number(args.beginYear),
         endYear: Number(args.endYear),
         measurableId: args.measurable,
@@ -22,7 +22,7 @@ export default async (path: string, args: {[string]: string}): Promise<Action[]>
         page: Number(args.page) || 1,
       }));
     } else {
-      actions.push(updateSearchOptions({
+      actions.push(selectNewSearch({
         beginYear: Number(args.beginYear),
         endYear: Number(args.endYear),
         sortOrder: (args.sort === Sorts.DESC) ? Sorts.DESC : Sorts.ASC,

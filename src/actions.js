@@ -5,7 +5,7 @@ import type { ThunkAction } from 'redux-thunk';
 
 import type { Player, PlayerId, PositionId, Comparisons, Percentiles } from './types/domain';
 import type { Api } from './types/api';
-import type { State, SearchOptions } from './types/state';
+import type { State, SearchOptions, SearchResults } from './types/state';
 
 export const UPDATE_SELECTED_PLAYER = 'UPDATE_SELECTED_PLAYER';
 export const UPDATE_SELECTED_POSITION = 'UPDATE_SELECTED_POSITION';
@@ -45,14 +45,14 @@ export type UpdateSearchOptionsAction = {
   options: SearchOptions,
 };
 
-export const updateSearchResults = (newResults: Array<PlayerId>) => ({
+export const updateSearchResults = (newResults: SearchResults) => ({
   type: UPDATE_SEARCH_RESULTS,
   results: newResults,
 });
 
 export type UpdateSearchResultsAction = {
   type: 'UPDATE_SEARCH_RESULTS',
-  results: Array<PlayerId>,
+  results: SearchResults,
 };
 
 export type LoadPlayerAction = {
@@ -153,11 +153,11 @@ export const selectPlayer = (id: PlayerId, positionIdOverride: ?PositionId) =>
 export const selectNewSearch = (options: SearchOptions) =>
   async (dispatch: Dispatch<Action>, getState: () => State, api: Api) => {
     const pos = getState().selectedPositionId;
-    const playerIds = await api.fetchSearchResults(options, pos);
+    const results = await api.fetchSearchResults(options, pos);
     await Promise.all(
-      playerIds.map(id => dispatch(loadPlayerIfNeeded(id)))
-        .concat(playerIds.map(id => dispatch(loadPercentilesIfNeeded(id, pos)))),
+      results.players.map(id => dispatch(loadPlayerIfNeeded(id)))
+        .concat(results.players.map(id => dispatch(loadPercentilesIfNeeded(id, pos)))),
     );
     dispatch(updateSearchOptions(options));
-    dispatch(updateSearchResults(playerIds));
+    dispatch(updateSearchResults(results));
   };

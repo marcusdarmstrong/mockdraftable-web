@@ -21,10 +21,14 @@ type GlobalAppState = {
   selectedPositionId: PositionId,
 };
 
+export type SearchResults = {
+  players: Array<PlayerId>,
+  hasNextPage: boolean,
+};
 
 type SearchPageState = {
   searchOptions?: SearchOptions,
-  searchResults?: Array<PlayerId>,
+  searchResults?: SearchResults,
 };
 
 type PlayerPageState = {

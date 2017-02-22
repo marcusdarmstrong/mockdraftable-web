@@ -11,17 +11,19 @@ const offset = 1;
 
 type Props = {
   percentiles: Array<MeasurablePercentile>,
-  overlay: string,
+  overlay?: string,
   color: Color,
 };
 
-export default ({ percentiles, overlay, color }: Props) => {
+const SparkGraph = ({ percentiles, overlay, color }: Props) => {
   const { points, factors } = generateGraphData(percentiles, scale);
+
+  const totalOffset = scale + offset;
 
   return (<figure className="spark-graph mb-0">
     <svg
       preserveAspectRatio="xMinYMin meet"
-      viewBox={`0 0 ${2 * (scale + offset)} ${2 * (scale + offset)}`}
+      viewBox={`0 0 ${2 * (totalOffset)} ${2 * (totalOffset)}`}
     >
       <SpiderGraph
         className="graph"
@@ -31,7 +33,13 @@ export default ({ percentiles, overlay, color }: Props) => {
         offset={offset}
         color={color}
       />
-      <text x={scale + offset} y={scale + offset} className="spark-text">{overlay}</text>
+      {overlay && <text x={totalOffset} y={totalOffset} className="spark-text">{overlay}</text>}
     </svg>
   </figure>);
 };
+
+SparkGraph.defaultProps = {
+  overlay: undefined,
+};
+
+export default SparkGraph;

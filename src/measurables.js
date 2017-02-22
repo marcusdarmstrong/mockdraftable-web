@@ -29,7 +29,21 @@ const measurablesByKey = allMeasurables.reduce(
 
 const getByKey = (key: number) => measurablesByKey[key];
 
-export { getByKey, allMeasurables, measurablesByKey };
+const format = (measurement: number, measurementType: ?Measurable) => {
+  const unit = measurementType ? measurementType.unit : undefined;
+  if (unit === Units.INCHES) {
+    return `${measurement}"`;
+  } else if (unit === Units.SECONDS) {
+    return `${measurement}s`;
+  } else if (unit === Units.POUNDS) {
+    return `${measurement} lbs`;
+  } else if (unit === Units.REPS) {
+    return `${measurement} reps`;
+  }
+  return measurement;
+};
+
+export { getByKey, allMeasurables, measurablesByKey, format };
 
 const measurablesById = allMeasurables.reduce(
   (a, meas) => Object.assign({}, a, { [meas.id]: meas }),

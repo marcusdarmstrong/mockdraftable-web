@@ -75,10 +75,9 @@ const getBestMeasurementsForPlayer = async key => Object.values((await db.many(
 const impliedPositions = (explicitPositionIds: Array<PositionKey>): PlayerPositions => {
   const impliedSet = ['ATH'];
   explicitPositionIds.forEach((positionKey) => {
-    let stringPosId = positionKey.toString(10);
-    for (let offset = 0; offset < stringPosId.length; offset += 1) {
-      stringPosId = stringPosId.substr(0, stringPosId.length - offset);
-      const pos = getByKey(parseInt(stringPosId, 10));
+    const stringPosId = positionKey.toString(10);
+    for (let offset = 0; stringPosId.length - offset > 0; offset += 1) {
+      const pos = getByKey(parseInt(stringPosId.substr(0, stringPosId.length - offset), 10));
       if (pos && impliedSet.indexOf(pos.id) === -1) {
         impliedSet.push(pos.id);
       }

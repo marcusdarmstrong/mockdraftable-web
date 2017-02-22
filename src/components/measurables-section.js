@@ -4,29 +4,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import type { MeasurablePercentile } from '../types/graphing';
 import type { Position, Measurement, Measurable, MeasurableKey } from '../types/domain';
-import { Units } from '../types/domain';
 import FullGraph from './graphs/full-graph';
 import Measurables from './measurables';
+import { format } from '../measurables';
 
 type Props = {
   percentiles: Array<MeasurablePercentile>,
   measurements: Array<Measurement>,
   displayPosition: Position,
   measurables: { [key: MeasurableKey]: Measurable },
-};
-
-const format = (measurement, measurable: ?Measurable) => {
-  const unit = measurable ? measurable.unit : undefined;
-  if (unit === Units.INCHES) {
-    return `${measurement}"`;
-  } else if (unit === Units.SECONDS) {
-    return `${measurement}s`;
-  } else if (unit === Units.POUNDS) {
-    return `${measurement} lbs`;
-  } else if (unit === Units.REPS) {
-    return `${measurement} reps`;
-  }
-  return measurement;
 };
 
 const MeasurablesSection = ({ measurements, percentiles, displayPosition, measurables }: Props) => {

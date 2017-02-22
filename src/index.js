@@ -39,6 +39,22 @@ init().then((stores) => {
     maxAge: 1000 * 60 * 60 * 24 * 365, // one year
   }));
   app.use(favicon(`${__dirname}/../public/favicon.ico`));
+  app.get('/api/search', async (req: $Request, res) => {
+    res.send(JSON.stringify(await api.fetchSearchResults(
+      JSON.parse(req.query.opts),
+      req.query.pos,
+    )));
+  });
+  app.get('/api/player', async (req: $Request, res) => {
+    res.send(JSON.stringify(await api.fetchPlayer(req.query.id)));
+  });
+  app.get('/api/comparisons', async (req: $Request, res) => {
+    res.send(JSON.stringify(await api.fetchComparisons(req.query.id, req.query.pos)));
+  });
+  app.get('/api/percentiles', async (req: $Request, res) => {
+    res.send(JSON.stringify(await api.fetchPercentiles(req.query.id, req.query.pos)));
+  });
+
   app.get('*', async (req: $Request, res) => {
     const store: Store<State, BatchedAction> = createStore(reducer, {
       measurables: measurablesByKey,

@@ -7,7 +7,7 @@ import type { SearchOptions } from '../types/state';
 import { throw500 } from '../http';
 import getComparablePlayersAtPosition from '../services/comparisons/get-comparable-players-at-position';
 import getPercentileAtPosition from '../services/statistics/get-percentile-at-position';
-import { allMeasurables } from '../measurables';
+import measurables from '../measurables';
 import { Sorts } from '../types/domain';
 
 const pageSize = 20;
@@ -21,8 +21,7 @@ const byName = (sort: Sort) => {
 
 const byMeasurable = (measurableId: MeasurableId, sort: Sort) => {
   const measurableKey = (
-    allMeasurables.find(measurable => measurable.id === measurableId)
-    || throw500(`Unknown measurable id: ${measurableId}`)
+    measurables[measurableId] || throw500(`Unknown measurable id: ${measurableId}`)
   ).key;
   const nameSort = byName(sort);
   return (a: Player, b: Player) => {
@@ -34,9 +33,9 @@ const byMeasurable = (measurableId: MeasurableId, sort: Sort) => {
           ? aMeas.measurement - bMeas.measurement
           : bMeas.measurement - aMeas.measurement;
       }
-      return 1;
-    } else if (bMeas) {
       return -1;
+    } else if (bMeas) {
+      return 1;
     }
     return nameSort(a, b);
   };
@@ -67,15 +66,18 @@ const api: (Stores) => Api =
         const beginIndex = pageSize * (opts.page - 1);
         const playerIds = positionEligibilityStore.get(pos)
           || throw500(`No players found for position: ${pos}`);
-        return playerIds.map(id => (playerStore.get(id) || throw500(`Unknown player id: ${id}`)))
-          .filter(p => p.draft > opts.endYear || p.draft < opts.beginYear)
+        const players = playerIds.map(id => (playerStore.get(id) || throw500(`Unknown player id: ${id}`)))
+          .filter(p => p.draft <= opts.endYear && p.draft >= opts.beginYear)
           .sort(
             opts.measurableId
               ? byMeasurable(opts.measurableId, opts.sortOrder)
               : byName(opts.sortOrder),
-          )
-          .slice(beginIndex, beginIndex + pageSize)
-          .map(p => p.id);
+          );
+
+        return {
+          hasNextPage: players.length > (beginIndex + pageSize),
+          players: players.slice(beginIndex, beginIndex + pageSize).map(p => p.id),
+        };
       },
     };
   };

@@ -14,7 +14,7 @@ const clientApi: Api = {
   fetchPercentiles: async (id: PlayerId, pos: PositionId) =>
     (await fetch(`./api/percentiles?id=${id}&pos=${pos}`)).json(),
   fetchSearchResults: async (opts: SearchOptions, pos: PositionId) =>
-    (await fetch(`./api/search?opts=${opts.toString()}&pos=${pos}`)).json(),
+    (await fetch(`./api/search?opts=${JSON.stringify(opts)}&pos=${pos}`)).json(),
 };
 
 export default clientApi;
