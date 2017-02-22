@@ -57,7 +57,7 @@
     "hashmark": "4.1.0",
     "hsl-to-hex": "1.0.0",
     "isomorphic-fetch": "2.2.1",
-    "multi-slider": "3.0.0",
+    "multi-slider": "3.0.1",
     "node-sass": "4.5.0",
     "node-sass-module-importer": "0.1.0",
     "pg-promise": "5.5.8",
