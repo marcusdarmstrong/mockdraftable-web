@@ -116,7 +116,7 @@ class UnknownPositionId {
 }
 
 const unknownPositionId = (id) => { throw new UnknownPositionId(id); };
-const unknownPositionKey = (key) => { throw new UnknownPositionKey(key); };
+const unknownPositionKey = (key) => { console.log(`k:${key}`); throw new UnknownPositionKey(key); };
 
 const getById = (id: PositionId): Position => positionsById[id] || unknownPositionId(id);
 const getByKey = (key: PositionKey): Position => positionsByKey[key] || unknownPositionKey(key);
@@ -142,7 +142,7 @@ const getDefaultPosition = (positionSet: Array<Position>): Position => {
       }
       return accum;
     }, '');
-  return getByKey(parseInt(defaultPos, 10));
+  return getByKey(parseInt(defaultPos, 10) || 1);
 };
 
 export { getById, getByKey, getDefaultPosition, positions };

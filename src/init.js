@@ -2,7 +2,7 @@
 
 import db from './connection';
 import { getById, getByKey, getDefaultPosition } from './positions';
-import Measurables from './measurables';
+import { getByKey as getMeasurableByKey } from './measurables';
 import { Sorts, defaultSort } from './types/domain';
 import type {
   PositionId,
@@ -38,7 +38,7 @@ const getPlayers = async () =>
   );
 
 const getPositionsForPlayer = async key =>
-  (await db.many(
+  (await db.manyOrNone(
     `select
         position_id as position_key
       from t_position_eligibility
@@ -46,7 +46,7 @@ const getPositionsForPlayer = async key =>
     { key },
   )).map(result => result.position_key);
 
-const getBestMeasurementsForPlayer = async key => Object.values((await db.many(
+const getBestMeasurementsForPlayer = async key => Object.values((await db.manyOrNone(
     `select 
         measurable_id as measurable,
         measurement,
@@ -58,9 +58,9 @@ const getBestMeasurementsForPlayer = async key => Object.values((await db.many(
     const meas = value.measurable;
     if (!accum[meas]
       || (accum[meas].measurement > value.measurement
-        && defaultSort(Measurables[meas].unit) === Sorts.ASC)
+        && defaultSort(getMeasurableByKey(meas).unit) === Sorts.ASC)
       || (accum[meas].measurement < value.measurement
-        && defaultSort(Measurables[meas].unit) === Sorts.DESC)) {
+        && defaultSort(getMeasurableByKey(meas).unit) === Sorts.DESC)) {
       const retval = Object.assign({}, accum);
       retval[meas] = value;
       return retval;
@@ -77,9 +77,13 @@ const impliedPositions = (explicitPositionIds: Array<PositionKey>): PlayerPositi
   explicitPositionIds.forEach((positionKey) => {
     const stringPosId = positionKey.toString(10);
     for (let offset = 0; stringPosId.length - offset > 0; offset += 1) {
-      const pos = getByKey(parseInt(stringPosId.substr(0, stringPosId.length - offset), 10));
-      if (pos && impliedSet.indexOf(pos.id) === -1) {
-        impliedSet.push(pos.id);
+      const posId = stringPosId.substr(0, stringPosId.length - offset);
+      if (posId !== '80') {
+        // Special teams has a special case.
+        const pos = getByKey(parseInt(posId, 10));
+        if (pos && impliedSet.indexOf(pos.id) === -1) {
+          impliedSet.push(pos.id);
+        }
       }
     }
   });
