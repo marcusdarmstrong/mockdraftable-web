@@ -1,7 +1,9 @@
 // @flow
 
 import React from 'react';
+import type { Dispatch } from 'redux';
 import { connect } from 'react-redux';
+import type { Action } from '../actions';
 
 import Nav from './nav';
 import PositionSelector from './position-selector';
@@ -26,7 +28,7 @@ export default connect(state => ({
   isSearchPage: !!state.searchOptions,
   isHomePage: !state.selectedPlayerId && !state.searchOptions,
   modalType: state.modalType,
-}), dispatch => ({
+}), (dispatch: Dispatch<Action>) => ({
   closeModal: () => dispatch(updateModalType('None')),
 }))(({ isPlayerPage, isSearchPage, isHomePage, modalType, closeModal }: Props) =>
   <div>

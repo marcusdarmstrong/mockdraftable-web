@@ -1,11 +1,14 @@
 // @flow
 
 import React from 'react';
+import type { Dispatch } from 'redux';
 import { connect } from 'react-redux';
+import type { Action } from '../actions';
 import type { Position } from '../types/domain';
 import type { ModalType } from '../types/state';
 import Page from './page';
 import { updateModalType } from '../actions';
+
 
 type Props = {
   title: string,
@@ -62,7 +65,7 @@ export default connect(
     url: constructUrl(state),
     showPosition: !!state.selectedPlayerId,
   }),
-  dispatch => ({
+  (dispatch: Dispatch<Action>) => ({
     showModal: component => dispatch(updateModalType(component)),
   }),
 )(Nav);

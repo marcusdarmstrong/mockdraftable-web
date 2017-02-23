@@ -3,7 +3,7 @@
 import type { PlayerId, PositionId, MeasurableId, Player, Position, Measurable, MeasurableKey, Percentiles, Comparisons, Sort } from './domain';
 
 type TypeAheadState = {
-  typeAheadResults: Array<PlayerId>,
+  typeAheadResults?: Array<PlayerId>,
 };
 
 export type ModalType = 'PositionSelector' | 'TypeAhead' | 'None';
@@ -36,7 +36,6 @@ type PlayerPageState = {
 };
 
 type UiState = {
-  modal?: ModalState,
   modalType: ModalType,
 } & TypeAheadState;
 
