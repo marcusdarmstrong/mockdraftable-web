@@ -26,6 +26,7 @@ import translate from './router';
 import { measurablesByKey } from './measurables';
 import { positions } from './positions';
 import serverApi from './api/server';
+import bundles from './bundles.json';
 
 init().then((stores) => {
   const app = express();
@@ -69,8 +70,8 @@ init().then((stores) => {
       modalType: 'None',
     }, applyMiddleware(batcher, thunk.withExtraArgument(api)));
     await store.dispatch(await onError(translate, [])(req.path, req.query));
-    const jsBundleName = process.env.JS_BUNDLE_NAME || 'public/bundle.js';
-    const cssBundleName = process.env.CSS_BUNDLE_NAME || 'public/bundle.css';
+    const jsBundleName = bundles.js_bundle_name || 'public/bundle.js';
+    const cssBundleName = bundles.css_bundle_name || 'public/bundle.css';
     res.send(
       layout(
         'MockDraftable',

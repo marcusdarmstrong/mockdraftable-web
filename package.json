@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nf start",
     "lint": "eslint ./src",
-    "clean": "rm -rf lib/* && rm -f public/bundle* && rm -f .env",
+    "clean": "rm -rf lib/* && rm -f public/bundle*",
     "prebuild": "npm run clean && npm run -s lint",
     "build": "if [ \"${NODE_ENV}\" = \"production\" ]; then npm run build:prod; else npm run build:dev; fi",
     "build:dev": "npm run build:js:dev && time npm run build:css:dev",
@@ -14,10 +14,10 @@
     "build:js:dev": "time npm run build:server && time npm run build:client:dev",
     "build:js:prod": "npm run build:server && npm run build:client:prod",
     "build:server": "babel src -d lib",
-    "build:client:dev": "browserify lib/client.js | hashmark -s 'public/bundle-{hash}.js' -n js_bundle_name -l 8 -m './.env'",
-    "build:client:prod": "browserify lib/client.js | uglifyjs - --screw-ie8 -m -c warnings=false | hashmark -s 'public/bundle-{hash}.js' -n js_bundle_name -l 8 -m './.env'",
-    "build:css:prod": "node-sass --importer node_modules/node-sass-module-importer/index.js --output-style compressed sass/index.scss | hashmark -s 'public/bundle-{hash}.css' -n css_bundle_name -l 8 -m './.env'",
-    "build:css:dev": "node-sass --importer node_modules/node-sass-module-importer/index.js --output-style expanded sass/index.scss | hashmark -s 'public/bundle-{hash}.css' -n css_bundle_name -l 8 -m './.env'",
+    "build:client:dev": "browserify lib/client.js | hashmark -s 'public/bundle-{hash}.js' -n js_bundle_name -l 8 -m './lib/bundles.json'",
+    "build:client:prod": "browserify lib/client.js | uglifyjs - --screw-ie8 -m -c warnings=false | hashmark -s 'public/bundle-{hash}.js' -n js_bundle_name -l 8 -m './lib/bundles.json'",
+    "build:css:prod": "node-sass --importer node_modules/node-sass-module-importer/index.js --output-style compressed sass/index.scss | hashmark -s 'public/bundle-{hash}.css' -n css_bundle_name -l 8 -m './lib/bundles.json'",
+    "build:css:dev": "node-sass --importer node_modules/node-sass-module-importer/index.js --output-style expanded sass/index.scss | hashmark -s 'public/bundle-{hash}.css' -n css_bundle_name -l 8 -m './lib/bundles.json'",
     "postinstall": "npm run build",
     "flow": "flow"
   },
