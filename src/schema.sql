@@ -5,7 +5,13 @@ create table t_player (
   first_name TEXT not null,
   last_name TEXT not null,
   draft_year int not null,
-  canonical_name TEXT not null unique
+  canonical_name TEXT not null unique,
+  school_id int
+);
+
+create table t_school (
+  id serial,
+  name TEXT not null
 );
 
 create table t_position_eligibility (
