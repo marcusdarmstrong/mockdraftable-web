@@ -36,16 +36,16 @@ const SearchControls = ({
     </select>
     {selectedSortOrder === Sorts.DESC
       ? (<div className="btn-group ml-auto">
-        <button type="button" className="btn btn-secondary active">{'\u2B06'}</button>
+        <button type="button" className="btn btn-secondary active">{'\u21E7'}</button>
         <button type="button" className="btn btn-secondary" onClick={toggleSortOrder}>
-          {'\u2B07'}
+          {'\u21E9'}
         </button>
       </div>)
       : (<div className="btn-group ml-auto">
         <button type="button" className="btn btn-secondary" onClick={toggleSortOrder}>
-          {'\u2B06'}
+          {'\u21E7'}
         </button>
-        <button type="button" className="btn btn-secondary active">{'\u2B07'}</button>
+        <button type="button" className="btn btn-secondary active">{'\u21E9'}</button>
       </div>)
     }
   </div>
