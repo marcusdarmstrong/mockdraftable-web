@@ -36,7 +36,7 @@ init().then((stores) => {
   app.set('x-powered-by', false);
   app.set('port', (process.env.PORT || 5000));
   app.use(compression());
-  app.use('/public', express.static(path.join(__dirname, '..', 'public'), {
+  app.use(express.static(path.join(__dirname, '..', 'public'), {
     maxAge: 1000 * 60 * 60 * 24 * 365, // one year
   }));
   app.use(favicon(`${__dirname}/../public/favicon.ico`));
