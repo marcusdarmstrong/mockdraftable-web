@@ -13,7 +13,7 @@ import { Sorts } from '../types/domain';
 const pageSize = 20;
 
 const byName = (sort: Sort) => {
-  if (sort === Sorts.ASC) {
+  if (sort === Sorts.DESC) {
     return (a: Player, b: Player) => (a.name > b.name) ? 1 : -1;
   }
   return (a: Player, b: Player) => (a.name < b.name) ? 1 : -1;

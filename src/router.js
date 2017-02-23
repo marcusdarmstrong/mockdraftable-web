@@ -15,17 +15,17 @@ export default async (path: string, args: {[string]: string}): Promise<Action[]>
     // TODO: Sanitize years
     if (args.measurable) {
       actions.push(selectNewSearch({
-        beginYear: Number(args.beginYear),
-        endYear: Number(args.endYear),
+        beginYear: Number(args.beginYear) || 1999,
+        endYear: Number(args.endYear) || 2017,
         measurableId: args.measurable,
-        sortOrder: (args.sort === Sorts.DESC) ? Sorts.DESC : Sorts.ASC,
+        sortOrder: (args.sort === Sorts.ASC) ? Sorts.ASC : Sorts.DESC,
         page: Number(args.page) || 1,
       }));
     } else {
       actions.push(selectNewSearch({
-        beginYear: Number(args.beginYear),
-        endYear: Number(args.endYear),
-        sortOrder: (args.sort === Sorts.DESC) ? Sorts.DESC : Sorts.ASC,
+        beginYear: Number(args.beginYear) || 1999,
+        endYear: Number(args.endYear) || 2017,
+        sortOrder: (args.sort === Sorts.ASC) ? Sorts.ASC : Sorts.DESC,
         page: Number(args.page) || 1,
       }));
     }

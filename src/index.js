@@ -24,7 +24,7 @@ import reducer from './reducer';
 import init from './init';
 import translate from './router';
 import { measurablesByKey } from './measurables';
-import positions from './positions';
+import { positions } from './positions';
 import serverApi from './api/server';
 
 init().then((stores) => {
@@ -55,14 +55,18 @@ init().then((stores) => {
     res.send(JSON.stringify(await api.fetchPercentiles(req.query.id, req.query.pos)));
   });
 
+  const validPositions = positions.filter(pos => !!stores.positionEligibilityStore.get(pos.id));
+  const posById = validPositions.reduce((a, pos) => Object.assign({}, a, { [pos.id]: pos }), {});
+
   app.get('*', async (req: $Request, res) => {
     const store: Store<State, BatchedAction> = createStore(reducer, {
       measurables: measurablesByKey,
-      positions,
+      positions: posById,
       comparisons: {},
       percentiles: {},
       players: {},
       selectedPositionId: 'ATH',
+      modalType: 'None',
     }, applyMiddleware(batcher, thunk.withExtraArgument(api)));
     await store.dispatch(await onError(translate, [])(req.path, req.query));
     const jsBundleName = process.env.JS_BUNDLE_NAME || 'public/bundle.js';

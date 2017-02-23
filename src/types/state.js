@@ -3,9 +3,10 @@
 import type { PlayerId, PositionId, MeasurableId, Player, Position, Measurable, MeasurableKey, Percentiles, Comparisons, Sort } from './domain';
 
 type TypeAheadState = {
-  component: 'TypeAhead',
-  results: Array<PlayerId>,
+  typeAheadResults: Array<PlayerId>,
 };
+
+export type ModalType = 'PositionSelector' | 'TypeAhead' | 'None';
 
 export type SearchOptions = {
   beginYear: number,
@@ -14,8 +15,6 @@ export type SearchOptions = {
   sortOrder: Sort,
   page: number,
 };
-
-type ModalState = TypeAheadState;
 
 type GlobalAppState = {
   selectedPositionId: PositionId,
@@ -29,6 +28,7 @@ export type SearchResults = {
 type SearchPageState = {
   searchOptions?: SearchOptions,
   searchResults?: SearchResults,
+  isSearching?: boolean,
 };
 
 type PlayerPageState = {
@@ -37,7 +37,8 @@ type PlayerPageState = {
 
 type UiState = {
   modal?: ModalState,
-};
+  modalType: ModalType,
+} & TypeAheadState;
 
 type AppState = SearchPageState & PlayerPageState & GlobalAppState;
 

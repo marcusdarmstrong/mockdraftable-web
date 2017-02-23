@@ -3,32 +3,32 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import type { PlayerId, Position, PositionId } from '../types/domain';
+import type { Player, Position, PositionId } from '../types/domain';
 
 type Props = {
-  selectedPlayerId: PlayerId,
+  selectedPlayer: Player,
   selectedPositionId: PositionId,
   positions: Array<Position>,
-  draft: number,
-  school?: string,
 };
 
-const buttonClasses = 'list-inline-item btn btn-sm';
-
-const AboutSection = ({ selectedPlayerId, selectedPositionId, positions, draft, school }: Props) =>
+const AboutSection = ({ selectedPlayer, selectedPositionId, positions }: Props) =>
   <div>
     <h3>About</h3>
     <dl>
       <dt>Draft Class:</dt>
-      <dd>{draft}</dd>
+      <dd>{selectedPlayer.draft}</dd>
       <dt>Position:</dt>
       <dd className="h4">
         <div className="list-inline">
           {positions.map(p =>
             <a
-              href={`/player/${selectedPlayerId}?position=${p.id}`}
+              href={
+                selectedPlayer.positions.primary === p.id
+                  ? `/player/${selectedPlayer.id}`
+                  : `/player/${selectedPlayer.id}?position=${p.id}`
+              }
               key={p.key}
-              className={buttonClasses}
+              className="list-inline-item btn btn-sm"
               style={
                 selectedPositionId === p.id ?
                 {
@@ -46,20 +46,14 @@ const AboutSection = ({ selectedPlayerId, selectedPositionId, positions, draft, 
           )}
         </div>
       </dd>
-      {school && <dt>School:</dt>}
-      {school && <dd>{school}</dd>}
+      {selectedPlayer.school && <dt>School:</dt>}
+      {selectedPlayer.school && <dd>{selectedPlayer.school}</dd>}
     </dl>
   </div>;
 
-AboutSection.defaultProps = {
-  school: undefined,
-};
-
 export default connect(state => ({
-  selectedPlayerId: state.selectedPlayerId,
+  selectedPlayer: state.players[state.selectedPlayerId],
   selectedPositionId: state.selectedPositionId,
   positions: state.players[state.selectedPlayerId].positions.all
     .map(i => state.positions[i]),
-  draft: state.players[state.selectedPlayerId].draft,
-  school: state.players[state.selectedPlayerId].school,
 }))(AboutSection);

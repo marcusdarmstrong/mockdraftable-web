@@ -10,6 +10,7 @@ import batcher from './redux-batcher';
 import App from './components/app';
 import reducer from './reducer';
 import clientApi from './api/client';
+import searchDefaults from './search-defaults';
 import { selectNewSearch, updateSelectedPosition } from './actions';
 
 const store = createStore(
@@ -23,10 +24,8 @@ window.onpopstate = () => {
   const data = decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"');
   const args = JSON.parse(`{"${data}"}`);
   if (document.location.pathname === '/search') {
-    if (args.position) {
-      store.dispatch(updateSelectedPosition(args.position));
-    }
-    store.dispatch(selectNewSearch(args));
+    store.dispatch(updateSelectedPosition(args.position || 'ATH'));
+    store.dispatch(selectNewSearch(Object.assign({}, searchDefaults, args)));
   }
 };
 

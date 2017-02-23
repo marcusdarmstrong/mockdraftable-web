@@ -8,13 +8,13 @@ import type { SearchOptions } from '../types/state';
 
 const clientApi: Api = {
   fetchPlayer: async (id: PlayerId) =>
-    (await fetch(`./api/player?id=${id}`)).json(),
+    (await fetch(`/api/player?id=${id}`)).json(),
   fetchComparisons: async (id: PlayerId, pos: PositionId) =>
-    (await fetch(`./api/comparisons?id=${id}&pos=${pos}`)).json(),
+    (await fetch(`/api/comparisons?id=${id}&pos=${pos}`)).json(),
   fetchPercentiles: async (id: PlayerId, pos: PositionId) =>
-    (await fetch(`./api/percentiles?id=${id}&pos=${pos}`)).json(),
+    (await fetch(`/api/percentiles?id=${id}&pos=${pos}`)).json(),
   fetchSearchResults: async (opts: SearchOptions, pos: PositionId) =>
-    (await fetch(`./api/search?opts=${JSON.stringify(opts)}&pos=${pos}`)).json(),
+    (await fetch(`/api/search?opts=${JSON.stringify(opts)}&pos=${pos}`)).json(),
 };
 
 export default clientApi;

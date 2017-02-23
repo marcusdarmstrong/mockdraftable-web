@@ -50,5 +50,22 @@ export default (previousState: State, action: Action): State => {
   if (action.type === actions.UPDATE_SEARCH_RESULTS) {
     return Object.assign({}, previousState, { searchResults: action.results });
   }
+  if (action.type === actions.UPDATE_IS_SEARCHING) {
+    if (action.isSearching) {
+      return Object.assign({}, previousState, {
+        isSearching: true,
+        searchResults: {
+          hasNextPage: false,
+          players: [],
+        },
+      });
+    }
+    return Object.assign({}, previousState, {
+      isSearching: false,
+    });
+  }
+  if (action.type === actions.UPDATE_MODAL_TYPE) {
+    return Object.assign({}, previousState, { modalType: action.modalType });
+  }
   return previousState;
 };

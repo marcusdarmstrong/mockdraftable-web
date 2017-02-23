@@ -22,7 +22,7 @@ const positions: Array<Position> = [
   p(222, 'OW', 'Offensive Weapon', PositionTypes.PRIMARY, hsl(350, 90, 60)),
   p(223, 'WR', 'Wide Receiver', PositionTypes.PRIMARY, hsl(3, 90, 60)),
   p(2231, 'SR', 'Slot Receiver', PositionTypes.ROLE, hsl(0, 90, 65)),
-  p(2232, 'OR', 'Slot Receiver', PositionTypes.ROLE, hsl(7, 90, 65)),
+  p(2232, 'OR', 'Outside Receiver', PositionTypes.ROLE, hsl(7, 90, 65)),
   p(22321, 'Z', 'Flanker Receiver', PositionTypes.ROLE, hsl(5, 90, 70)),
   p(22322, 'X', 'Split End Receiver', PositionTypes.ROLE, hsl(10, 90, 70)),
   p(224, 'TE', 'Tight End', PositionTypes.PRIMARY, hsl(25, 90, 60)),
@@ -145,6 +145,6 @@ const getDefaultPosition = (positionSet: Array<Position>): Position => {
   return getByKey(parseInt(defaultPos, 10));
 };
 
-export { getById, getByKey, getDefaultPosition };
+export { getById, getByKey, getDefaultPosition, positions };
 
 export default positionsById;

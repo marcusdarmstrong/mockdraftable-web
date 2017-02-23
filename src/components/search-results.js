@@ -23,6 +23,7 @@ type DisplayableSearchResult = {
 };
 
 type Props = {
+  isSearching: boolean,
   searchOptions: SearchOptions;
   selectedPosition: Position,
   players: Array<DisplayableSearchResult>,
@@ -33,6 +34,7 @@ type Props = {
 };
 
 const SearchResults = ({
+  isSearching,
   searchOptions,
   selectedPosition,
   players,
@@ -49,33 +51,36 @@ const SearchResults = ({
       selectMeasurable={selectMeasurable(searchOptions)}
       toggleSortOrder={toggleSortOrder(searchOptions)}
     />
-    <div className="list-group mb-2">
-      {players.length === 0
-        ? <div className="alert alert-warning">
-          <strong>Whoops!</strong> No players met your criteria.
-        </div>
-        : players.map((result: DisplayableSearchResult) =>
-          result.measurable ?
-            <SearchResult
-              key={result.player.key}
-              name={result.player.name}
-              playerPosition={result.playerPosition}
-              selectedPosition={selectedPosition}
-              id={result.player.id}
-              percentiles={result.percentiles}
-              measurable={result.measurable}
-            />
-            :
-            <SearchResult
-              key={result.player.key}
-              name={result.player.name}
-              playerPosition={result.playerPosition}
-              selectedPosition={selectedPosition}
-              id={result.player.id}
-              percentiles={result.percentiles}
-            />,
-      )}
-    </div>
+    {isSearching
+      ? <div className="loader">Loading...</div>
+      : <div className="list-group mb-2">
+        {players.length === 0
+          ? <div className="alert alert-warning">
+            <strong>Whoops!</strong> No players met your criteria.
+          </div>
+          : players.map((result: DisplayableSearchResult) =>
+            result.measurable ?
+              <SearchResult
+                key={result.player.key}
+                name={result.player.name}
+                playerPosition={result.playerPosition}
+                selectedPosition={selectedPosition}
+                id={result.player.id}
+                percentiles={result.percentiles}
+                measurable={result.measurable}
+              />
+              :
+              <SearchResult
+                key={result.player.key}
+                name={result.player.name}
+                playerPosition={result.playerPosition}
+                selectedPosition={selectedPosition}
+                id={result.player.id}
+                percentiles={result.percentiles}
+              />,
+        )}
+      </div>
+    }
     {players.length !== 0 && (<SearchPaging
       currentPage={searchOptions.page}
       hasNextPage={hasNextPage}
@@ -83,46 +88,50 @@ const SearchResults = ({
     />)}
   </div>;
 
-export default connect(state => ({
-  searchOptions: state.searchOptions,
-  selectedPosition: state.positions[state.selectedPositionId],
-  players:
-    state.searchResults.players
-      .map((playerId) => {
-        const baseResult = {
-          player: state.players[playerId],
-          playerPosition: state.positions[state.players[playerId].positions.primary],
-          percentiles: state.percentiles[playerId][state.selectedPositionId]
-            .map(({ measurableKey, percentile }) => ({
-              percentile,
-              measurable: {
-                id: measurableKey,
-                name: state.measurables[measurableKey].name,
-              },
-            })),
-          measurable: undefined,
-        };
-        if (state.searchOptions.measurableId) {
-          const measurable = measurables[state.searchOptions.measurableId];
-          const value = baseResult.player.measurements
-            .find(measurement => measurement.measurableKey === measurable.key);
-          baseResult.measurable = value ? format(value.measurement, measurable) : '?';
-        }
-        return baseResult;
-      }),
-  hasNextPage: state.searchResults.hasNextPage,
-}), (dispatch: Dispatch<Action>) => ({
-  selectMeasurable: searchOptions => (measurableId) => {
-    dispatch(selectNewSearch(Object.assign({}, searchOptions, { measurableId })));
-  },
-  toggleSortOrder: searchOptions => () => {
-    dispatch(selectNewSearch(Object.assign(
-      {},
-      searchOptions,
-      { sortOrder: searchOptions.sortOrder === Sorts.ASC ? Sorts.DESC : Sorts.ASC },
-    )));
-  },
-  selectPage: searchOptions => (page) => {
-    dispatch(selectNewSearch(Object.assign({}, searchOptions, { page })));
-  },
-}))(SearchResults);
+export default connect(
+  state => ({
+    isSearching: state.isSearching,
+    searchOptions: state.searchOptions,
+    selectedPosition: state.positions[state.selectedPositionId],
+    players:
+      state.searchResults.players
+        .map((playerId) => {
+          const baseResult = {
+            player: state.players[playerId],
+            playerPosition: state.positions[state.players[playerId].positions.primary],
+            percentiles: state.percentiles[playerId][state.selectedPositionId]
+              .map(({ measurableKey, percentile }) => ({
+                percentile,
+                measurable: {
+                  id: measurableKey,
+                  name: state.measurables[measurableKey].name,
+                },
+              })),
+            measurable: undefined,
+          };
+          if (state.searchOptions.measurableId) {
+            const measurable = measurables[state.searchOptions.measurableId];
+            const value = baseResult.player.measurements
+              .find(measurement => measurement.measurableKey === measurable.key);
+            baseResult.measurable = value ? format(value.measurement, measurable) : '?';
+          }
+          return baseResult;
+        }),
+    hasNextPage: state.searchResults.hasNextPage,
+  }),
+  (dispatch: Dispatch<Action>) => ({
+    selectMeasurable: searchOptions => (measurableId) => {
+      dispatch(selectNewSearch(Object.assign({}, searchOptions, { measurableId })));
+    },
+    toggleSortOrder: searchOptions => () => {
+      dispatch(selectNewSearch(Object.assign(
+        {},
+        searchOptions,
+        { sortOrder: searchOptions.sortOrder === Sorts.ASC ? Sorts.DESC : Sorts.ASC },
+      )));
+    },
+    selectPage: searchOptions => (page) => {
+      dispatch(selectNewSearch(Object.assign({}, searchOptions, { page })));
+    },
+  }),
+)(SearchResults);

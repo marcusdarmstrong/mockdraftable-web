@@ -5,7 +5,7 @@ import type { ThunkAction } from 'redux-thunk';
 
 import type { Player, PlayerId, PositionId, Comparisons, Percentiles } from './types/domain';
 import type { Api } from './types/api';
-import type { State, SearchOptions, SearchResults } from './types/state';
+import type { State, SearchOptions, SearchResults, ModalType } from './types/state';
 
 export const UPDATE_SELECTED_PLAYER = 'UPDATE_SELECTED_PLAYER';
 export const UPDATE_SELECTED_POSITION = 'UPDATE_SELECTED_POSITION';
@@ -14,6 +14,8 @@ export const LOAD_PLAYER = 'LOAD_PLAYER';
 export const LOAD_COMPARISONS = 'LOAD_COMPARISONS';
 export const LOAD_PERCENTILES = 'LOAD_PERCENTILES';
 export const UPDATE_SEARCH_RESULTS = 'UPDATE_SEARCH_RESULTS';
+export const UPDATE_IS_SEARCHING = 'UPDATE_IS_SEARCHING';
+export const UPDATE_MODAL_TYPE = 'UPDATE_MODAL_TYPE';
 
 export const updateSelectedPlayer = (id: PlayerId) => ({
   type: UPDATE_SELECTED_PLAYER,
@@ -53,6 +55,26 @@ export const updateSearchResults = (newResults: SearchResults) => ({
 export type UpdateSearchResultsAction = {
   type: 'UPDATE_SEARCH_RESULTS',
   results: SearchResults,
+};
+
+export const updateIsSearching = (isSearching: boolean) => ({
+  type: 'UPDATE_IS_SEARCHING',
+  isSearching,
+});
+
+export type UpdateIsSearchingAction = {
+  type: 'UPDATE_IS_SEARCHING',
+  isSearching: boolean,
+};
+
+export const updateModalType = (modalType: ModalType) => ({
+  type: 'UPDATE_MODAL_TYPE',
+  modalType,
+});
+
+export type UpdateModalTypeAction = {
+  type: 'UPDATE_MODAL_TYPE',
+  modalType: ModalType,
 };
 
 export type LoadPlayerAction = {
@@ -101,6 +123,8 @@ export type Action =
   | UpdateSelectedPositionAction
   | UpdateSearchOptionsAction
   | UpdateSearchResultsAction
+  | UpdateIsSearchingAction
+  | UpdateModalTypeAction
   | LoadPlayerAction
   | LoadComparisonsAction
   | LoadPercentilesAction
@@ -150,14 +174,31 @@ export const selectPlayer = (id: PlayerId, positionIdOverride: ?PositionId) =>
     dispatch(updateSelectedPlayer(id));
   };
 
-export const selectNewSearch = (options: SearchOptions) =>
+const doSearch = (options: SearchOptions, positionId: PositionId) =>
   async (dispatch: Dispatch<Action>, getState: () => State, api: Api) => {
-    const pos = getState().selectedPositionId;
-    const results = await api.fetchSearchResults(options, pos);
+    dispatch(updateIsSearching(true));
+    const results = await api.fetchSearchResults(options, positionId);
     await Promise.all(
       results.players.map(id => dispatch(loadPlayerIfNeeded(id)))
-        .concat(results.players.map(id => dispatch(loadPercentilesIfNeeded(id, pos)))),
+        .concat(results.players.map(id => dispatch(loadPercentilesIfNeeded(id, positionId)))),
     );
-    dispatch(updateSearchOptions(options));
+    dispatch(updateSelectedPosition(positionId));
     dispatch(updateSearchResults(results));
+    dispatch(updateIsSearching(false));
+  };
+
+export const selectNewSearch = (options: SearchOptions) =>
+  async (dispatch: Dispatch<Action>, getState: () => State) => {
+    await dispatch(doSearch(options, getState().selectedPositionId));
+    dispatch(updateSearchOptions(options));
+  };
+
+export const selectPosition = (positionId: PositionId) =>
+  async (dispatch: Dispatch<Action>, getState: () => State) => {
+    const state = getState();
+    if (state.selectedPlayerId) {
+      await dispatch(selectPlayer(state.selectedPlayerId, positionId));
+    } else if (state.searchOptions) {
+      await dispatch(doSearch(state.searchOptions, positionId));
+    }
   };
