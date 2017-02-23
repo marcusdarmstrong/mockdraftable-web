@@ -8,7 +8,7 @@
     "lint": "eslint ./src",
     "clean": "rm -rf lib/* && rm -f public/bundle* && rm -f .env",
     "prebuild": "npm run clean && npm run -s lint",
-    "build": "if [ \"${NODE_ENV}\" == \"production\" ]; then npm run build:prod; else npm run build:dev; fi",
+    "build": "if [ \"${NODE_ENV}\" = \"production\" ]; then npm run build:prod; else npm run build:dev; fi",
     "build:dev": "npm run build:js:dev && time npm run build:css:dev",
     "build:prod": "npm run build:js:prod && time npm run build:css:prod",
     "build:js:dev": "time npm run build:server && time npm run build:client:dev",
