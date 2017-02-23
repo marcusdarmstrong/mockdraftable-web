@@ -2,4 +2,4 @@
 
 import React from 'react';
 
-export default () => <div />;
+export default () => <div>I be a typeahead</div>;

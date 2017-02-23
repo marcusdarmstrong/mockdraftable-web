@@ -42,19 +42,31 @@ const Nav = ({ title, selectedPosition, url, showPosition, showModal }: Props) =
     <Page title={`${title} - MockDraftable`} url={url} />
     <a className="navbar-nav" href="/"><img src="/public/icon.png" alt="MockDraftable" /></a>
     <span className="navbar-brand mr-auto">{title}</span>
-    {showPosition && <form className="form-inline">
-      <button
+    {showPosition
+      ? <form className="form-inline">
+        <button
+          type="button"
+          className="btn"
+          onClick={() => showModal('PositionSelector')}
+          style={{
+            backgroundColor: selectedPosition.color,
+            color: '#fff',
+          }}
+        >
+          {selectedPosition.abbreviation}
+        </button>
+      </form>
+      : <button
         type="button"
-        className="btn"
-        onClick={() => showModal('PositionSelector')}
-        style={{
-          backgroundColor: selectedPosition.color,
-          color: '#fff',
-        }}
+        className="btn btn-secondary"
+        onClick={() => { showModal('TypeAhead'); }}
       >
-        {selectedPosition.abbreviation}
+        <svg width="16" height="16" viewBox="5 0 65 65" className="search">
+          <circle cx="30" cy="30" r="15" />
+          <line x1="40" y1="40" x2="60" y2="60" />
+        </svg>
       </button>
-    </form>}
+    }
   </nav>
 );
 
