@@ -11,6 +11,7 @@ import measurables from '../measurables';
 import { Sorts } from '../types/domain';
 
 const pageSize = 20;
+const typeAheadPageSize = 5;
 
 const byName = (sort: Sort) => {
   if (sort === Sorts.DESC) {
@@ -78,6 +79,20 @@ const api: (Stores) => Api =
           hasNextPage: players.length > (beginIndex + pageSize),
           players: players.slice(beginIndex, beginIndex + pageSize).map(p => p.id),
         };
+      },
+      fetchTypeAheadResults: async (search: string) => {
+        const searchTerm = search.toUpperCase();
+        const results = [];
+        // eslint-disable-next-line no-restricted-syntax
+        for (const player of playerStore.values()) {
+          if (player.name.toUpperCase().includes(searchTerm)) {
+            results.push(player.id);
+            if (results.length >= typeAheadPageSize) {
+              break;
+            }
+          }
+        }
+        return results;
       },
     };
   };

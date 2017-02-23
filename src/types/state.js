@@ -3,6 +3,7 @@
 import type { PlayerId, PositionId, MeasurableId, Player, Position, Measurable, MeasurableKey, Percentiles, Comparisons, Sort } from './domain';
 
 type TypeAheadState = {
+  typeAheadSearching?: boolean,
   typeAheadResults?: Array<PlayerId>,
 };
 

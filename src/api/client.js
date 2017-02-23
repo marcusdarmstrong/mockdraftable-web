@@ -15,6 +15,8 @@ const clientApi: Api = {
     (await fetch(`/api/percentiles?id=${id}&pos=${pos}`)).json(),
   fetchSearchResults: async (opts: SearchOptions, pos: PositionId) =>
     (await fetch(`/api/search?opts=${JSON.stringify(opts)}&pos=${pos}`)).json(),
+  fetchTypeAheadResults: async (search: string) =>
+    (await fetch(`/api/typeahead?search=${search}`)).json(),
 };
 
 export default clientApi;

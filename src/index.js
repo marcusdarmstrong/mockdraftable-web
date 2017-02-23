@@ -55,6 +55,9 @@ init().then((stores) => {
   app.get('/api/percentiles', async (req: $Request, res) => {
     res.send(JSON.stringify(await api.fetchPercentiles(req.query.id, req.query.pos)));
   });
+  app.get('/api/typeahead', async (req: $Request, res) => {
+    res.send(JSON.stringify(await api.fetchTypeAheadResults(req.query.search)));
+  });
 
   const validPositions = positions.filter(pos => !!stores.positionEligibilityStore.get(pos.id));
   const posById = validPositions.reduce((a, pos) => Object.assign({}, a, { [pos.id]: pos }), {});

@@ -46,9 +46,9 @@ export default connect(state => ({
   searchOptions: state.searchOptions,
 }), (dispatch: Dispatch<Action>) => ({
   onLowChange: searchOptions => (newLow) => {
-    dispatch(selectNewSearch(Object.assign({}, searchOptions, { beginYear: newLow })));
+    dispatch(selectNewSearch(Object.assign({}, searchOptions, { beginYear: newLow, page: 1 })));
   },
   onHighChange: searchOptions => (newHigh) => {
-    dispatch(selectNewSearch(Object.assign({}, searchOptions, { endYear: newHigh })));
+    dispatch(selectNewSearch(Object.assign({}, searchOptions, { endYear: newHigh, page: 1 })));
   },
 }))(YearSelector);

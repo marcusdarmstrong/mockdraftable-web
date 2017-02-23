@@ -8,4 +8,5 @@ export interface Api {
   fetchComparisons: (id: PlayerId, pos: PositionId) => Promise<Comparisons>,
   fetchPercentiles: (id: PlayerId, pos: PositionId) => Promise<Percentiles>,
   fetchSearchResults: (opts: SearchOptions, pos: PositionId) => Promise<SearchResults>,
+  fetchTypeAheadResults: (search: string) => Promise<Array<PlayerId>>
 }

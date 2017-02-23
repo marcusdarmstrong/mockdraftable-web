@@ -16,6 +16,8 @@ export const LOAD_PERCENTILES = 'LOAD_PERCENTILES';
 export const UPDATE_SEARCH_RESULTS = 'UPDATE_SEARCH_RESULTS';
 export const UPDATE_IS_SEARCHING = 'UPDATE_IS_SEARCHING';
 export const UPDATE_MODAL_TYPE = 'UPDATE_MODAL_TYPE';
+export const UPDATE_TYPE_AHEAD_IS_SEARCHING = 'UPDATE_TYPE_AHEAD_IS_SEARCHING';
+export const UPDATE_TYPE_AHEAD_RESULTS = 'UPDATE_TYPE_AHEAD_RESULTS';
 
 export const updateSelectedPlayer = (id: PlayerId) => ({
   type: UPDATE_SELECTED_PLAYER,
@@ -77,6 +79,26 @@ export type UpdateModalTypeAction = {
   modalType: ModalType,
 };
 
+export const updateTypeAheadIsSearching = (isSearching: boolean) => ({
+  type: 'UPDATE_TYPE_AHEAD_IS_SEARCHING',
+  isSearching,
+});
+
+export type UpdateTypeAheadIsSearchingAction = {
+  type: 'UPDATE_TYPE_AHEAD_IS_SEARCHING',
+  isSearching: boolean,
+};
+
+export const updateTypeAheadResults = (results: Array<PlayerId>) => ({
+  type: 'UPDATE_TYPE_AHEAD_RESULTS',
+  results,
+});
+
+export type UpdateTypeAheadResultsAction = {
+  type: 'UPDATE_TYPE_AHEAD_RESULTS',
+  results: Array<PlayerId>,
+};
+
 export type LoadPlayerAction = {
   type: 'LOAD_PLAYER',
   player: Player,
@@ -125,6 +147,8 @@ export type Action =
   | UpdateSearchResultsAction
   | UpdateIsSearchingAction
   | UpdateModalTypeAction
+  | UpdateTypeAheadIsSearchingAction
+  | UpdateTypeAheadResultsAction
   | LoadPlayerAction
   | LoadComparisonsAction
   | LoadPercentilesAction
@@ -184,13 +208,13 @@ const doSearch = (options: SearchOptions, positionId: PositionId) =>
     );
     dispatch(updateSelectedPosition(positionId));
     dispatch(updateSearchResults(results));
+    dispatch(updateSearchOptions(options));
     dispatch(updateIsSearching(false));
   };
 
 export const selectNewSearch = (options: SearchOptions) =>
   async (dispatch: Dispatch<Action>, getState: () => State) => {
     await dispatch(doSearch(options, getState().selectedPositionId));
-    dispatch(updateSearchOptions(options));
   };
 
 export const selectPosition = (positionId: PositionId) =>
@@ -199,6 +223,16 @@ export const selectPosition = (positionId: PositionId) =>
     if (state.selectedPlayerId) {
       await dispatch(selectPlayer(state.selectedPlayerId, positionId));
     } else if (state.searchOptions) {
-      await dispatch(doSearch(state.searchOptions, positionId));
+      await dispatch(doSearch(Object.assign({}, state.searchOptions, { page: 1 }), positionId));
     }
   };
+
+export const selectTypeAheadSearch = (search: string) =>
+  async (dispatch: Dispatch<Action>, getState: () => State, api: Api) => {
+    dispatch(updateTypeAheadIsSearching(true));
+    const results = await api.fetchTypeAheadResults(search);
+    await Promise.all(results.map(id => dispatch(loadPlayerIfNeeded(id))));
+    dispatch(updateTypeAheadResults(results));
+    dispatch(updateTypeAheadIsSearching(false));
+  };
+

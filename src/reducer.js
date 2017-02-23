@@ -65,7 +65,28 @@ export default (previousState: State, action: Action): State => {
     });
   }
   if (action.type === actions.UPDATE_MODAL_TYPE) {
+    if (previousState.modalType === 'TypeAhead' && action.modalType === 'None') {
+      return Object.assign({}, previousState, {
+        modalType: action.modalType,
+        typeAheadResults: undefined,
+        typeAheadSearching: false,
+      });
+    }
     return Object.assign({}, previousState, { modalType: action.modalType });
+  }
+  if (action.type === actions.UPDATE_TYPE_AHEAD_IS_SEARCHING) {
+    if (action.isSearching) {
+      return Object.assign({}, previousState, {
+        typeAheadSearching: true,
+        typeAheadResults: [],
+      });
+    }
+    return Object.assign({}, previousState, {
+      typeAheadSearching: false,
+    });
+  }
+  if (action.type === actions.UPDATE_TYPE_AHEAD_RESULTS) {
+    return Object.assign({}, previousState, { typeAheadResults: action.results });
   }
   return previousState;
 };
