@@ -65,5 +65,17 @@ export default connect(
     {/* eslint-disable jsx-a11y/no-static-element-interactions */}
     {modalType !== 'None' && <div className="modal-backdrop show" onClick={() => closeModal()} />}
     {/* eslint-enable jsx-a11y/no-static-element-interactions */}
+    {!embed &&
+      <div className="col-12 col-md-6 offset-md-3">
+        <p className="text-muted text-center mt-2">
+          <small>
+            &copy; MockDraftable, 2011-2017.
+            <br />
+            MockDraftable is developed in the open by <a href="https://twitter.com/mockdraftable">Marcus Armstrong</a>, on <a href="https://github.com/marcusdarmstrong/mockdraftable-web">GitHub</a>.
+            Feel free to submit any issues you find with the site, or to contribute to the project.
+          </small>
+        </p>
+      </div>
+    }
   </div>);
 });

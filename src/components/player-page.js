@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
-
+import type { Dispatch } from 'redux';
+import type { Action } from '../actions';
 import AboutSection from './about-section';
 import MeasurablesSection from './measurables-section';
 import ComparisonSection from './comparison-section';
@@ -30,6 +31,6 @@ const PlayerPage = ({ showEmbedModal }: Props) =>
 ;
 /* eslint-enable jsx-a11y/no-static-element-interactions */
 
-export default connect(() => ({}), dispatch => ({
+export default connect(() => ({}), (dispatch: Dispatch<Action>) => ({
   showEmbedModal: () => { dispatch(updateModalType('Embed')); },
 }))(PlayerPage);
