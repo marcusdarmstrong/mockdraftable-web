@@ -81,11 +81,11 @@ const api: (Stores) => Api =
         };
       },
       fetchTypeAheadResults: async (search: string) => {
-        const searchTerm = search.toUpperCase();
+        const searchTerm = search.toUpperCase().replace(/\W/g, '');
         const results = [];
         // eslint-disable-next-line no-restricted-syntax
         for (const player of playerStore.values()) {
-          if (player.name.toUpperCase().includes(searchTerm)) {
+          if (player.name.toUpperCase().replace(/\W/g, '').includes(searchTerm)) {
             results.push(player.id);
             if (results.length >= typeAheadPageSize) {
               break;

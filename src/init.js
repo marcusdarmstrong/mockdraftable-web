@@ -34,7 +34,8 @@ const getPlayers = async () =>
         CONCAT(p.first_name, ' ', p.last_name) as name,
         draft_year as draft,
         id as key
-      from t_player p`,
+      from t_player p
+      where status = 0;`,
   );
 
 const getPositionsForPlayer = async key =>

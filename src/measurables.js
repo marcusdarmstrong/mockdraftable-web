@@ -29,15 +29,43 @@ const measurablesByKey = allMeasurables.reduce(
 
 const getByKey = (key: number) => measurablesByKey[key];
 
+const getFraction = (num) => {
+  switch (num) {
+    case 0.125:
+      return '\u215b';
+    case 0.25:
+      return '\u00bc';
+    case 0.375:
+      return '\u215c';
+    case 0.5:
+      return '\u00bd';
+    case 0.625:
+      return '\u215d';
+    case 0.75:
+      return '\u00be';
+    case 0.875:
+      return '\u215e';
+    default:
+      if (num !== 0) {
+        const numstr = num.toString();
+        return numstr.substr(1, numstr.length);
+      }
+  }
+  return '';
+};
+
 const format = (measurement: number, measurementType: ?Measurable) => {
   const unit = measurementType ? measurementType.unit : undefined;
   if (unit === Units.INCHES) {
     if (measurementType && measurementType.id === 'height') {
       const feet = Math.floor(measurement / 12);
-      const inches = measurement % 12;
-      return `${feet}' ${inches}"`;
+      const inches = Math.floor(measurement % 12);
+      const frac = getFraction(measurement % 1);
+      return `${feet}' ${inches}${frac}"`;
     }
-    return `${measurement}"`;
+    const inches = Math.floor(measurement);
+    const frac = getFraction(measurement % 1);
+    return `${inches}${frac}"`;
   } else if (unit === Units.SECONDS) {
     return `${measurement}s`;
   } else if (unit === Units.POUNDS) {
