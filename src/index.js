@@ -17,7 +17,6 @@ import batcher from './redux-batcher';
 import type { BatchedAction } from './redux-batcher';
 
 import type { State } from './types/state';
-import onError from './util/on-error';
 import layout from './layout';
 import App from './components/app';
 import reducer from './reducer';
@@ -27,6 +26,7 @@ import { measurablesByKey } from './measurables';
 import { positions } from './positions';
 import serverApi from './api/server';
 import bundles from './bundles.json';
+import { HttpRedirect } from './http';
 
 init().then((stores) => {
   const app = express();
@@ -73,7 +73,14 @@ init().then((stores) => {
       modalType: 'None',
       embed: false,
     }, applyMiddleware(batcher, thunk.withExtraArgument(api)));
-    await store.dispatch(await onError(translate, [])(req.path, req.query));
+    try {
+      await store.dispatch(await translate(req.path, req.query));
+    } catch (e) {
+      if (e instanceof HttpRedirect) {
+        res.redirect(e.code, e.location);
+        return;
+      }
+    }
     const jsBundleName = bundles.js_bundle_name || 'public/bundle.js';
     const cssBundleName = bundles.css_bundle_name || 'public/bundle.css';
     res.send(
