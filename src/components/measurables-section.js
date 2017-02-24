@@ -26,7 +26,7 @@ const MeasurablesSection = ({ measurements, percentiles, displayPosition, measur
   }));
   return (<div>
     <h3>Measurables</h3>
-    <h6 className="text-muted">Percentiles vs. {displayPosition.name}s</h6>
+    <h6 className="text-muted">Percentiles vs. {displayPosition.plural}</h6>
     <FullGraph percentiles={percentiles} color={displayPosition.color} />
     <Measurables measurements={zippedMeasurements} />
   </div>);

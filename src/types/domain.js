@@ -69,6 +69,7 @@ export type Position = {
   name: string,
   type: PositionType,
   color: Color,
+  plural: string,
 };
 
 export type Measurable = {
