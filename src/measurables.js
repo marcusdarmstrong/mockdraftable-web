@@ -54,26 +54,31 @@ const getFraction = (num) => {
   return '';
 };
 
-const format = (measurement: number, measurementType: ?Measurable) => {
+const format = (measurement: number, measurementType: ?Measurable, nonCombine: ?boolean) => {
   const unit = measurementType ? measurementType.unit : undefined;
+  let formatted = measurement.toString();
   if (unit === Units.INCHES) {
     if (measurementType && measurementType.id === 'height') {
       const feet = Math.floor(measurement / 12);
       const inches = Math.floor(measurement % 12);
       const frac = getFraction(measurement % 1);
-      return `${feet}' ${inches}${frac}"`;
+      formatted = `${feet}' ${inches}${frac}"`;
+    } else {
+      const inches = Math.floor(measurement);
+      const frac = getFraction(measurement % 1);
+      formatted = `${inches}${frac}"`;
     }
-    const inches = Math.floor(measurement);
-    const frac = getFraction(measurement % 1);
-    return `${inches}${frac}"`;
   } else if (unit === Units.SECONDS) {
-    return `${measurement}s`;
+    formatted = `${measurement}s`;
   } else if (unit === Units.POUNDS) {
-    return `${measurement} lbs`;
+    formatted = `${measurement} lbs`;
   } else if (unit === Units.REPS) {
-    return `${measurement} reps`;
+    formatted = `${measurement} reps`;
   }
-  return measurement;
+  if (nonCombine) {
+    formatted = `${formatted}*`;
+  }
+  return formatted;
 };
 
 export { getByKey, allMeasurables, measurablesByKey, format };

@@ -117,7 +117,7 @@ export default connect(
             const measurable = measurables[state.searchOptions.measurableId];
             const value = baseResult.player.measurements
               .find(measurement => measurement.measurableKey === measurable.key);
-            baseResult.measurable = value ? format(value.measurement, measurable) : '?';
+            baseResult.measurable = value ? format(value.measurement, measurable, value.source !== 1) : '?';
           }
           return baseResult;
         }),
