@@ -32,6 +32,8 @@ const ComparisonSection = ({ comparisons, selectedPosition, count }: Props) =>
         id={comp.player.id}
         percentiles={comp.percentiles}
         percentage={comp.score}
+        school={comp.player.school}
+        draft={comp.player.draft}
       />)}
     </div>
   </div>;

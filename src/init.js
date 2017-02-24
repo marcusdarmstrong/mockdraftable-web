@@ -30,12 +30,15 @@ const stores = {
 const getPlayers = async () =>
   db.many(
     `select
-        canonical_name as id,
+        p.canonical_name as id,
         CONCAT(p.first_name, ' ', p.last_name) as name,
-        draft_year as draft,
-        id as key
-      from t_player p
-      where status = 0;`,
+        p.draft_year as draft,
+        p.id as key,
+        s.name as school
+      from t_player as p
+      left join t_school as s
+        on p.school_id = s.id
+      where p.status = 0;`,
   );
 
 const getPositionsForPlayer = async key =>
@@ -71,6 +74,13 @@ const getBestMeasurementsForPlayer = async key => Object.values((await db.manyOr
     const retval = Object.assign({}, measurement, { measurableKey: measurement.measurable });
     delete retval.measurable;
     return retval;
+  }).sort((a, b) => {
+    if (a.measurableKey === 9) {
+      return 1;
+    } else if (b.measurableKey === 9) {
+      return -1;
+    }
+    return a.measurableKey - b.measurableKey;
   });
 
 const impliedPositions = (explicitPositionIds: Array<PositionKey>): PlayerPositions => {

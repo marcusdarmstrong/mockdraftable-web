@@ -58,10 +58,10 @@ const getPercentileAtPosition = (measurementStore: MeasurementStore) =>
 
     if (getByKey(measurableKey).unit === Units.SECONDS) {
       return Math.round(
-        (100 * (measurements.length - (countLower + (count / 2)))) / measurements.length,
+        (99 * (measurements.length - (countLower + (count / 2)))) / measurements.length,
       );
     }
-    return Math.round((100 * (countLower + (count / 2))) / measurements.length);
+    return Math.round((99 * (countLower + (count / 2))) / measurements.length);
   };
 
 export default getPercentileAtPosition;

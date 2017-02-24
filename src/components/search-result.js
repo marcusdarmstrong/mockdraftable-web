@@ -12,10 +12,12 @@ type Props = {
   id: string,
   percentiles: Array<MeasurablePercentile>,
   measurable?: string,
+  school?: string,
+  draft: number,
 };
 
 const SearchResult =
-  ({ name, playerPosition, selectedPosition, id, percentiles, measurable }: Props) =>
+  ({ name, playerPosition, selectedPosition, id, percentiles, measurable, school, draft }: Props) =>
     <a
       href={`/player/${id}?position=${selectedPosition.id}`}
       className="list-group-item list-group-item-action justify-content-between"
@@ -29,12 +31,14 @@ const SearchResult =
         >
           {playerPosition.abbreviation}
         </span>
+        <span className="align-middle ml-2">{school !== '' && `${school},`} {draft}</span>
       </div>
       <SparkGraph percentiles={percentiles} overlay={measurable} color={selectedPosition.color} />
     </a>;
 
 SearchResult.defaultProps = {
   measurable: undefined,
+  school: '',
 };
 
 export default SearchResult;

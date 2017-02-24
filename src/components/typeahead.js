@@ -36,6 +36,7 @@ const TypeAhead = ({ updateSearch, searchResults, positions }: Props) => <div>
           >
             {positions[p.positions.primary].abbreviation}
           </span>
+          <span className="align-middle ml-2">{p.school && `${p.school},`} {p.draft}</span>
         </div>
       </a>,
     )}

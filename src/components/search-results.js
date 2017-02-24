@@ -68,6 +68,8 @@ const SearchResults = ({
                 id={result.player.id}
                 percentiles={result.percentiles}
                 measurable={result.measurable}
+                school={result.player.school}
+                draft={result.player.draft}
               />
               :
               <SearchResult
@@ -77,6 +79,8 @@ const SearchResults = ({
                 selectedPosition={selectedPosition}
                 id={result.player.id}
                 percentiles={result.percentiles}
+                school={result.player.school}
+                draft={result.player.draft}
               />,
         )}
       </div>

@@ -12,19 +12,29 @@ type Props = {
   id: string,
   percentiles: Array<MeasurablePercentile>,
   percentage: number,
+  school?: string,
+  draft: number,
 };
 
-export default ({ name, playerPosition, selectedPosition, id, percentiles, percentage }: Props) =>
-  <a href={`/player/${id}`} className="list-group-item list-group-item-action justify-content-between">
-    <div className="list-group-item-text">
-      <h5 className="list-group-item-heading mb-0">{name}</h5>
-      <span
-        className="badge"
-        title={playerPosition.name}
-        style={{ backgroundColor: playerPosition.color, color: '#fff' }}
-      >
-        {playerPosition.abbreviation}
-      </span>
-    </div>
-    <SparkGraph percentiles={percentiles} overlay={`${percentage}%`} color={selectedPosition.color} />
-  </a>;
+const Comparison =
+  ({ name, playerPosition, selectedPosition, id, percentiles, percentage, school, draft }: Props) =>
+    <a href={`/player/${id}`} className="list-group-item list-group-item-action justify-content-between">
+      <div className="list-group-item-text">
+        <h5 className="list-group-item-heading mb-0">{name}</h5>
+        <span
+          className="badge"
+          title={playerPosition.name}
+          style={{ backgroundColor: playerPosition.color, color: '#fff' }}
+        >
+          {playerPosition.abbreviation}
+        </span>
+        <span className="align-middle ml-2">{school !== '' && `${school},`} {draft}</span>
+      </div>
+      <SparkGraph percentiles={percentiles} overlay={`${percentage}%`} color={selectedPosition.color} />
+    </a>;
+
+Comparison.defaultProps = {
+  school: '',
+};
+
+export default Comparison;
