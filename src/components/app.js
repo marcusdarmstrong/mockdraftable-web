@@ -15,6 +15,7 @@ import Typeahead from './typeahead';
 import type { ModalType } from '../types/state';
 import { updateModalType } from '../actions';
 import EmbededPlayer from './embeded-player';
+import EmbedCode from './embed-code';
 
 type Props = {
   isPlayerPage: boolean,
@@ -40,14 +41,21 @@ export default connect(
   if (embed) {
     return <EmbededPlayer />;
   }
+  let title = 'Select a position';
+  if (modalType === 'TypeAhead') {
+    title = 'Search for a player by name';
+  } else if (modalType === 'Embed') {
+    title = 'Embed this player';
+  }
   return (<div>
     {modalType !== 'None' && (
       <Modal
-        title={modalType === 'TypeAhead' ? 'Search for a player by name' : 'Select a position'}
+        title={title}
         closeModal={closeModal}
       >
         {modalType === 'PositionSelector' && <PositionSelector />}
         {modalType === 'TypeAhead' && <Typeahead />}
+        {modalType === 'Embed' && <EmbedCode />}
       </Modal>
     )}
     <Nav />

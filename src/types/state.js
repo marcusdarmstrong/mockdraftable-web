@@ -7,7 +7,7 @@ type TypeAheadState = {
   typeAheadResults?: Array<PlayerId>,
 };
 
-export type ModalType = 'PositionSelector' | 'TypeAhead' | 'None';
+export type ModalType = 'PositionSelector' | 'TypeAhead' | 'Embed' | 'None';
 
 export type SearchOptions = {
   beginYear: number,
