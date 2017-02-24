@@ -5,7 +5,7 @@ import type { ThunkAction } from 'redux-thunk';
 
 import type { Player, PlayerId, PositionId, Comparisons, Percentiles } from './types/domain';
 import type { Api } from './types/api';
-import type { State, SearchOptions, SearchResults, ModalType } from './types/state';
+import type { State, SearchOptions, SearchResults, ModalType, EmbedPage } from './types/state';
 
 export const UPDATE_SELECTED_PLAYER = 'UPDATE_SELECTED_PLAYER';
 export const UPDATE_SELECTED_POSITION = 'UPDATE_SELECTED_POSITION';
@@ -18,6 +18,7 @@ export const UPDATE_IS_SEARCHING = 'UPDATE_IS_SEARCHING';
 export const UPDATE_MODAL_TYPE = 'UPDATE_MODAL_TYPE';
 export const UPDATE_TYPE_AHEAD_IS_SEARCHING = 'UPDATE_TYPE_AHEAD_IS_SEARCHING';
 export const UPDATE_TYPE_AHEAD_RESULTS = 'UPDATE_TYPE_AHEAD_RESULTS';
+export const UPDATE_EMBED_PAGE = 'UPDATE_EMBED_PAGE';
 
 export const updateSelectedPlayer = (id: PlayerId) => ({
   type: UPDATE_SELECTED_PLAYER,
@@ -99,6 +100,16 @@ export type UpdateTypeAheadResultsAction = {
   results: Array<PlayerId>,
 };
 
+export const updateEmbedPage = (state: EmbedPage) => ({
+  type: 'UPDATE_EMBED_PAGE',
+  state,
+});
+
+export type UpdateEmbedPageAction = {
+  type: 'UPDATE_EMBED_PAGE',
+  state: EmbedPage,
+};
+
 export type LoadPlayerAction = {
   type: 'LOAD_PLAYER',
   player: Player,
@@ -149,6 +160,7 @@ export type Action =
   | UpdateModalTypeAction
   | UpdateTypeAheadIsSearchingAction
   | UpdateTypeAheadResultsAction
+  | UpdateEmbedPageAction
   | LoadPlayerAction
   | LoadComparisonsAction
   | LoadPercentilesAction

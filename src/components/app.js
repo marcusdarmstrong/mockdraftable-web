@@ -14,6 +14,7 @@ import SearchPage from './search-page';
 import Typeahead from './typeahead';
 import type { ModalType } from '../types/state';
 import { updateModalType } from '../actions';
+import EmbededPlayer from './embeded-player';
 
 type Props = {
   isPlayerPage: boolean,
@@ -21,17 +22,25 @@ type Props = {
   isHomePage: boolean,
   modalType: ModalType,
   closeModal: () => void,
+  embed: boolean,
 };
 
-export default connect(state => ({
-  isPlayerPage: !!state.selectedPlayerId,
-  isSearchPage: !!state.searchOptions,
-  isHomePage: !state.selectedPlayerId && !state.searchOptions,
-  modalType: state.modalType,
-}), (dispatch: Dispatch<Action>) => ({
-  closeModal: () => dispatch(updateModalType('None')),
-}))(({ isPlayerPage, isSearchPage, isHomePage, modalType, closeModal }: Props) =>
-  <div>
+export default connect(
+  state => ({
+    isPlayerPage: !!state.selectedPlayerId,
+    isSearchPage: !!state.searchOptions,
+    isHomePage: !state.selectedPlayerId && !state.searchOptions,
+    embed: state.embed,
+    modalType: state.modalType,
+  }),
+  (dispatch: Dispatch<Action>) => ({
+    closeModal: () => dispatch(updateModalType('None')),
+  }),
+)(({ isPlayerPage, isSearchPage, isHomePage, modalType, closeModal, embed }: Props) => {
+  if (embed) {
+    return <EmbededPlayer />;
+  }
+  return (<div>
     {modalType !== 'None' && (
       <Modal
         title={modalType === 'TypeAhead' ? 'Search for a player by name' : 'Select a position'}
@@ -48,5 +57,5 @@ export default connect(state => ({
     {/* eslint-disable jsx-a11y/no-static-element-interactions */}
     {modalType !== 'None' && <div className="modal-backdrop show" onClick={() => closeModal()} />}
     {/* eslint-enable jsx-a11y/no-static-element-interactions */}
-  </div>,
-);
+  </div>);
+});

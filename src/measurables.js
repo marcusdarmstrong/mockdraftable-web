@@ -32,7 +32,7 @@ const getByKey = (key: number) => measurablesByKey[key];
 const format = (measurement: number, measurementType: ?Measurable) => {
   const unit = measurementType ? measurementType.unit : undefined;
   if (unit === Units.INCHES) {
-    if (measurementType.id === 'height') {
+    if (measurementType && measurementType.id === 'height') {
       const feet = Math.floor(measurement / 12);
       const inches = measurement % 12;
       return `${feet}' ${inches}"`;

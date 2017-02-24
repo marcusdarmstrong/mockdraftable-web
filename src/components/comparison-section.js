@@ -17,13 +17,14 @@ type Comparable = {
 type Props = {
   comparisons: Array<Comparable>,
   selectedPosition: Position,
+  count?: number,
 };
 
-const ComparisonSection = ({ comparisons, selectedPosition }: Props) =>
+const ComparisonSection = ({ comparisons, selectedPosition, count }: Props) =>
   <div>
     <h3>Comparisons</h3>
     <div className="list-group">
-      {comparisons && comparisons.map(comp => <Comparison
+      {comparisons && comparisons.slice(0, count).map(comp => <Comparison
         key={comp.player.key}
         name={comp.player.name}
         playerPosition={comp.playerPosition}
@@ -34,6 +35,10 @@ const ComparisonSection = ({ comparisons, selectedPosition }: Props) =>
       />)}
     </div>
   </div>;
+
+ComparisonSection.defaultProps = {
+  count: 10,
+};
 
 export default connect(state => ({
   selectedPosition: state.positions[state.selectedPositionId],

@@ -88,5 +88,8 @@ export default (previousState: State, action: Action): State => {
   if (action.type === actions.UPDATE_TYPE_AHEAD_RESULTS) {
     return Object.assign({}, previousState, { typeAheadResults: action.results });
   }
+  if (action.type === actions.UPDATE_EMBED_PAGE) {
+    return Object.assign({}, previousState, { embed: true, embedPage: action.state });
+  }
   return previousState;
 };

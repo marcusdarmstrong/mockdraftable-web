@@ -36,11 +36,18 @@ type PlayerPageState = {
   selectedPlayerId?: PlayerId,
 };
 
+export type EmbedPage = 'GRAPH' | 'COMPARISONS' | 'MEASURABLES';
+
+type EmbedState = {
+  embed: boolean,
+  embedPage?: EmbedPage,
+}
+
 type UiState = {
   modalType: ModalType,
 } & TypeAheadState;
 
-type AppState = SearchPageState & PlayerPageState & GlobalAppState;
+type AppState = SearchPageState & PlayerPageState & GlobalAppState & EmbedState;
 
 type Domain = {
   players: { [key: PlayerId]: Player },

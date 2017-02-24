@@ -71,6 +71,7 @@ init().then((stores) => {
       players: {},
       selectedPositionId: 'ATH',
       modalType: 'None',
+      embed: false,
     }, applyMiddleware(batcher, thunk.withExtraArgument(api)));
     await store.dispatch(await onError(translate, [])(req.path, req.query));
     const jsBundleName = bundles.js_bundle_name || 'public/bundle.js';

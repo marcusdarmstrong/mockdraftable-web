@@ -2,7 +2,7 @@
 
 import { Sorts } from './types/domain';
 import { HttpRedirect, HttpError, throw404 } from './http';
-import { selectPlayer, updateSelectedPosition, selectNewSearch } from './actions';
+import { selectPlayer, updateSelectedPosition, selectNewSearch, updateEmbedPage } from './actions';
 import getPlayerByOldId from './services/players/get-player-by-old-id';
 import type { Action } from './actions';
 
@@ -43,7 +43,19 @@ export default async (path: string, args: {[string]: string}): Promise<Action[]>
 
     return [selectPlayer(segments[2], args.position)];
   } else if (path.startsWith('/embed/')) {
-    // TODO
+    const segments = path.split('/');
+    if (segments.length < 3) {
+      throw new HttpError(404, path);
+    }
+
+    let page = 'GRAPH';
+    if (args.page === 'MEASURABLES') {
+      page = 'MEASURABLES';
+    } else if (args.page === 'COMPARISONS') {
+      page = 'COMPARISONS';
+    }
+
+    return [selectPlayer(segments[2], args.position), updateEmbedPage(page)];
   } else if (path.startsWith('/players/')) {
     throw new HttpRedirect(301, '/search');
   } else if (path.startsWith('/player_embed/')) {
