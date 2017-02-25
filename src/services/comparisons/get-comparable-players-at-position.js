@@ -50,12 +50,12 @@ const zscore = (measurement, mean, stddev) => stddev === 0 ? 0 : (measurement - 
 
 const scale = distance => round(Math.max(1, 100 * Math.min((1 / distance) ** (1 / 7), 1)) - 1, 1);
 
-const keyedMeasurements = measurements =>
-  measurements.reduce(
-    (accum, { measurableKey, measurement }) =>
-      Object.assign({ [measurableKey]: measurement }, accum),
-    {},
-  );
+const keyedMeasurements = (measurements) => {
+  const keyed = {};
+  measurements.forEach(({ measurableKey, measurement }) => { keyed[measurableKey] = measurement; });
+  return keyed;
+};
+
 
 const distance = (p1meas, p2meas, positionStats) =>
   (allMeasurables).reduce(
