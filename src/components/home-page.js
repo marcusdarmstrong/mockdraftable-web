@@ -13,7 +13,7 @@ export default () => <div className="window container-fluid col-12 col-lg-10 off
         you discover.
       </p>
       <p>
-        <a href="/search" className="btn btn-lg btn-success btn-block">Search the Database &raquo;</a>
+        <a href="/search" className="btn btn-lg btn-success btn-block">Explore the Database &raquo;</a>
       </p>
       <hr className="my-4" />
       <TypeAhead />
