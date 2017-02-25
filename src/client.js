@@ -25,7 +25,13 @@ window.onpopstate = () => {
   const args = JSON.parse(`{"${data}"}`);
   if (document.location.pathname === '/search') {
     store.dispatch(updateSelectedPosition(args.position || 'ATH'));
-    store.dispatch(selectNewSearch(Object.assign({}, searchDefaults, args)));
+    store.dispatch(selectNewSearch({
+      beginYear: Number(args.beginYear) || searchDefaults.beginYear,
+      endYear: Number(args.endYear) || searchDefaults.endYear,
+      page: Number(args.page) || searchDefaults.page,
+      sortOrder: args.sort || searchDefaults.sortOrder,
+      measurableId: args.measurable,
+    }));
   }
 };
 
