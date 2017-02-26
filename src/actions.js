@@ -210,7 +210,7 @@ export const selectPlayer = (id: PlayerId, positionIdOverride: ?PositionId) =>
     dispatch(updateSelectedPlayer(id));
   };
 
-const doSearch = (options: SearchOptions, positionId: PositionId) =>
+export const doSearch = (options: SearchOptions, positionId: PositionId) =>
   async (dispatch: Dispatch<Action>, getState: () => State, api: Api) => {
     dispatch(updateIsSearching(true));
     const results = await api.fetchSearchResults(options, positionId);

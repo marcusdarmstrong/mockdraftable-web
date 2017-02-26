@@ -108,12 +108,17 @@ const impliedPositions = (explicitPositionIds: Array<PositionKey>): PlayerPositi
 };
 
 export default async () => {
+  console.time('Player Load');
+
   await Promise.all((await getPlayers()).map(async (player) => {
     playerStore.set(player.id, Object.assign({}, player, {
       positions: impliedPositions(await getPositionsForPlayer(player.key)),
       measurements: await getBestMeasurementsForPlayer(player.key),
     }));
   }));
+
+  console.timeEnd('Player Load');
+  console.time('Stats Compute');
 
   const positionCounters: Map<PositionId, number> = new Map();
   const measurementCounters: Map<PositionId, Map<MeasurableKey, number>> = new Map();
@@ -200,5 +205,6 @@ export default async () => {
     statisticsStore.set(positionId, positionStatisticsStore);
   });
 
+  console.timeEnd('Stats Compute');
   return stores;
 };
