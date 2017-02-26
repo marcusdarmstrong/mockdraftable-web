@@ -16,10 +16,15 @@ type Props = {
 };
 
 const MeasurablesSection = ({ measurements, percentiles, displayPosition, measurables }: Props) => {
-  const keyedMeasurements = measurements.reduce((a, { measurableKey, measurement, source }) =>
-    Object.assign({}, a, {
-      [measurableKey]: format(measurement, measurables[measurableKey], source !== 1),
-    }),
+  let nonCombine = false;
+  const keyedMeasurements = measurements.reduce(
+    (accum, { measurableKey, measurement, source }) => {
+      const isNonCombine = source !== 1;
+      nonCombine = nonCombine || isNonCombine;
+      return Object.assign({}, accum, {
+        [measurableKey]: format(measurement, measurables[measurableKey], isNonCombine),
+      });
+    },
     {},
   );
   const zippedMeasurements = percentiles.map(mwp => ({
@@ -31,7 +36,9 @@ const MeasurablesSection = ({ measurements, percentiles, displayPosition, measur
     <h6 className="text-muted">Percentiles vs. {displayPosition.plural}</h6>
     <FullGraph percentiles={percentiles} color={displayPosition.color} />
     <Measurables measurements={zippedMeasurements} />
-    <p className="text-center"><small>* Measurement from source other than the NFL Combine</small></p>
+    {nonCombine &&
+      <p className="text-center"><small>* Measurement from source other than the NFL Combine</small></p>
+    }
   </div>);
 };
 
