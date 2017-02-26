@@ -86,7 +86,7 @@ const SearchResults = ({
       </div>
     }
     {players.length !== 0 && (<SearchPaging
-      currentPage={searchOptions.page}
+      currentPage={Number(searchOptions.page)}
       hasNextPage={hasNextPage}
       selectPage={selectPage(searchOptions)}
     />)}
