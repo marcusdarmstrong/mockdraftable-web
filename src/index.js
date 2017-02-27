@@ -12,6 +12,7 @@ import { createStore, applyMiddleware } from 'redux';
 import type { Store } from 'redux';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
+import responseTime from 'response-time';
 
 import batcher from './redux-batcher';
 import type { BatchedAction } from './redux-batcher';
@@ -28,18 +29,37 @@ import serverApi from './api/server';
 import bundles from './bundles.json';
 import { HttpRedirect } from './http';
 
+
+const isRequestNotHttps = req => req.headers['x-forwarded-proto'] !== 'https';
+const requireHttps = isNotHttps => (req, res, next) => {
+  if (isNotHttps(req)) {
+    res.redirect(301, `https://${req.hostname}${req.url}`);
+  } else {
+    next();
+  }
+};
+
+
 init().then((stores) => {
   const app = express();
 
   const api = serverApi(stores);
 
   app.set('x-powered-by', false);
+  app.use(responseTime());
   app.set('port', (process.env.PORT || 5000));
   app.use(compression());
+
+  const env = process.env.NODE_ENV || 'development';
+  if (env === 'production') {
+    app.use(requireHttps(isRequestNotHttps));
+  }
+
   app.use('/public', express.static(`${__dirname}/../public`, {
     maxAge: 1000 * 60 * 60 * 24 * 365, // one year
   }));
   app.use(favicon(`${__dirname}/../public/favicon.ico`));
+
   app.get('/api/search', async (req: $Request, res) => {
     res.send(JSON.stringify(await api.fetchSearchResults(
       JSON.parse(req.query.opts),
