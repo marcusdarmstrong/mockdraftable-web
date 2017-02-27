@@ -59,8 +59,8 @@ init().then((stores) => {
     res.send(JSON.stringify(await api.fetchTypeAheadResults(req.query.search)));
   });
 
-  app.get('/.well-known/acme-challenge/XH4Lt6PqOCVWwifNvHuR90st0fyShGjWaBDDwoUjrJc', (req: $Request, res) => {
-    res.send('XH4Lt6PqOCVWwifNvHuR90st0fyShGjWaBDDwoUjrJc.i8Z5Sr5IA3VD1phPjT0oWE2bVrnLwpaGPE9KjcK9M_I');
+  app.get('/.well-known/acme-challenge/sJI2fruuWtN3goKIyUSp25S4F7O8dbs0d7baPjPkSEM', (req: $Request, res) => {
+    res.send('sJI2fruuWtN3goKIyUSp25S4F7O8dbs0d7baPjPkSEM.i8Z5Sr5IA3VD1phPjT0oWE2bVrnLwpaGPE9KjcK9M_I');
   });
 
   const validPositions = positions.filter(pos => !!stores.positionEligibilityStore.get(pos.id));
