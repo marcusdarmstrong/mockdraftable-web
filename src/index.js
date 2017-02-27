@@ -59,7 +59,7 @@ init().then((stores) => {
     res.send(JSON.stringify(await api.fetchTypeAheadResults(req.query.search)));
   });
 
-  app.get('.well-known/acme-challenge/XH4Lt6PqOCVWwifNvHuR90st0fyShGjWaBDDwoUjrJc', (req: $Request, res) => {
+  app.get('/.well-known/acme-challenge/XH4Lt6PqOCVWwifNvHuR90st0fyShGjWaBDDwoUjrJc', (req: $Request, res) => {
     res.send('XH4Lt6PqOCVWwifNvHuR90st0fyShGjWaBDDwoUjrJc.i8Z5Sr5IA3VD1phPjT0oWE2bVrnLwpaGPE9KjcK9M_I');
   });
 
