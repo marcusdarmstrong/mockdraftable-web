@@ -28,13 +28,13 @@ const Comparison =
         >
           {playerPosition.abbreviation}
         </span>
-        <span className="align-middle ml-2">{school !== '' && `${school},`} {draft}</span>
+        <span className="align-middle ml-2">{school !== undefined && `${school},`} {draft}</span>
       </div>
       <SparkGraph percentiles={percentiles} overlay={`${percentage}%`} color={selectedPosition.color} />
     </a>;
 
 Comparison.defaultProps = {
-  school: '',
+  school: undefined,
 };
 
 export default Comparison;

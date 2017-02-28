@@ -31,14 +31,14 @@ const SearchResult =
         >
           {playerPosition.abbreviation}
         </span>
-        <span className="align-middle ml-2">{school !== '' && `${school},`} {draft}</span>
+        <span className="align-middle ml-2">{school !== undefined && `${school},`} {draft}</span>
       </div>
       <SparkGraph percentiles={percentiles} overlay={measurable} color={selectedPosition.color} />
     </a>;
 
 SearchResult.defaultProps = {
   measurable: undefined,
-  school: '',
+  school: undefined,
 };
 
 export default SearchResult;
