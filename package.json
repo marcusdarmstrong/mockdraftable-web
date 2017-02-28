@@ -20,7 +20,7 @@
     "build:css:dev": "node-sass --importer node_modules/node-sass-module-importer/index.js --output-style expanded sass/index.scss | hashmark -s 'public/bundle-{hash}.css' -n css_bundle_name -l 8 -m './lib/bundles.json'",
     "postinstall": "npm run build",
     "flow": "flow",
-    "heroku-postbuild": "npm prune"
+    "heroku-postbuild": "npm prune --production"
   },
   "repository": {
     "type": "git",
