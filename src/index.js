@@ -13,6 +13,7 @@ import type { Store } from 'redux';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import responseTime from 'response-time';
+import cookieParser from 'cookie-parser';
 
 import batcher from './redux-batcher';
 import type { BatchedAction } from './redux-batcher';
@@ -31,7 +32,7 @@ import { HttpRedirect } from './http';
 
 
 const isRequestNotHttps = req => req.headers['x-forwarded-proto'] !== 'https';
-const requireHttps = isNotHttps => (req, res, next) => {
+const requireHttps = isNotHttps => (req: $Request, res, next) => {
   if (isNotHttps(req)) {
     res.redirect(301, `https://${req.hostname}${req.url}`);
   } else {
@@ -54,6 +55,8 @@ init().then((stores) => {
   if (env === 'production') {
     app.use(requireHttps(isRequestNotHttps));
   }
+
+  app.use(cookieParser());
 
   app.use('/public', express.static(`${__dirname}/../public`, {
     maxAge: 1000 * 60 * 60 * 24 * 365, // one year
