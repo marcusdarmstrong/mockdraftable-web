@@ -3,7 +3,7 @@
 import { allMeasurables } from '../../measurables';
 import round from '../../util/round';
 
-import type { PlayerId, Id, PlayerStore, PositionEligibilityStore, PositionId, StatisticsStore, Measurable } from '../../types/domain';
+import type { PlayerId, Id, PlayerStore, PositionEligibilityStore, PositionId, StatisticsStore, Measurable, MeasurableKey } from '../../types/domain';
 
 type FixedSizeArrayNode<T> = {
   value: T,
@@ -50,7 +50,7 @@ const zscore = (measurement, mean, stddev) => stddev === 0 ? 0 : (measurement - 
 
 const scale = distance => round(Math.max(1, 100 * Math.min((1 / distance) ** (1 / 7), 1)) - 1, 1);
 
-const keyedMeasurements = (measurements) => {
+const keyedMeasurements = (measurements): { [MeasurableKey]: number } => {
   const keyed = {};
   measurements.forEach(({ measurableKey, measurement }) => { keyed[measurableKey] = measurement; });
   return keyed;

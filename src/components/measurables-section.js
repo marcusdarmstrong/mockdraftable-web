@@ -7,6 +7,7 @@ import type { Position, Measurement, Measurable, MeasurableKey } from '../types/
 import FullGraph from './graphs/full-graph';
 import Measurables from './measurables';
 import { format } from '../measurables';
+import type { State } from '../types/state';
 
 type Props = {
   percentiles: Array<MeasurablePercentile>,
@@ -17,7 +18,7 @@ type Props = {
 
 const MeasurablesSection = ({ measurements, percentiles, displayPosition, measurables }: Props) => {
   let nonCombine = false;
-  const keyedMeasurements = measurements.reduce(
+  const keyedMeasurements: { [MeasurableKey]: string } = measurements.reduce(
     (accum, { measurableKey, measurement, source }) => {
       const isNonCombine = source !== 1;
       nonCombine = nonCombine || isNonCombine;
@@ -42,7 +43,7 @@ const MeasurablesSection = ({ measurements, percentiles, displayPosition, measur
   </div>);
 };
 
-export default connect(state => ({
+export default connect((state: State) => ({
   displayPosition: state.positions[state.selectedPositionId],
   measurements: state.players[state.selectedPlayerId].measurements,
   measurables: state.measurables,

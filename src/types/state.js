@@ -41,7 +41,7 @@ export type EmbedPage = 'GRAPH' | 'COMPARISONS' | 'MEASURABLES';
 type EmbedState = {
   embed: boolean,
   embedPage?: EmbedPage,
-}
+};
 
 type UiState = {
   modalType: ModalType,

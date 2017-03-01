@@ -4,6 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import type { Dispatch } from 'redux';
 import type { Player, PositionId, Position } from '../types/domain';
+import type { State } from '../types/state';
 import type { Action } from '../actions';
 import { selectTypeAheadSearch } from '../actions';
 
@@ -18,7 +19,7 @@ const TypeAhead = ({ updateSearch, searchResults, positions }: Props) => <div>
     type="text"
     className="form-control form-control-lg"
     placeholder="Player Name..."
-    onChange={event => updateSearch(event.target.value)}
+    onChange={(event: SyntheticInputEvent) => updateSearch(event.target.value)}
   />
   <div className="list-group mt-2">
     {searchResults.map(p =>
@@ -44,7 +45,7 @@ const TypeAhead = ({ updateSearch, searchResults, positions }: Props) => <div>
 </div>;
 
 export default connect(
-  state => ({
+  (state: State) => ({
     searchResults: state.typeAheadResults
       ? state.typeAheadResults.map(id => state.players[id])
       : [],

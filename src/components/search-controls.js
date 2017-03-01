@@ -27,7 +27,8 @@ const SearchControls = ({
       id="measurable-selector"
       className="custom-select"
       onChange={
-        ({ target }) => selectMeasurable((target.value === defaultVal) ? undefined : target.value)
+        ({ target }: SyntheticInputEvent) =>
+          selectMeasurable((target.value === defaultVal) ? undefined : target.value)
       }
       defaultValue={selectedMeasurable || defaultVal}
     >

@@ -6,6 +6,7 @@ import React from 'react';
 import Comparison from './comparison';
 import type { Player, Position } from '../types/domain';
 import type { MeasurablePercentile } from '../types/graphing';
+import type { State } from '../types/state';
 
 type Comparable = {
   player: Player,
@@ -42,7 +43,7 @@ ComparisonSection.defaultProps = {
   count: 10,
 };
 
-export default connect(state => ({
+export default connect((state: State) => ({
   selectedPosition: state.positions[state.selectedPositionId],
   comparisons:
     state.comparisons[state.selectedPlayerId][state.selectedPositionId]

@@ -31,7 +31,7 @@ import bundles from './bundles.json';
 import { HttpRedirect } from './http';
 
 
-const isRequestNotHttps = req => req.headers['x-forwarded-proto'] !== 'https';
+const isRequestNotHttps = (req: $Request) => req.header('x-forwarded-proto') !== 'https';
 const requireHttps = isNotHttps => (req: $Request, res, next) => {
   if (isNotHttps(req)) {
     res.redirect(301, `https://${req.hostname}${req.url}`);
@@ -104,8 +104,8 @@ init().then((stores) => {
         return;
       }
     }
-    const jsBundleName = bundles.js_bundle_name || 'public/bundle.js';
-    const cssBundleName = bundles.css_bundle_name || 'public/bundle.css';
+    const jsBundleName: string = bundles.js_bundle_name || 'public/bundle.js';
+    const cssBundleName: string = bundles.css_bundle_name || 'public/bundle.css';
     res.send(
       layout(
         'MockDraftable',
@@ -120,4 +120,4 @@ init().then((stores) => {
   const port = app.get('port').toString();
   app.listen(port);
   console.log(`MockDraftable now listening on ${port}`);
-}).catch((e) => { console.log(e.stack); });
+}).catch((e: Error) => { console.log(e.stack); });

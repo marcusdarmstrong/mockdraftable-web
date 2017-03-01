@@ -14,26 +14,5 @@
  */
 
 declare module 'md5' {
-  declare module.exports: any;
-}
-
-/**
- * We include stubs for each file inside this npm package in case you need to
- * require those files directly. Feel free to delete any files that aren't
- * needed.
- */
-declare module 'md5/md5' {
-  declare module.exports: any;
-}
-
-declare module 'md5/test' {
-  declare module.exports: any;
-}
-
-// Filename aliases
-declare module 'md5/md5.js' {
-  declare module.exports: $Exports<'md5/md5'>;
-}
-declare module 'md5/test.js' {
-  declare module.exports: $Exports<'md5/test'>;
+  declare module.exports: (string | Buffer) => string;
 }

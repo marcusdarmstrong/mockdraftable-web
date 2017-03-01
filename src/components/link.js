@@ -6,7 +6,7 @@ export type Props = {
   href: string,
   title?: string,
   className?: string,
-  children: any,
+  children: Element<any>,
   callback: (string) => void,
 };
 

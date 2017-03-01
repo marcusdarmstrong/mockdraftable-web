@@ -6,7 +6,7 @@ import type { Dispatch } from 'redux';
 import MultiSlider from 'multi-slider';
 
 import type { Action } from '../actions';
-import type { SearchOptions } from '../types/state';
+import type { State, SearchOptions } from '../types/state';
 import { selectNewSearch } from '../actions';
 
 type Props = {
@@ -20,7 +20,7 @@ type Props = {
 };
 
 const YearSelector = ({ min, max, low, high, onLowChange, onHighChange, searchOptions }: Props) => {
-  const handler = (newvals) => {
+  const handler = (newvals: [number, number, number]) => {
     const old0 = low - min;
     if (old0 !== newvals[0]) {
       onLowChange(searchOptions)(min + newvals[0]);
@@ -40,9 +40,9 @@ const YearSelector = ({ min, max, low, high, onLowChange, onHighChange, searchOp
   </div>);
 };
 
-export default connect(state => ({
-  low: state.searchOptions.beginYear,
-  high: state.searchOptions.endYear,
+export default connect((state: State) => ({
+  low: state.searchOptions && state.searchOptions.beginYear,
+  high: state.searchOptions && state.searchOptions.endYear,
   searchOptions: state.searchOptions,
 }), (dispatch: Dispatch<Action>) => ({
   onLowChange: searchOptions => (newLow) => {

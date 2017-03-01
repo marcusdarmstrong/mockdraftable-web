@@ -1,7 +1,7 @@
 // @flow
 
 import { Units } from './types/domain';
-import type { Measurable } from './types/domain';
+import type { Measurable, MeasurableKey } from './types/domain';
 
 const measurable = (id, key, name, unit): Measurable => ({ id, key, name, unit });
 
@@ -22,7 +22,7 @@ const allMeasurables = [
   measurable('60ss', 14, '60 Yard Shuttle', Units.SECONDS),
 ];
 
-const measurablesByKey = allMeasurables.reduce(
+const measurablesByKey: { [MeasurableKey]: Measurable } = allMeasurables.reduce(
   (accum, meas) => Object.assign({}, accum, { [meas.key]: meas }),
   {},
 );

@@ -5,7 +5,7 @@ import type { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import type { Action } from '../actions';
 import type { Position } from '../types/domain';
-import type { ModalType } from '../types/state';
+import type { State, ModalType } from '../types/state';
 import Page from './page';
 import { updateModalType } from '../actions';
 
@@ -19,7 +19,7 @@ type Props = {
   showModal: ModalType => void,
 };
 
-const constructUrl = (state) => {
+const constructUrl = (state: State) => {
   if (state.selectedPlayerId) {
     let url = `/player/${state.selectedPlayerId}`;
     if (state.selectedPositionId !== state.players[state.selectedPlayerId].positions.primary) {
@@ -74,7 +74,7 @@ const Nav = ({ title, selectedPosition, url, showPosition, showModal, showSearch
 );
 
 export default connect(
-  state => ({
+  (state: State) => ({
     title: state.selectedPlayerId ? state.players[state.selectedPlayerId].name : 'MockDraftable',
     selectedPosition: state.positions[state.selectedPositionId],
     url: constructUrl(state),

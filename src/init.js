@@ -5,10 +5,13 @@ import { getById, getByKey, getDefaultPosition } from './positions';
 import { getByKey as getMeasurableByKey } from './measurables';
 import { Sorts, defaultSort } from './types/domain';
 import type {
+  Player,
+  PlayerKey,
   PositionId,
   PositionKey,
   PlayerPositions,
   MeasurableKey,
+  Measurement,
   PlayerStore,
   MeasurementStore,
   StatisticsStore,
@@ -27,7 +30,7 @@ const stores = {
   positionEligibilityStore,
 };
 
-const getPlayers = async () =>
+const getPlayers = async (): Promise<Array<Player>> =>
   db.many(
     `select
         p.canonical_name as id,
@@ -41,7 +44,7 @@ const getPlayers = async () =>
       where p.status = 0;`,
   );
 
-const getPositionsForPlayer = async key =>
+const getPositionsForPlayer: PlayerKey => Promise<Array<PositionKey>> = async key =>
   (await db.manyOrNone(
     `select
         position_id as position_key
@@ -50,31 +53,43 @@ const getPositionsForPlayer = async key =>
     { key },
   )).map(result => result.position_key);
 
-const getBestMeasurementsForPlayer = async key => Object.values((await db.manyOrNone(
-    `select 
-        measurable_id as measurable,
-        measurement,
-        source
-      from t_measurement
-      where player_id=$(key)`,
-    { key },
-  )).reduce((accum, value) => {
-    const meas = value.measurable;
-    if (!accum[meas]
-      || (accum[meas].measurement > value.measurement
-        && defaultSort(getMeasurableByKey(meas).unit) === Sorts.ASC)
-      || (accum[meas].measurement < value.measurement
-        && defaultSort(getMeasurableByKey(meas).unit) === Sorts.DESC)) {
-      const retval = Object.assign({}, accum);
-      retval[meas] = value;
-      return retval;
-    }
-    return accum;
-  }, {})).map((measurement: any) => {
+type DBMeasurement = {
+  measurable: MeasurableKey,
+  measurement: number,
+  source: number,
+};
+
+const getBestMeasurementsForPlayer = async (key: PlayerKey) =>
+  Object.values(
+    (await db.manyOrNone(
+      `select 
+          measurable_id as measurable,
+          measurement,
+          source
+        from t_measurement
+        where player_id=$(key)`,
+      { key },
+    )).reduce(
+      (accum: { [MeasurableKey]: DBMeasurement }, value: DBMeasurement) => {
+        const meas: MeasurableKey = value.measurable;
+        if (!accum[meas]
+          || (accum[meas].measurement > value.measurement
+            && defaultSort(getMeasurableByKey(meas).unit) === Sorts.ASC)
+          || (accum[meas].measurement < value.measurement
+            && defaultSort(getMeasurableByKey(meas).unit) === Sorts.DESC)) {
+          const retval = Object.assign({}, accum);
+          retval[meas] = value;
+          return retval;
+        }
+        return accum;
+      },
+      {},
+    ),
+  ).map((measurement: any) => {
     const retval = Object.assign({}, measurement, { measurableKey: measurement.measurable });
     delete retval.measurable;
     return retval;
-  }).sort((a, b) => {
+  }).sort((a: Measurement, b: Measurement) => {
     if (a.measurableKey === 9) {
       return 1;
     } else if (b.measurableKey === 9) {
@@ -110,7 +125,7 @@ const impliedPositions = (explicitPositionIds: Array<PositionKey>): PlayerPositi
 export default async () => {
   console.time('Player Load');
 
-  await Promise.all((await getPlayers()).map(async (player) => {
+  await Promise.all((await getPlayers()).map(async (player: Player) => {
     playerStore.set(player.id, Object.assign({}, player, {
       positions: impliedPositions(await getPositionsForPlayer(player.key)),
       measurements: await getBestMeasurementsForPlayer(player.key),

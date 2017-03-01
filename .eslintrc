@@ -8,10 +8,6 @@
   },
   "rules": {
     "no-console": 0,
-    "flowtype/type-id-match": [
-      2,
-      "^([A-Z][a-z0-9]+)+$"
-    ],
     "flowtype/require-valid-file-annotation": [
       2,
       "always",

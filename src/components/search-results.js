@@ -7,11 +7,11 @@ import type { Dispatch } from 'redux';
 import SearchResult from './search-result';
 import { Sorts } from '../types/domain';
 import type { Action } from '../actions';
-import type { Player, Position, MeasurableId } from '../types/domain';
+import type { Player, Position, Measurable, MeasurableId } from '../types/domain';
 import type { MeasurablePercentile } from '../types/graphing';
 import measurables, { format } from '../measurables';
 import SearchControls from './search-controls';
-import type { SearchOptions } from '../types/state';
+import type { State, SearchOptions } from '../types/state';
 import { selectNewSearch } from '../actions';
 import SearchPaging from './search-paging';
 
@@ -93,12 +93,12 @@ const SearchResults = ({
   </div>;
 
 export default connect(
-  state => ({
+  (state: State) => ({
     isSearching: state.isSearching,
     searchOptions: state.searchOptions,
     selectedPosition: state.positions[state.selectedPositionId],
-    players:
-      state.searchResults.players
+    players: state.searchResults
+      ? state.searchResults.players
         .map((playerId) => {
           const baseResult = {
             player: state.players[playerId],
@@ -113,15 +113,16 @@ export default connect(
               })),
             measurable: undefined,
           };
-          if (state.searchOptions.measurableId) {
-            const measurable = measurables[state.searchOptions.measurableId];
+          if (state.searchOptions && state.searchOptions.measurableId) {
+            const measurable: Measurable = measurables[state.searchOptions.measurableId];
             const value = baseResult.player.measurements
               .find(measurement => measurement.measurableKey === measurable.key);
             baseResult.measurable = value ? format(value.measurement, measurable, value.source !== 1) : '?';
           }
           return baseResult;
-        }),
-    hasNextPage: state.searchResults.hasNextPage,
+        })
+      : [],
+    hasNextPage: state.searchResults && state.searchResults.hasNextPage,
   }),
   (dispatch: Dispatch<Action>) => ({
     selectMeasurable: searchOptions => (measurableId) => {

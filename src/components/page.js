@@ -19,5 +19,7 @@ export default class Page extends React.Component {
     }
   }
 
+  props: Props;
+
   render() { return null; }
 }

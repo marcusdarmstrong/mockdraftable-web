@@ -4,6 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import type { Player, Position, PositionId } from '../types/domain';
+import type { State } from '../types/state';
 
 type Props = {
   selectedPlayer: Player,
@@ -51,7 +52,7 @@ const AboutSection = ({ selectedPlayer, selectedPositionId, positions }: Props) 
     </dl>
   </div>;
 
-export default connect(state => ({
+export default connect((state: State) => ({
   selectedPlayer: state.players[state.selectedPlayerId],
   selectedPositionId: state.selectedPositionId,
   positions: state.players[state.selectedPlayerId].positions.all

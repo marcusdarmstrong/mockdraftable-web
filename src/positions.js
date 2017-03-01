@@ -4,7 +4,7 @@ import mhsl from 'hsl-to-hex';
 import { PositionTypes } from './types/domain';
 import type { PositionId, PositionKey, Position } from './types/domain';
 
-const hsl = (h, s, l) => mhsl(h, s, Math.max(0, l - 20));
+const hsl = (h, s, l): string => mhsl(h, s, Math.max(0, l - 20));
 
 const p = (key, abbreviation, name, plural, type, color): Position =>
   ({ key, id: abbreviation, abbreviation, name, type, color, plural });
@@ -128,7 +128,7 @@ const getDefaultPosition = (positionSet: Array<Position>): Position => {
       if (accum === '') {
         return id;
       }
-      for (let i = 0; i < Math.min(accum.length, id.length); i += 1) {
+      for (let i: number = 0; i < Math.min(accum.length, id.length); i += 1) {
         if (accum.charAt(i) !== id.charAt(i)) {
           if (i === 0) {
             if ((accum.charAt(i) === '4' && id.charAt === '6')

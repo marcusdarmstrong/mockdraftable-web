@@ -6,6 +6,7 @@ import type { Dispatch } from 'redux';
 import type { Action } from '../actions';
 import type { Position, PositionId } from '../types/domain';
 import { selectPosition as buildSelectPositionAction } from '../actions';
+import type { State } from '../types/state';
 
 type Props = {
   selectedPosition: Position,
@@ -83,7 +84,7 @@ const PositionSelector = ({
   </div>);
 };
 
-export default connect(state => ({
+export default connect((state: State) => ({
   selectedPosition: state.positions[state.selectedPositionId],
   positions: Object.values(state.positions),
 }), (dispatch: Dispatch<Action>) => ({

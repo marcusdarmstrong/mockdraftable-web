@@ -3,7 +3,7 @@
 import db from '../../connection';
 import onError from '../../util/on-error';
 
-const getPlayerByOldId = async id =>
+const getPlayerByOldId = async (id: number) =>
   db.one(
     `select 
         p.id,

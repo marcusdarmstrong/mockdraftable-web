@@ -12,7 +12,7 @@ import PlayerPage from './player-page';
 import HomePage from './home-page';
 import SearchPage from './search-page';
 import Typeahead from './typeahead';
-import type { ModalType } from '../types/state';
+import type { State, ModalType } from '../types/state';
 import { updateModalType } from '../actions';
 import EmbededPlayer from './embeded-player';
 import EmbedCode from './embed-code';
@@ -27,7 +27,7 @@ type Props = {
 };
 
 export default connect(
-  state => ({
+  (state: State) => ({
     isPlayerPage: !!state.selectedPlayerId,
     isSearchPage: !!state.searchOptions,
     isHomePage: !state.selectedPlayerId && !state.searchOptions,
