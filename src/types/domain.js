@@ -45,6 +45,15 @@ export type PlayerPositions = {
   all: Array<PositionId>,
 };
 
+
+export const PlayerStatuses = {
+  OKAY: 'OKAY',
+  PENDING: 'PENDING',
+  NOVELTY: 'NOVELTY',
+};
+
+export type PlayerStatus = $Keys<typeof PlayerStatuses>;
+
 export type Player = {
   id: PlayerId,
   key: PlayerKey,
@@ -53,6 +62,7 @@ export type Player = {
   measurements: Array<Measurement>,
   positions: PlayerPositions,
   school?: string,
+  status: PlayerStatus,
 };
 
 export const PositionTypes = {

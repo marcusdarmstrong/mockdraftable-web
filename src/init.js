@@ -3,7 +3,7 @@
 import db from './connection';
 import { getById, getByKey, getDefaultPosition } from './positions';
 import { getByKey as getMeasurableByKey } from './measurables';
-import { Sorts, defaultSort } from './types/domain';
+import { Sorts, defaultSort, PlayerStatuses } from './types/domain';
 import type {
   Player,
   PlayerKey,
@@ -31,18 +31,26 @@ const stores = {
 };
 
 const getPlayers = async (): Promise<Array<Player>> =>
-  db.many(
+  (await db.many(
     `select
         p.canonical_name as id,
         CONCAT(p.first_name, ' ', p.last_name) as name,
         p.draft_year as draft,
         p.id as key,
-        s.name as school
+        s.name as school,
+        p.status as status
       from t_player as p
       left join t_school as s
-        on p.school_id = s.id
-      where p.status = 0;`,
-  );
+        on p.school_id = s.id;`,
+  )).map((p) => {
+    let status = PlayerStatuses.OKAY;
+    if (p.status === 1) {
+      status = PlayerStatuses.PENDING;
+    } else if (p.status === 2) {
+      status = PlayerStatuses.NOVELTY;
+    }
+    return Object.assign({}, p, { status });
+  });
 
 const getPositionsForPlayer: PlayerKey => Promise<Array<PositionKey>> = async key =>
   (await db.manyOrNone(
@@ -143,6 +151,9 @@ export default async () => {
   const measurementIndicies: Map<PositionId, Map<MeasurableKey, number>> = new Map();
 
   playerStore.forEach((player) => {
+    if (player.status !== PlayerStatuses.OKAY) {
+      return;
+    }
     player.positions.all.forEach((positionId) => {
       positionCounters.set(positionId, (positionCounters.get(positionId) || 0) + 1);
       player.measurements.forEach(({ measurableKey, measurement }) => {
@@ -180,6 +191,9 @@ export default async () => {
   });
 
   playerStore.forEach((player) => {
+    if (player.status !== PlayerStatuses.OKAY) {
+      return;
+    }
     player.positions.all.forEach((positionId) => {
       const positionList = positionEligibilityStore.get(positionId) || [];
       positionList.push(player.id);
