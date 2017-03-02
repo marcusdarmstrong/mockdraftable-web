@@ -122,7 +122,9 @@ const getById = (id: PositionId): Position => positionsById[id] || unknownPositi
 const getByKey = (key: PositionKey): Position => positionsByKey[key] || unknownPositionKey(key);
 
 const getDefaultPosition = (positionSet: Array<Position>): Position => {
-  const defaultPos = positionSet.filter(pos => pos.type === PositionTypes.PRIMARY)
+  const defaultPos = positionSet.filter(
+    pos => pos.type === PositionTypes.PRIMARY,
+  )
     .map(pos => pos.key.toString())
     .reduce((accum, id) => {
       if (accum === '') {
@@ -142,7 +144,15 @@ const getDefaultPosition = (positionSet: Array<Position>): Position => {
       }
       return accum;
     }, '');
-  return getByKey(parseInt(defaultPos, 10) || 1);
+
+  let posKey = parseInt(defaultPos, 10) || 1;
+  if (posKey === 1) {
+    const otherOptions = positionSet.map(pos => pos.key).filter(key => key !== 1);
+    if (otherOptions.length > 0) {
+      posKey = otherOptions[0];
+    }
+  }
+  return getByKey(posKey);
 };
 
 export { getById, getByKey, getDefaultPosition, positions };

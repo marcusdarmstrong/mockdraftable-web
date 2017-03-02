@@ -1,5 +1,7 @@
 // @flow
 
+// import { groupBy, mapValues } from 'lodash';
+
 import db from './connection';
 import { getById, getByKey, getDefaultPosition } from './positions';
 import { getByKey as getMeasurableByKey } from './measurables';
@@ -51,6 +53,45 @@ const getPlayers = async (): Promise<Array<Player>> =>
     }
     return Object.assign({}, p, { status });
   });
+
+/*
+const getAllPlayerPositions = async () =>
+  mapValues(
+    groupBy(
+      await db.many(
+        'select player_id as player_key, position_id as position_key from t_position_eligibility'
+      ),
+      row => row.player_key,
+    ),
+    values => impliedPositions(values.map(value => value.position_key)),
+  );
+
+const getAllPlayerMeasurements = async () =>
+  mapValues(
+    groupBy(
+      await db.many(
+        `select
+          player_id as player_key,
+          measurable_id as measurable_key,
+          measurement,
+          source
+        from t_measurement`
+      ),
+      row => row.player_key,
+    ),
+    values =>
+      Object.values(
+        values.reduce(
+        )
+      ).map(
+        (value: any) => ({
+          measurableKey: value.measurable_key,
+          measurement: value.measurement,
+          source: value.source,
+        }),
+      ),
+  );
+*/
 
 const getPositionsForPlayer: PlayerKey => Promise<Array<PositionKey>> = async key =>
   (await db.manyOrNone(
