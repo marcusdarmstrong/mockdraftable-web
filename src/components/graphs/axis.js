@@ -22,6 +22,6 @@ const generateLine = (scale, offset, point: Point) => {
 export default ({ id, name, scale, offset, point }: Props) => (<g>
   <path id={`m${id}`} d={generateLine(scale, offset, point)} />
   <text className="measurable" dy="-.25em">
-    <textPath spacing="auto" startOffset={offset * 1.5} xlinkHref={`#m${id}`}>{name}</textPath>
+    <textPath spacing="auto" startOffset={offset * 2} xlinkHref={`#m${id}`}>{name}</textPath>
   </text>
 </g>);
