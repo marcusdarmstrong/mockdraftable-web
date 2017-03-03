@@ -80,9 +80,9 @@ const getSchoolId = async (nflCollegeName: string) => {
     }
     const newSchool: { id: number } = await db.one(
       'insert into t_school (name) values($(name)) returning id',
-      { name: nflCollegeName },
+      { name: schoolName },
     );
-    console.log(`Created new school: ${nflCollegeName}`);
+    console.log(`Created new school: ${schoolName}`);
     return newSchool.id;
   }
   return school.id;
@@ -92,8 +92,8 @@ const isCanonicalNameInUse: string => Promise<boolean> = async name =>
   !!(await db.oneOrNone('select id from t_player where canonical_name = $(name)', { name }));
 
 const getCanonicalName: (string, string) => Promise<?string> = async (firstName, lastName) => {
-  const safeFirstName = firstName.replace(/[^\x00-\x7F]/g, '').toLowerCase();
-  const safeLastName = lastName.replace(/[^\x00-\x7F]/g, '').toLowerCase();
+  const safeFirstName = firstName.replace(' ', '-').replace(/[^0-9a-z-]/gi, '').toLowerCase();
+  const safeLastName = lastName.replace(' ', '-').replace(/[^0-9a-z-]/gi, '').toLowerCase();
   const firstTry = `${safeFirstName}-${safeLastName}`;
   if (!(await isCanonicalNameInUse(firstTry))) {
     return firstTry;
@@ -205,7 +205,7 @@ const doImport = async () => {
     process.exit(1);
   }
 
-  Promise.all(nflData.map(async (player) => {
+  await Promise.all(nflData.map(async (player) => {
     const positionKey = positionIdMapping[player.position];
     if (!positionKey) {
       console.log(
@@ -257,4 +257,4 @@ const doImport = async () => {
 };
 
 
-doImport().then(() => { console.log('Done with import'); });
+doImport().then(() => { console.log('Done with import'); process.exit(0); });

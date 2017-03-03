@@ -85,6 +85,10 @@ init().then((stores) => {
   const validPositions = positions.filter(pos => !!stores.positionEligibilityStore.get(pos.id));
   const posById = validPositions.reduce((a, pos) => Object.assign({}, a, { [pos.id]: pos }), {});
 
+  app.get('/positions', async (req: $Request, res) => {
+    res.send(JSON.stringify(stores.statisticsStore, null, 4));
+  });
+
   app.get('*', async (req: $Request, res) => {
     const store: Store<State, BatchedAction> = createStore(reducer, {
       measurables: measurablesByKey,
