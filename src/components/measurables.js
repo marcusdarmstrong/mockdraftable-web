@@ -9,7 +9,7 @@ type Props = {
 };
 
 export default ({ measurements }: Props) =>
-  <table className="table">
+  <table className="table table-sm mb-0">
     <thead>
       <tr>
         <th>Measurable</th>

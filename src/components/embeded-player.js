@@ -63,7 +63,7 @@ const EmbededPlayer = ({
   }
 
   /* eslint-disable jsx-a11y/href-no-hash */
-  return (<div className="card" style={{ width: '480px', height: '750px' }}>
+  return (<div className="card" style={{ width: '480px', height: '651px' }}>
     <div className="card-header">
       <h4 className="card-title mb-1">
         {selectedPlayer.name}
