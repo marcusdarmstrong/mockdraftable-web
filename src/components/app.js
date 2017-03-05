@@ -16,11 +16,13 @@ import type { State, ModalType } from '../types/state';
 import { updateModalType } from '../actions';
 import EmbededPlayer from './embeded-player';
 import EmbedCode from './embed-code';
+import PositionPage from './position-page';
 
 type Props = {
   isPlayerPage: boolean,
   isSearchPage: boolean,
   isHomePage: boolean,
+  isPositionPage: boolean,
   modalType: ModalType,
   closeModal: () => void,
   embed: boolean,
@@ -30,14 +32,23 @@ export default connect(
   (state: State) => ({
     isPlayerPage: !!state.selectedPlayerId,
     isSearchPage: !!state.searchOptions,
-    isHomePage: !state.selectedPlayerId && !state.searchOptions,
+    isHomePage: !state.selectedPlayerId && !state.searchOptions && !state.positionDetail,
+    isPositionPage: state.positionDetail,
     embed: state.embed,
     modalType: state.modalType,
   }),
   (dispatch: Dispatch<Action>) => ({
     closeModal: () => dispatch(updateModalType('None')),
   }),
-)(({ isPlayerPage, isSearchPage, isHomePage, modalType, closeModal, embed }: Props) => {
+)(({
+  isPlayerPage,
+  isSearchPage,
+  isHomePage,
+  modalType,
+  closeModal,
+  embed,
+  isPositionPage,
+}: Props) => {
   if (embed) {
     return <EmbededPlayer />;
   }
@@ -62,6 +73,7 @@ export default connect(
     {isPlayerPage && <PlayerPage />}
     {isSearchPage && <SearchPage />}
     {isHomePage && <HomePage />}
+    {isPositionPage && <PositionPage />}
     {/* eslint-disable jsx-a11y/no-static-element-interactions */}
     {modalType !== 'None' && <div className="modal-backdrop show" onClick={() => closeModal()} />}
     {/* eslint-enable jsx-a11y/no-static-element-interactions */}

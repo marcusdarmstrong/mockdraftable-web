@@ -94,6 +94,14 @@ const api: (Stores) => Api =
         }
         return results;
       },
+      fetchDistributionStats: async (pos: PositionId) => {
+        const rawData = statisticsStore.get(pos) || throw500('Invalid Position ID');
+        const result = {};
+        rawData.forEach((val, key) => {
+          result[key] = val;
+        });
+        return result;
+      },
     };
   };
 

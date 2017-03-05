@@ -17,6 +17,8 @@ const clientApi: Api = {
     (await fetch(`/api/search?opts=${JSON.stringify(opts)}&pos=${pos}`)).json(),
   fetchTypeAheadResults: async (search: string) =>
     (await fetch(`/api/typeahead?search=${search}`)).json(),
+  fetchDistributionStats: async (pos: PositionId) =>
+    (await fetch(`api/stats?pos=${pos}`)).json(),
 };
 
 export default clientApi;

@@ -1,6 +1,6 @@
 // @flow
 
-import type { PlayerId, PositionId, MeasurableId, Player, Position, Measurable, MeasurableKey, Percentiles, Comparisons, Sort } from './domain';
+import type { PlayerId, PositionId, MeasurableId, Player, Position, Measurable, MeasurableKey, Percentiles, Comparisons, Sort, DistributionStatistics } from './domain';
 
 type TypeAheadState = {
   typeAheadSearching?: boolean,
@@ -47,7 +47,12 @@ type UiState = {
   modalType: ModalType,
 } & TypeAheadState;
 
-type AppState = SearchPageState & PlayerPageState & GlobalAppState & EmbedState;
+type PositionPageState = {
+  positionDetail: boolean,
+  distributionStatistics: { [PositionId]: { [MeasurableKey]: DistributionStatistics } };
+};
+
+type AppState = SearchPageState & PlayerPageState & GlobalAppState & EmbedState & PositionPageState;
 
 type Domain = {
   players: { [key: PlayerId]: Player },

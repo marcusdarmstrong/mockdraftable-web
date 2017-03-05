@@ -3,7 +3,7 @@
 import type { Dispatch } from 'redux';
 import type { ThunkAction } from 'redux-thunk';
 
-import type { Player, PlayerId, PositionId, Comparisons, Percentiles } from './types/domain';
+import type { Player, PlayerId, PositionId, Comparisons, Percentiles, MeasurableKey, DistributionStatistics } from './types/domain';
 import type { Api } from './types/api';
 import type { State, SearchOptions, SearchResults, ModalType, EmbedPage } from './types/state';
 
@@ -19,6 +19,7 @@ export const UPDATE_MODAL_TYPE = 'UPDATE_MODAL_TYPE';
 export const UPDATE_TYPE_AHEAD_IS_SEARCHING = 'UPDATE_TYPE_AHEAD_IS_SEARCHING';
 export const UPDATE_TYPE_AHEAD_RESULTS = 'UPDATE_TYPE_AHEAD_RESULTS';
 export const UPDATE_EMBED_PAGE = 'UPDATE_EMBED_PAGE';
+export const LOAD_DISTRIBUTION_STATISTICS = 'LOAD_DISTRIBUTION_STATISTICS';
 
 export const updateSelectedPlayer = (id: PlayerId) => ({
   type: UPDATE_SELECTED_PLAYER,
@@ -151,6 +152,21 @@ export type LoadPercentilesAction = {
   percentiles: Percentiles,
 };
 
+export const loadDistributionStatistics =
+  (positionId: PositionId, measurableKey: MeasurableKey, stats: DistributionStatistics) => ({
+    type: LOAD_DISTRIBUTION_STATISTICS,
+    positionId,
+    measurableKey,
+    stats,
+  });
+
+export type LoadDistributionStatisticsAction = {
+  type: 'LOAD_DISTRIBUTION_STATISTICS',
+  positionId: PositionId,
+  measurableKey: MeasurableKey,
+  stats: DistributionStatistics,
+};
+
 export type Action =
   UpdateSelectedPlayerAction
   | UpdateSelectedPositionAction
@@ -164,6 +180,7 @@ export type Action =
   | LoadPlayerAction
   | LoadComparisonsAction
   | LoadPercentilesAction
+  | LoadDistributionStatisticsAction
   | ThunkAction;
 
 type Dispatcher = Dispatch<Action>;
@@ -246,5 +263,13 @@ export const selectTypeAheadSearch = (search: string) =>
     await Promise.all(results.map(id => dispatch(loadPlayerIfNeeded(id))));
     dispatch(updateTypeAheadResults(results));
     dispatch(updateTypeAheadIsSearching(false));
+  };
+
+export const selectDistributionStats = (positionId: PositionId) =>
+  async (dispatch: Dispatch<Action>, getState: () => State, api: Api) => {
+    dispatch(updateSelectedPosition(positionId));
+    const results = await api.fetchDistributionStats(getState().selectedPositionId);
+    Object.entries(results)
+      .forEach(entry => dispatch(loadDistributionStatistics(positionId, entry[0], entry[1])));
   };
 

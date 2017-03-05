@@ -91,5 +91,27 @@ export default (previousState: State, action: Action): State => {
   if (action.type === actions.UPDATE_EMBED_PAGE) {
     return Object.assign({}, previousState, { embed: true, embedPage: action.state });
   }
+  if (action.type === actions.LOAD_DISTRIBUTION_STATISTICS) {
+    return Object.assign(
+      {},
+      previousState,
+      {
+        positionDetail: true,
+        distributionStatistics: Object.assign(
+          {},
+          previousState.distributionStatistics,
+          {
+            [action.positionId]: Object.assign(
+              {},
+              previousState.distributionStatistics[action.positionId],
+              {
+                [action.measurableKey]: action.stats,
+              },
+            ),
+          },
+        ),
+      },
+    );
+  }
   return previousState;
 };

@@ -2,7 +2,13 @@
 
 import { Sorts } from './types/domain';
 import { HttpRedirect, HttpError, throw404 } from './http';
-import { selectPlayer, updateSelectedPosition, selectNewSearch, updateEmbedPage } from './actions';
+import {
+  selectPlayer,
+  updateSelectedPosition,
+  selectNewSearch,
+  updateEmbedPage,
+  selectDistributionStats,
+} from './actions';
 import getPlayerByOldId from './services/players/get-player-by-old-id';
 import type { Action } from './actions';
 
@@ -70,6 +76,8 @@ export default async (path: string, args: {[string]: string}): Promise<Action[]>
     const newPlayer = await getPlayerByOldId(oldId) || throw404(path);
 
     throw new HttpRedirect(301, `/embed/${newPlayer.url}`);
+  } else if (path === '/positions') {
+    return [selectDistributionStats(args.position)];
   } else if (path === '/') {
     return [];
   }

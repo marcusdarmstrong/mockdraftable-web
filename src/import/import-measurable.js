@@ -45,7 +45,7 @@ if (!Object.keys(validMeasurables).includes(measurable)) {
 
 
 const getSchoolId = async (nflCollegeName: string) => {
-  let schoolName = nflCollegeName.replace('St.', 'State');
+  let schoolName = nflCollegeName.replace(' St.', ' State');
   if (schoolName === 'Central Florida') {
     schoolName = 'UCF';
   } else if (schoolName === 'Mississippi') {
