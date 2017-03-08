@@ -26,6 +26,7 @@ type Props = {
   modalType: ModalType,
   closeModal: () => void,
   embed: boolean,
+  positionName: string,
 };
 
 export default connect(
@@ -36,6 +37,7 @@ export default connect(
     isPositionPage: state.positionDetail,
     embed: state.embed,
     modalType: state.modalType,
+    positionName: state.positions[state.selectedPositionId].plural,
   }),
   (dispatch: Dispatch<Action>) => ({
     closeModal: () => dispatch(updateModalType('None')),
@@ -48,6 +50,7 @@ export default connect(
   closeModal,
   embed,
   isPositionPage,
+  positionName,
 }: Props) => {
   if (embed) {
     return <EmbededPlayer />;
@@ -73,7 +76,7 @@ export default connect(
     {isPlayerPage && <PlayerPage />}
     {isSearchPage && <SearchPage />}
     {isHomePage && <HomePage />}
-    {isPositionPage && <PositionPage />}
+    {isPositionPage && <PositionPage positionName={positionName} />}
     {/* eslint-disable jsx-a11y/no-static-element-interactions */}
     {modalType !== 'None' && <div className="modal-backdrop show" onClick={() => closeModal()} />}
     {/* eslint-enable jsx-a11y/no-static-element-interactions */}

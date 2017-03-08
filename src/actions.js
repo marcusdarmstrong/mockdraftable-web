@@ -246,6 +246,14 @@ export const selectNewSearch = (options: SearchOptions) =>
     await dispatch(doSearch(options, getState().selectedPositionId));
   };
 
+export const selectDistributionStats = (positionId: PositionId) =>
+  async (dispatch: Dispatch<Action>, getState: () => State, api: Api) => {
+    dispatch(updateSelectedPosition(positionId));
+    const results = await api.fetchDistributionStats(getState().selectedPositionId);
+    Object.entries(results)
+      .forEach(entry => dispatch(loadDistributionStatistics(positionId, entry[0], entry[1])));
+  };
+
 export const selectPosition = (positionId: PositionId) =>
   async (dispatch: Dispatch<Action>, getState: () => State) => {
     const state = getState();
@@ -253,6 +261,8 @@ export const selectPosition = (positionId: PositionId) =>
       await dispatch(selectPlayer(state.selectedPlayerId, positionId));
     } else if (state.searchOptions) {
       await dispatch(doSearch(Object.assign({}, state.searchOptions, { page: 1 }), positionId));
+    } else {
+      await dispatch(selectDistributionStats(positionId));
     }
   };
 
@@ -264,12 +274,3 @@ export const selectTypeAheadSearch = (search: string) =>
     dispatch(updateTypeAheadResults(results));
     dispatch(updateTypeAheadIsSearching(false));
   };
-
-export const selectDistributionStats = (positionId: PositionId) =>
-  async (dispatch: Dispatch<Action>, getState: () => State, api: Api) => {
-    dispatch(updateSelectedPosition(positionId));
-    const results = await api.fetchDistributionStats(getState().selectedPositionId);
-    Object.entries(results)
-      .forEach(entry => dispatch(loadDistributionStatistics(positionId, entry[0], entry[1])));
-  };
-

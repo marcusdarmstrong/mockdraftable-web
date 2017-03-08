@@ -81,6 +81,9 @@ init().then((stores) => {
   app.get('/api/typeahead', async (req: $Request, res) => {
     res.send(JSON.stringify(await api.fetchTypeAheadResults(req.query.search)));
   });
+  app.get('/api/stats', async (req: $Request, res) => {
+    res.send(JSON.stringify(await api.fetchDistributionStats(req.query.pos)));
+  });
 
   const validPositions = positions.filter(pos => !!stores.positionEligibilityStore.get(pos.id));
   const posById = validPositions.reduce((a, pos) => Object.assign({}, a, { [pos.id]: pos }), {});

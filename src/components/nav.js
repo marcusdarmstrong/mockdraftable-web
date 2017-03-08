@@ -78,7 +78,7 @@ export default connect(
     title: state.selectedPlayerId ? state.players[state.selectedPlayerId].name : 'MockDraftable',
     selectedPosition: state.positions[state.selectedPositionId],
     url: constructUrl(state),
-    showPosition: !!state.selectedPlayerId,
+    showPosition: !!state.selectedPlayerId || state.positionDetail,
     showSearch: !state.selectedPlayerId && state.searchOptions,
   }),
   (dispatch: Dispatch<Action>) => ({
