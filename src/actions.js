@@ -272,7 +272,9 @@ export const selectTypeAheadSearch = (search: string) =>
   async (dispatch: Dispatch<Action>, getState: () => State, api: Api) => {
     dispatch(updateTypeAheadIsSearching(true));
     const results = await api.fetchTypeAheadResults(search);
-    await Promise.all(results.map(id => dispatch(loadPlayerIfNeeded(id))));
-    dispatch(updateTypeAheadResults(results));
-    dispatch(updateTypeAheadIsSearching(false));
+    if (getState().typeAheadSearching) {
+      await Promise.all(results.map(id => dispatch(loadPlayerIfNeeded(id))));
+      dispatch(updateTypeAheadResults(results));
+      dispatch(updateTypeAheadIsSearching(false));
+    }
   };
