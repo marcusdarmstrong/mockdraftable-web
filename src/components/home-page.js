@@ -15,6 +15,9 @@ export default () => <div className="window container-fluid col-12 col-lg-10 off
       <p>
         <a href="/search" className="btn btn-lg btn-success btn-block">Explore the Database &raquo;</a>
       </p>
+      <p className="text-center">
+        Or take a look at <a href="/positions">Aggregate Data</a>.
+      </p>
       <hr className="my-4" />
       <TypeAhead />
     </div>

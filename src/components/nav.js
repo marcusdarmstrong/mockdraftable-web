@@ -34,6 +34,12 @@ const constructUrl = (state: State) => {
       url = `${url}&measurable=${state.searchOptions.measurableId}`;
     }
     return url;
+  } else if (state.positionDetail) {
+    let url = '/positions';
+    if (state.selectedPositionId !== 'ATH') {
+      url = `${url}?position=${state.selectedPositionId}`;
+    }
+    return url;
   }
   return '/';
 };

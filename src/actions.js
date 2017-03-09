@@ -248,10 +248,10 @@ export const selectNewSearch = (options: SearchOptions) =>
 
 export const selectDistributionStats = (positionId: PositionId) =>
   async (dispatch: Dispatch<Action>, getState: () => State, api: Api) => {
-    dispatch(updateSelectedPosition(positionId));
-    const results = await api.fetchDistributionStats(getState().selectedPositionId);
+    const results = await api.fetchDistributionStats(positionId);
     Object.entries(results)
       .forEach(entry => dispatch(loadDistributionStatistics(positionId, entry[0], entry[1])));
+    dispatch(updateSelectedPosition(positionId));
   };
 
 export const selectPosition = (positionId: PositionId) =>

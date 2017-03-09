@@ -77,7 +77,7 @@ export default async (path: string, args: {[string]: string}): Promise<Action[]>
 
     throw new HttpRedirect(301, `/embed/${newPlayer.url}`);
   } else if (path === '/positions') {
-    return [selectDistributionStats(args.position)];
+    return [selectDistributionStats(args.position || 'ATH')];
   } else if (path === '/') {
     return [];
   }
