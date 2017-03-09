@@ -231,14 +231,16 @@ export const doSearch = (options: SearchOptions, positionId: PositionId) =>
   async (dispatch: Dispatch<Action>, getState: () => State, api: Api) => {
     dispatch(updateIsSearching(true));
     dispatch(updateSearchOptions(options));
-    const results = await api.fetchSearchResults(options, positionId);
-    await Promise.all(
-      results.players.map(id => dispatch(loadPlayerIfNeeded(id)))
-        .concat(results.players.map(id => dispatch(loadPercentilesIfNeeded(id, positionId)))),
-    );
     dispatch(updateSelectedPosition(positionId));
-    dispatch(updateSearchResults(results));
-    dispatch(updateIsSearching(false));
+    const results = await api.fetchSearchResults(options, positionId);
+    if (getState().searchOptions === options) {
+      await Promise.all(
+        results.players.map(id => dispatch(loadPlayerIfNeeded(id)))
+          .concat(results.players.map(id => dispatch(loadPercentilesIfNeeded(id, positionId)))),
+      );
+      dispatch(updateSearchResults(results));
+      dispatch(updateIsSearching(false));
+    }
   };
 
 export const selectNewSearch = (options: SearchOptions) =>
