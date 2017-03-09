@@ -20,6 +20,7 @@ const TypeAhead = ({ updateSearch, searchResults, positions }: Props) => <div>
     className="form-control form-control-lg"
     placeholder="Player Name..."
     onChange={(event: SyntheticInputEvent) => updateSearch(event.target.value)}
+    autoFocus
   />
   <div className="list-group mt-2">
     {searchResults.map(p =>
