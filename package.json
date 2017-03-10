@@ -48,6 +48,7 @@
     "react-dom": "15.4.2",
     "react-redux": "5.0.3",
     "redux": "3.6.0",
+    "redux-shortcuts": "0.0.3",
     "redux-thunk": "2.2.0",
     "response-time": "2.3.2",
     "serve-favicon": "2.4.1"

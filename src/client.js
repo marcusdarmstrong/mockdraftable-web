@@ -5,19 +5,32 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
+import { mousetrap, Mousetrap, bindShortcuts } from 'redux-shortcuts';
 import thunk from 'redux-thunk';
 import batcher from './redux-batcher';
 import App from './components/app';
 import reducer from './reducer';
 import clientApi from './api/client';
 import searchDefaults from './search-defaults';
-import { doSearch } from './actions';
+import { doSearch, updateModalType } from './actions';
 
 const store = createStore(
   reducer,
   window.INITIAL_STATE,
   applyMiddleware(batcher, thunk.withExtraArgument(clientApi)),
 );
+
+bindShortcuts(
+  [['s'], () => updateModalType('TypeAhead'), true],
+  [['esc'], () => updateModalType('None')],
+)(store.dispatch);
+
+mousetrap.stopCallback = (e, element, combo, sequence) => {
+  if (combo === 'esc') {
+    return false;
+  }
+  return Mousetrap.stopCallback(e, element, combo, sequence);
+};
 
 window.onpopstate = () => {
   const search = document.location.search.substring(1);
