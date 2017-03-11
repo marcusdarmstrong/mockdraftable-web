@@ -172,6 +172,7 @@ const impliedPositions = (explicitPositionIds: Array<PositionKey>): PlayerPositi
 };
 
 export default async () => {
+  console.log('Starting Player Load');
   console.time('Player Load');
 
   await Promise.all((await getPlayers()).map(async (player: Player) => {

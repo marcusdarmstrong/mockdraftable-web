@@ -13,6 +13,8 @@ type Props = {
   title: string,
   url: string,
   showModal: ModalType => void,
+  isSearch: boolean,
+  isPositionDetail: boolean,
 };
 
 const constructUrl = (state: State) => {
@@ -40,28 +42,66 @@ const constructUrl = (state: State) => {
   return '/';
 };
 
-const Nav = ({ title, url, showModal }: Props) => (
-  <nav className="navbar navbar-inverse fixed-top bg-faded navbar-toggleable-xl">
-    <Page title={`${title} - MockDraftable`} url={url} />
-    <a className="navbar-nav" href="/"><img src="/public/icon-white.png" alt="MockDraftable" /></a>
-    <span className="navbar-brand mr-auto">MockDraftable</span>
-    <button
-      type="button"
-      className="btn btn-search"
-      onClick={() => { showModal('TypeAhead'); }}
-    >
-      <svg width="23" height="23" viewBox="5 0 65 65" className="search">
-        <circle cx="30" cy="30" r="15" />
-        <line x1="40" y1="40" x2="60" y2="60" />
-      </svg>
-    </button>
-  </nav>
-);
+class Nav extends React.Component {
+  state: {
+    isCollapsed: boolean,
+  } = {
+    isCollapsed: true,
+  };
+
+  props: Props;
+
+  toggleCollapsed = () => {
+    this.setState({ isCollapsed: !this.state.isCollapsed });
+  };
+
+  render() {
+    const { title, url, isSearch, isPositionDetail, showModal } = this.props;
+    const itemClass = 'nav-item nav-link';
+    const activeItemClass = `${itemClass} active`;
+    let collapseClasses = 'collapse navbar-collapse ml-2';
+    collapseClasses = this.state.isCollapsed ? collapseClasses : `${collapseClasses} show`;
+    const togglerClasses = 'navbar-toggler navbar-toggler-right';
+
+    return (
+      <nav className="navbar navbar-inverse fixed-top bg-faded navbar-toggleable-sm">
+        <button className={togglerClasses} type="button" onClick={this.toggleCollapsed}>
+          <span className="navbar-toggler-icon" />
+        </button>
+        <Page title={`${title} - MockDraftable`} url={url} />
+        <a className="navbar-brand mr-auto p-0" href="/">
+          <img src="/public/icon-white.png" alt="MockDraftable" />
+          MockDraftable
+        </a>
+        <div className={collapseClasses} id="navbarNavAltMarkup">
+          <div className="navbar-nav">
+            <a className={isSearch ? activeItemClass : itemClass} href="/search">Advanced Search</a>
+            <a className={isPositionDetail ? activeItemClass : itemClass} href="/positions">
+              Position Data
+            </a>
+          </div>
+        </div>
+        <button
+          type="button"
+          className="btn btn-search navbar-toggler-right"
+          onClick={() => { showModal('TypeAhead'); }}
+        >
+          <svg width="25" height="25" viewBox="5 0 65 65" className="search">
+            <circle cx="30" cy="30" r="15" />
+            <line x1="40" y1="40" x2="60" y2="60" />
+          </svg>
+        </button>
+      </nav>
+    );
+  }
+}
 
 export default connect(
   (state: State) => ({
     title: state.selectedPlayerId ? state.players[state.selectedPlayerId].name : 'MockDraftable',
     url: constructUrl(state),
+    isSearch: !!state.searchOptions,
+    isPositionDetail: state.positionDetail,
   }),
   (dispatch: Dispatch<Action>) => ({
     showModal: component => dispatch(updateModalType(component)),

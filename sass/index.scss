@@ -13,9 +13,10 @@ $brand-primary: #46B77B;
 }
 
 .navbar img {
-  height: 2.33rem;
-  width: 3rem;
+  height: 2.5rem;
+  width: 3.25rem;
   padding-right: .67rem;
+  vertical-align: -.8rem;
 }
 
 
@@ -85,10 +86,14 @@ path,
   stroke-width: 6;
 }
 
+.btn {
+  cursor: pointer;
+}
+
 .btn-search {
   padding: .25rem 1rem;
   background-color: rgba(0,0,0,0);
-  border-color: #fff;
+  border-color: rgba(255,255,255,0.1);
 }
 
 .navbar {
@@ -101,7 +106,7 @@ path,
 }
 
 .playerbar {
-  top: 54px;
+  top: 56px;
   background-color: #6D6E70;
   color: #fff;
 }
@@ -112,4 +117,8 @@ path,
 
 .playerbar + .window {
   margin-top: 8rem;
+}
+
+.navbar-toggler {
+  margin-right: 4.5rem;
 }
