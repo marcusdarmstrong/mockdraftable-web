@@ -1,6 +1,11 @@
 @import "~bootstrap/scss/bootstrap";
 @import "./loader";
 
+@font-face {
+  font-family: "Maven Pro Light";
+  src: url("./MavenProLight-300.otf");
+}
+
 .window {
   margin-top: 4rem;
 }
@@ -69,15 +74,40 @@ path,
 
 .search circle {
   fill: rgba(0,0,0,0);
-  stroke: black;
+  stroke: #fff;
   stroke-width: 6;
 }
 
 .search line {
-  stroke: black;
+  stroke: #fff;
   stroke-width: 6;
 }
 
 .btn-search {
   padding: .25rem 1rem;
+  background-color: rgba(0,0,0,0);
+  border-color: #fff;
+}
+
+.navbar {
+  background: linear-gradient(to right, rgba(70,183,123,1) 0%, rgba(52,148,99,1) 100%);
+}
+
+.navbar-brand {
+  font-family: "Maven Pro Light";
+  font-weight: 300;
+}
+
+.playerbar {
+  top: 54px;
+  background-color: #6D6E70;
+  color: #fff;
+}
+
+.playerbar-name {
+  font-weight: 200;
+}
+
+.playerbar + .window {
+  margin-top: 7rem;
 }
