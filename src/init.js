@@ -1,6 +1,6 @@
 // @flow
 
-// import { groupBy, mapValues } from 'lodash';
+import { groupBy, mapValues } from 'lodash';
 
 import db from './connection';
 import { getById, getByKey, getDefaultPosition } from './positions';
@@ -8,7 +8,6 @@ import { getByKey as getMeasurableByKey } from './measurables';
 import { Sorts, defaultSort, PlayerStatuses } from './types/domain';
 import type {
   Player,
-  PlayerKey,
   PositionId,
   PositionKey,
   PlayerPositions,
@@ -54,98 +53,11 @@ const getPlayers = async (): Promise<Array<Player>> =>
     return Object.assign({}, p, { status });
   });
 
-/*
-const getAllPlayerPositions = async () =>
-  mapValues(
-    groupBy(
-      await db.many(
-        'select player_id as player_key, position_id as position_key from t_position_eligibility'
-      ),
-      row => row.player_key,
-    ),
-    values => impliedPositions(values.map(value => value.position_key)),
-  );
-
-const getAllPlayerMeasurements = async () =>
-  mapValues(
-    groupBy(
-      await db.many(
-        `select
-          player_id as player_key,
-          measurable_id as measurable_key,
-          measurement,
-          source
-        from t_measurement`
-      ),
-      row => row.player_key,
-    ),
-    values =>
-      Object.values(
-        values.reduce(
-        )
-      ).map(
-        (value: any) => ({
-          measurableKey: value.measurable_key,
-          measurement: value.measurement,
-          source: value.source,
-        }),
-      ),
-  );
-*/
-
-const getPositionsForPlayer: PlayerKey => Promise<Array<PositionKey>> = async key =>
-  (await db.manyOrNone(
-    `select
-        position_id as position_key
-      from t_position_eligibility
-      where player_id = $(key)`,
-    { key },
-  )).map(result => result.position_key);
-
 type DBMeasurement = {
-  measurable: MeasurableKey,
+  measurable_key: MeasurableKey,
   measurement: number,
   source: number,
 };
-
-const getBestMeasurementsForPlayer = async (key: PlayerKey) =>
-  Object.values(
-    (await db.manyOrNone(
-      `select 
-          measurable_id as measurable,
-          measurement,
-          source
-        from t_measurement
-        where player_id=$(key)`,
-      { key },
-    )).reduce(
-      (accum: { [MeasurableKey]: DBMeasurement }, value: DBMeasurement) => {
-        const meas: MeasurableKey = value.measurable;
-        if (!accum[meas]
-          || (accum[meas].measurement > value.measurement
-            && defaultSort(getMeasurableByKey(meas).unit) === Sorts.ASC)
-          || (accum[meas].measurement < value.measurement
-            && defaultSort(getMeasurableByKey(meas).unit) === Sorts.DESC)) {
-          const retval = Object.assign({}, accum);
-          retval[meas] = value;
-          return retval;
-        }
-        return accum;
-      },
-      {},
-    ),
-  ).map((measurement: any) => {
-    const retval = Object.assign({}, measurement, { measurableKey: measurement.measurable });
-    delete retval.measurable;
-    return retval;
-  }).sort((a: Measurement, b: Measurement) => {
-    if (a.measurableKey === 9) {
-      return 1;
-    } else if (b.measurableKey === 9) {
-      return -1;
-    }
-    return a.measurableKey - b.measurableKey;
-  });
 
 const impliedPositions = (explicitPositionIds: Array<PositionKey>): PlayerPositions => {
   const impliedSet = ['ATH'];
@@ -171,16 +83,77 @@ const impliedPositions = (explicitPositionIds: Array<PositionKey>): PlayerPositi
   };
 };
 
+const getAllPlayerPositions = async () =>
+  mapValues(
+    groupBy(
+      await db.many(
+        'select player_id as player_key, position_id as position_key from t_position_eligibility',
+      ),
+      row => row.player_key,
+    ),
+    values => impliedPositions(values.map(value => value.position_key)),
+  );
+
+const getAllPlayerMeasurements = async () =>
+  mapValues(
+    groupBy(
+      await db.many(
+        `select
+          player_id as player_key,
+          measurable_id as measurable_key,
+          measurement,
+          source
+        from t_measurement`,
+      ),
+      row => row.player_key,
+    ),
+    values =>
+      Object.values(
+        values.reduce(
+          (accum: { [MeasurableKey]: DBMeasurement }, value: DBMeasurement) => {
+            const meas: MeasurableKey = value.measurable_key;
+            if (!accum[meas]
+              || (accum[meas].measurement > value.measurement
+                && defaultSort(getMeasurableByKey(meas).unit) === Sorts.ASC)
+              || (accum[meas].measurement < value.measurement
+                && defaultSort(getMeasurableByKey(meas).unit) === Sorts.DESC)) {
+              const retval = Object.assign({}, accum);
+              retval[meas] = value;
+              return retval;
+            }
+            return accum;
+          },
+          {},
+        ),
+      ).map(
+        (value: any) => ({
+          measurableKey: value.measurable_key,
+          measurement: value.measurement,
+          source: value.source,
+        }),
+      ).sort((a: Measurement, b: Measurement) => {
+        if (a.measurableKey === 9) {
+          return 1;
+        } else if (b.measurableKey === 9) {
+          return -1;
+        }
+        return a.measurableKey - b.measurableKey;
+      }),
+  );
+
 export default async () => {
   console.log('Starting Player Load');
   console.time('Player Load');
 
-  await Promise.all((await getPlayers()).map(async (player: Player) => {
+  const [allPlayers, allPositions, allMeasurements] =
+    await Promise.all([getPlayers(), getAllPlayerPositions(), getAllPlayerMeasurements()]);
+
+  allPlayers.forEach((player) => {
     playerStore.set(player.id, Object.assign({}, player, {
-      positions: impliedPositions(await getPositionsForPlayer(player.key)),
-      measurements: await getBestMeasurementsForPlayer(player.key),
+      positions: allPositions[player.key] || { primary: 'ATH', all: ['ATH'] },
+      measurements: allMeasurements[player.key] || [],
     }));
-  }));
+  });
 
   console.timeEnd('Player Load');
   console.time('Stats Compute');
@@ -196,6 +169,7 @@ export default async () => {
     if (player.status !== PlayerStatuses.OKAY) {
       return;
     }
+
     player.positions.all.forEach((positionId) => {
       positionCounters.set(positionId, (positionCounters.get(positionId) || 0) + 1);
       player.measurements.forEach(({ measurableKey, measurement }) => {
