@@ -14,11 +14,13 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import responseTime from 'response-time';
 import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
 
 import batcher from './redux-batcher';
 import type { BatchedAction } from './redux-batcher';
 
 import type { State } from './types/state';
+import { updateLoggedInUserId } from './actions';
 import layout from './layout';
 import App from './components/app';
 import reducer from './reducer';
@@ -28,7 +30,12 @@ import { measurablesByKey } from './measurables';
 import { positions } from './positions';
 import serverApi from './api/server';
 import bundles from './bundles.json';
-import { HttpRedirect } from './http';
+import { HttpRedirect, HttpError } from './http';
+import {
+  setAuthTokenCookieForUserId,
+  readAuthTokenFromCookies,
+  deleteAuthTokenFromCookies,
+} from './auth-token';
 
 
 const isRequestNotHttps = (req: $Request) => req.header('x-forwarded-proto') !== 'https';
@@ -84,6 +91,36 @@ init().then((stores) => {
   app.get('/api/stats', async (req: $Request, res) => {
     res.send(JSON.stringify(await api.fetchDistributionStats(req.query.pos)));
   });
+  app.get('/api/does-user-exist', async (req: $Request, res) => {
+    res.send(JSON.stringify(await api.doesUserExist(req.query.email)));
+  });
+  app.get('/api/logout', async (req: $Request, res) => {
+    deleteAuthTokenFromCookies(res);
+    res.send(JSON.stringify(await api.logout()));
+  });
+
+  app.use(bodyParser.json());
+  app.post('/api/login', async (req: $Request, res) => {
+    if (!req.body
+      || typeof req.body.email !== 'string'
+      || typeof req.body.password !== 'string'
+    ) {
+      throw new HttpError(400, '/api/login requires a email and password');
+    }
+    const result = await api.loginUser(req.body.email, req.body.password);
+    if (result.userId) {
+      setAuthTokenCookieForUserId(res, result.userId);
+    }
+    res.send(JSON.stringify(result));
+  });
+
+  app.post('/api/create-user', async (req: $Request, res) => {
+    const result = await api.createUser(req.body.email, req.body.password);
+    if (result.userId) {
+      setAuthTokenCookieForUserId(res, result.userId);
+    }
+    res.send(JSON.stringify(result));
+  });
 
   const validPositions = positions.filter(pos => !!stores.positionEligibilityStore.get(pos.id));
   const posById = validPositions.reduce((a, pos) => Object.assign({}, a, { [pos.id]: pos }), {});
@@ -100,8 +137,10 @@ init().then((stores) => {
       embed: false,
       positionDetail: false,
       distributionStatistics: {},
+      loggedInUserId: null,
     }, applyMiddleware(batcher, thunk.withExtraArgument(api)));
     try {
+      store.dispatch(updateLoggedInUserId(readAuthTokenFromCookies(req)));
       await store.dispatch(await translate(req.path, req.query));
     } catch (e) {
       if (e instanceof HttpRedirect) {

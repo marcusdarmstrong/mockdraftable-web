@@ -113,5 +113,8 @@ export default (previousState: State, action: Action): State => {
       },
     );
   }
+  if (action.type === actions.UPDATE_LOGGED_IN_USER) {
+    return Object.assign({}, previousState, { loggedInUserId: action.userId });
+  }
   return previousState;
 };

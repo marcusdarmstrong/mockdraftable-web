@@ -19,6 +19,42 @@ const clientApi: Api = {
     (await fetch(`/api/typeahead?search=${search}`)).json(),
   fetchDistributionStats: async (pos: PositionId) =>
     (await fetch(`api/stats?pos=${pos}`)).json(),
+  loginUser: async (email: string, password: string) =>
+    (await fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'same-origin',
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    })).json(),
+  createUser: async (email: string, password: string) =>
+    (await fetch('/api/create-user', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'same-origin',
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    })).json(),
+  doesUserExist: async (email: string) =>
+    (await fetch(`/api/does-user-exist?email=${email}`)).json(),
+  logout: async () =>
+    (await fetch('/api/logout', {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'same-origin',
+    })).json(),
 };
 
 export default clientApi;

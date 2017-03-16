@@ -1,13 +1,16 @@
 // @flow
 
-import type { PlayerId, PositionId, MeasurableId, Player, Position, Measurable, MeasurableKey, Percentiles, Comparisons, Sort, DistributionStatistics } from './domain';
+import type { Id, PlayerId, PositionId, MeasurableId, Player, Position, Measurable, MeasurableKey, Percentiles, Comparisons, Sort, DistributionStatistics } from './domain';
+
+export type UserId = Id;
+export type ValidationError = string;
 
 type TypeAheadState = {
   typeAheadSearching?: boolean,
   typeAheadResults?: Array<PlayerId>,
 };
 
-export type ModalType = 'PositionSelector' | 'TypeAhead' | 'Embed' | 'None';
+export type ModalType = 'PositionSelector' | 'TypeAhead' | 'Embed' | 'None' | 'Login';
 
 export type SearchOptions = {
   beginYear: number,
@@ -19,6 +22,7 @@ export type SearchOptions = {
 
 type GlobalAppState = {
   selectedPositionId: PositionId,
+  loggedInUserId: ?UserId,
 };
 
 export type SearchResults = {
@@ -52,7 +56,11 @@ type PositionPageState = {
   distributionStatistics: { [PositionId]: { [MeasurableKey]: DistributionStatistics } };
 };
 
-type AppState = SearchPageState & PlayerPageState & GlobalAppState & EmbedState & PositionPageState;
+type AppState = SearchPageState
+  & PlayerPageState
+  & GlobalAppState
+  & EmbedState
+  & PositionPageState;
 
 type Domain = {
   players: { [key: PlayerId]: Player },

@@ -13,10 +13,11 @@ import HomePage from './home-page';
 import SearchPage from './search-page';
 import Typeahead from './typeahead';
 import type { State, ModalType } from '../types/state';
-import { updateModalType } from '../actions';
+import { updateModalType, logout as doLogout } from '../actions';
 import EmbededPlayer from './embeded-player';
 import EmbedCode from './embed-code';
 import PositionPage from './position-page';
+import LoginPage from './login-page';
 
 type Props = {
   isPlayerPage: boolean,
@@ -25,22 +26,29 @@ type Props = {
   isPositionPage: boolean,
   modalType: ModalType,
   closeModal: () => void,
+  openLoginModal: () => void,
+  logout: () => void,
   embed: boolean,
   positionName: string,
+  isUserLoggedIn: boolean,
 };
 
 export default connect(
   (state: State) => ({
     isPlayerPage: !!state.selectedPlayerId,
     isSearchPage: !!state.searchOptions,
-    isHomePage: !state.selectedPlayerId && !state.searchOptions && !state.positionDetail,
+    isHomePage:
+      !state.selectedPlayerId && !state.searchOptions && !state.positionDetail,
     isPositionPage: state.positionDetail,
     embed: state.embed,
     modalType: state.modalType,
     positionName: state.positions[state.selectedPositionId].plural,
+    isUserLoggedIn: !!state.loggedInUserId,
   }),
   (dispatch: Dispatch<Action>) => ({
     closeModal: () => dispatch(updateModalType('None')),
+    openLoginModal: () => dispatch(updateModalType('Login')),
+    logout: () => dispatch(doLogout()),
   }),
 )(({
   isPlayerPage,
@@ -48,9 +56,12 @@ export default connect(
   isHomePage,
   modalType,
   closeModal,
+  openLoginModal,
+  logout,
   embed,
   isPositionPage,
   positionName,
+  isUserLoggedIn,
 }: Props) => {
   if (embed) {
     return <EmbededPlayer />;
@@ -60,6 +71,8 @@ export default connect(
     title = 'Search for a player by name';
   } else if (modalType === 'Embed') {
     title = 'Embed this player';
+  } else if (modalType === 'Login') {
+    title = 'Contributor login';
   }
   return (<div>
     {modalType !== 'None' && (
@@ -70,6 +83,7 @@ export default connect(
         {modalType === 'PositionSelector' && <PositionSelector />}
         {modalType === 'TypeAhead' && <Typeahead />}
         {modalType === 'Embed' && <EmbedCode />}
+        {modalType === 'Login' && <LoginPage />}
       </Modal>
     )}
     <Nav />
@@ -85,6 +99,13 @@ export default connect(
         <p className="text-muted text-center mt-2">
           <small>
             &copy; MockDraftable, 2011-2017.
+            <br />
+            {isUserLoggedIn
+              ? <button className="btn btn-link btn-sm" onClick={logout}>Log out</button>
+              : <button className="btn btn-link btn-sm" onClick={openLoginModal}>
+                Contributor Login
+              </button>
+            }
             <br />
             MockDraftable is developed in the open by <a href="https://twitter.com/mockdraftable">Marcus Armstrong</a>, on <a href="https://github.com/marcusdarmstrong/mockdraftable-web">GitHub</a>.
             Feel free to submit any issues you find with the site, or to contribute to the project.

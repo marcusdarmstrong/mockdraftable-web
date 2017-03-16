@@ -29,6 +29,12 @@ create table t_measurement (
   source int not null
 );
 
+create table t_user (
+  id serial,
+  status int not null,
+  email text not null unique,
+  pass_hash text not null
+);
 
 create view v_individual_measurements as 
 select 

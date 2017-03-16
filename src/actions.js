@@ -5,7 +5,7 @@ import type { ThunkAction } from 'redux-thunk';
 
 import type { Player, PlayerId, PositionId, Comparisons, Percentiles, MeasurableKey, DistributionStatistics } from './types/domain';
 import type { Api } from './types/api';
-import type { State, SearchOptions, SearchResults, ModalType, EmbedPage } from './types/state';
+import type { UserId, State, SearchOptions, SearchResults, ModalType, EmbedPage } from './types/state';
 
 export const UPDATE_SELECTED_PLAYER = 'UPDATE_SELECTED_PLAYER';
 export const UPDATE_SELECTED_POSITION = 'UPDATE_SELECTED_POSITION';
@@ -20,6 +20,7 @@ export const UPDATE_TYPE_AHEAD_IS_SEARCHING = 'UPDATE_TYPE_AHEAD_IS_SEARCHING';
 export const UPDATE_TYPE_AHEAD_RESULTS = 'UPDATE_TYPE_AHEAD_RESULTS';
 export const UPDATE_EMBED_PAGE = 'UPDATE_EMBED_PAGE';
 export const LOAD_DISTRIBUTION_STATISTICS = 'LOAD_DISTRIBUTION_STATISTICS';
+export const UPDATE_LOGGED_IN_USER = 'UPDATE_LOGGED_IN_USER';
 
 export const updateSelectedPlayer = (id: PlayerId) => ({
   type: UPDATE_SELECTED_PLAYER,
@@ -111,6 +112,16 @@ export type UpdateEmbedPageAction = {
   state: EmbedPage,
 };
 
+export const updateLoggedInUserId = (userId: ?UserId) => ({
+  type: UPDATE_LOGGED_IN_USER,
+  userId,
+});
+
+export type UpdateLoggedInUserIdAction = {
+  type: 'UPDATE_LOGGED_IN_USER',
+  userId: ?UserId,
+};
+
 export type LoadPlayerAction = {
   type: 'LOAD_PLAYER',
   player: Player,
@@ -177,6 +188,7 @@ export type Action =
   | UpdateTypeAheadIsSearchingAction
   | UpdateTypeAheadResultsAction
   | UpdateEmbedPageAction
+  | UpdateLoggedInUserIdAction
   | LoadPlayerAction
   | LoadComparisonsAction
   | LoadPercentilesAction
@@ -277,4 +289,10 @@ export const selectTypeAheadSearch = (search: string) =>
       dispatch(updateTypeAheadResults(results));
       dispatch(updateTypeAheadIsSearching(false));
     }
+  };
+
+export const logout = () =>
+  async (dispatch: Dispatch<Action>, getState: () => State, api: Api) => {
+    dispatch(updateLoggedInUserId(null));
+    await api.logout();
   };

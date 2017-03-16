@@ -7,8 +7,11 @@ import type { SearchOptions } from '../types/state';
 import { throw500 } from '../http';
 import getComparablePlayersAtPosition from '../services/comparisons/get-comparable-players-at-position';
 import getPercentileAtPosition from '../services/statistics/get-percentile-at-position';
+import getUserByEmail from '../services/users/get-user-by-email';
+import createUser from '../services/users/create-user';
 import measurables from '../measurables';
 import { Sorts } from '../types/domain';
+import { checkPassword } from '../pass-hash';
 
 const pageSize = 20;
 const typeAheadPageSize = 5;
@@ -102,6 +105,41 @@ const api: (Stores) => Api =
         });
         return result;
       },
+      loginUser: async (email: string, password: string) => {
+        try {
+          const dbuser = await getUserByEmail(email);
+          if (dbuser && checkPassword(dbuser.email, password, dbuser.pass_hash)) {
+            return { userId: dbuser.id };
+          }
+          return { error: 'Mismatched email and password' };
+        } catch (e) {
+          return { error: 'Mismatched email and password' };
+        }
+      },
+      createUser: async (email: string, password: string) => {
+        try {
+          const dbuser = await createUser(email, password);
+          if (dbuser) {
+            return { userId: dbuser.id };
+          }
+          return { error: 'Unable to create user' };
+        } catch (e) {
+          console.log(e.message);
+          return { error: 'Unable to create user' };
+        }
+      },
+      doesUserExist: async (email: string) => {
+        try {
+          const dbuser = await getUserByEmail(email);
+          if (dbuser) {
+            return { userId: dbuser.id };
+          }
+          return { error: 'Email addresss already taken' };
+        } catch (e) {
+          return { error: 'Email addresss already taken' };
+        }
+      },
+      logout: async () => true,
     };
   };
 
