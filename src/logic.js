@@ -1,7 +1,7 @@
 // @flow
 
+import { round } from 'lodash';
 import type { MeasurablePercentile, MeasurablePercentilePoint, GraphData } from './types/graphing';
-import round from './util/round';
 
 export default (percentiles: MeasurablePercentile[], scale: number): GraphData => {
   const angleIncrement = (2 * Math.PI) / percentiles.length;

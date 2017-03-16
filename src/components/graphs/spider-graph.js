@@ -1,8 +1,9 @@
 // @flow
 
 import React from 'react';
+import { round } from 'lodash';
+
 import type { Point } from '../../types/graphing';
-import round from '../../util/round';
 import type { Color } from '../../types/domain';
 
 type Props = {

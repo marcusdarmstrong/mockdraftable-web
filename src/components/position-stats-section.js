@@ -3,7 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import round from '../util/round';
+import { round } from 'lodash';
 import type { State } from '../types/state';
 import type { DistributionStatistics } from '../types/domain';
 

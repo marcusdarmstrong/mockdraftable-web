@@ -1,7 +1,7 @@
 // @flow
 
+import { round } from 'lodash';
 import { allMeasurables } from '../../measurables';
-import round from '../../util/round';
 
 import type { PlayerId, Id, PlayerStore, PositionEligibilityStore, PositionId, StatisticsStore, Measurable, MeasurableKey } from '../../types/domain';
 

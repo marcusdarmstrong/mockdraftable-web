@@ -1,12 +1,13 @@
 // @flow
 
 import React from 'react';
+import { round } from 'lodash';
+
 import SpiderGraph from './spider-graph';
 import Axis from './axis';
 import generatePointsAndFactors from '../../logic';
 import type { MeasurablePercentile } from '../../types/graphing';
 import type { Color } from '../../types/domain';
-import round from '../../util/round';
 
 type Props = {
   percentiles: Array<MeasurablePercentile>,
