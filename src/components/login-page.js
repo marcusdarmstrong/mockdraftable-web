@@ -33,7 +33,7 @@ class LoginPage extends React.Component {
               <span className="nav-link active">Log In</span>
             </li>
             <li className="nav-item">
-              <button className="nav-link btn-link btn-block" onClick={this.toggleIsLogin}>Create an Account</button>
+              <button className="nav-link btn-link btn-block" onClick={this.toggleIsLogin}>Sign Up</button>
             </li>
           </ul>
           <LoginForm loginUser={this.props.loginUser} />
@@ -47,7 +47,7 @@ class LoginPage extends React.Component {
             <button className="nav-link btn-link btn-block" onClick={this.toggleIsLogin}>Log In</button>
           </li>
           <li className="nav-item">
-            <span className="nav-link active">Create an Account</span>
+            <span className="nav-link active">Sign Up</span>
           </li>
         </ul>
         <SignUpForm loginUser={this.props.loginUser} />
