@@ -13,7 +13,7 @@
     "build:prod": "npm run build:js:prod && npm run build:css:prod",
     "build:js:dev": "time npm run build:server && time npm run build:client:dev",
     "build:js:prod": "npm run build:server && npm run build:client:prod",
-    "build:server": "babel src -d lib",
+    "build:server": "babel --comments=false src -d lib",
     "build:client:dev": "browserify lib/client.js | hashmark -s 'public/bundle-{hash}.js' -n js_bundle_name -l 8 -m './lib/bundles.json'",
     "build:client:prod": "browserify lib/client.js | uglifyjs - --screw-ie8 -m -c warnings=false | hashmark -s 'public/bundle-{hash}.js' -n js_bundle_name -l 8 -m './lib/bundles.json'",
     "build:css:prod": "node-sass --importer node_modules/node-sass-module-importer/index.js --output-style compressed sass/index.scss | hashmark -s 'public/bundle-{hash}.css' -n css_bundle_name -l 8 -m './lib/bundles.json'",
@@ -34,6 +34,7 @@
   "homepage": "https://github.com/marcusdarmstrong/mockdraftable-web#readme",
   "dependencies": {
     "babel-polyfill": "6.23.0",
+    "body-parser": "1.17.1",
     "compression": "1.6.2",
     "cookie-parser": "1.4.3",
     "express": "4.15.2",
@@ -43,7 +44,7 @@
     "lodash": "4.17.4",
     "md5": "2.2.1",
     "multi-slider": "3.0.1",
-    "pg-promise": "5.6.3",
+    "pg-promise": "5.6.4",
     "react": "15.4.2",
     "react-dom": "15.4.2",
     "react-redux": "5.0.3",
@@ -51,14 +52,15 @@
     "redux-shortcuts": "0.0.3",
     "redux-thunk": "2.2.0",
     "response-time": "2.3.2",
+    "scrypt": "6.0.3",
     "serve-favicon": "2.4.1"
   },
   "devDependencies": {
-    "babel-cli": "6.23.0",
-    "babel-core": "6.23.1",
+    "babel-cli": "6.24.0",
+    "babel-core": "6.24.0",
     "babel-eslint": "7.1.1",
     "babel-plugin-lodash": "3.2.11",
-    "babel-preset-latest": "6.22.0",
+    "babel-preset-latest": "6.24.0",
     "babel-preset-react": "6.23.0",
     "babel-preset-stage-2": "6.22.0",
     "bootstrap": "4.0.0-alpha.6",
@@ -73,6 +75,6 @@
     "hashmark": "4.1.0",
     "node-sass": "4.5.0",
     "node-sass-module-importer": "0.1.0",
-    "uglify-js": "2.8.9"
+    "uglify-js": "2.8.12"
   }
 }
