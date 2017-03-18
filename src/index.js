@@ -38,6 +38,7 @@ import {
 import requireHttps from './packages/require-https';
 import defaultState from './redux/default-state';
 import errorPage from './error';
+import oldUrlMiddleware from './old-url-middleware';
 
 init().then((stores) => {
   const app = express();
@@ -120,6 +121,8 @@ init().then((stores) => {
     }
     res.json(result);
   }));
+
+  app.use(oldUrlMiddleware);
 
   app.get('*', asyncCatch(async (req: $Request, res) => {
     const store: Store<State, BatchedAction> = createStore(

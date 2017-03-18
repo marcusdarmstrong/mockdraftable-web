@@ -1,7 +1,7 @@
 // @flow
 
 import { Sorts } from './types/domain';
-import { HttpRedirect, HttpError, throw404 } from './packages/http';
+import { HttpError } from './packages/http';
 import {
   selectPlayer,
   updateSelectedPosition,
@@ -9,7 +9,6 @@ import {
   updateEmbedPage,
   selectDistributionStats,
 } from './redux/actions';
-import getPlayerByOldId from './services/players/get-player-by-old-id';
 import type { Action } from './redux/actions';
 
 export default async (path: string, args: {[string]: string}): Promise<Action[]> => {
@@ -41,11 +40,6 @@ export default async (path: string, args: {[string]: string}): Promise<Action[]>
     if (segments.length < 3) {
       throw new HttpError(404, path);
     }
-    const possibleOldId = Number(segments[2]);
-    if (!isNaN(possibleOldId)) {
-      const newPlayer = await getPlayerByOldId(possibleOldId) || throw404(path);
-      throw new HttpRedirect(301, `/player/${newPlayer.url}`);
-    }
 
     return [selectPlayer(segments[2], args.position)];
   } else if (path.startsWith('/embed/')) {
@@ -62,20 +56,6 @@ export default async (path: string, args: {[string]: string}): Promise<Action[]>
     }
 
     return [selectPlayer(segments[2], args.position), updateEmbedPage(page)];
-  } else if (path.startsWith('/players/')) {
-    throw new HttpRedirect(301, '/search');
-  } else if (path.startsWith('/player_embed/')) {
-    const segments = path.split('/');
-    if (segments.length < 3) {
-      throw new HttpError(404, path);
-    }
-    const oldId = parseInt(segments[2], 10);
-    if (isNaN(oldId) || oldId < 1) {
-      throw new HttpError(404, path);
-    }
-    const newPlayer = await getPlayerByOldId(oldId) || throw404(path);
-
-    throw new HttpRedirect(301, `/embed/${newPlayer.url}`);
   } else if (path === '/positions') {
     return [selectDistributionStats(args.position || 'ATH')];
   } else if (path === '/') {
