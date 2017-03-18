@@ -44,7 +44,7 @@ init().then((stores) => {
 
   const api = serverApi(stores);
 
-  app.set('trust proxy');
+  app.set('trust proxy', true);
   app.set('x-powered-by', false);
   app.use(responseTime());
   app.set('port', (process.env.PORT || 5000));
