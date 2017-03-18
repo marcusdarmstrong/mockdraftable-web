@@ -1,4 +1,7 @@
 {
   "presets": ["react", "latest", "stage-2"],
-  "plugins": ["lodash"]
+  "plugins": [
+    "lodash",
+    ["transform-builtin-extend", { globals: ["Error"] }]
+  ]
 }
