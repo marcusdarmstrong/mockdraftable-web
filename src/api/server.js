@@ -109,34 +109,34 @@ const api: (Stores) => Api =
         try {
           const dbuser = await getUserByEmail(email);
           if (dbuser && checkPassword(dbuser.email, password, dbuser.pass_hash)) {
-            return { userId: dbuser.id };
+            return { success: true, userId: dbuser.id };
           }
-          return { error: 'Mismatched email and password' };
+          return { success: false, error: 'Mismatched email and password' };
         } catch (e) {
-          return { error: 'Mismatched email and password' };
+          return { success: false, error: 'Mismatched email and password' };
         }
       },
       createUser: async (email: string, password: string) => {
         try {
           const dbuser = await createUser(email, password);
           if (dbuser) {
-            return { userId: dbuser.id };
+            return { success: true, userId: dbuser.id };
           }
-          return { error: 'Unable to create user' };
+          return { success: false, error: 'Unable to create user' };
         } catch (e) {
           console.log(e.message);
-          return { error: 'Unable to create user' };
+          return { success: false, error: 'Unable to create user' };
         }
       },
       doesUserExist: async (email: string) => {
         try {
           const dbuser = await getUserByEmail(email);
           if (dbuser) {
-            return { userId: dbuser.id };
+            return { success: true, userId: dbuser.id };
           }
-          return { error: 'Email addresss already taken' };
+          return { success: false, error: 'Email addresss already taken' };
         } catch (e) {
-          return { error: 'Email addresss already taken' };
+          return { success: false, error: 'Email addresss already taken' };
         }
       },
       logout: async () => true,

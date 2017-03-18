@@ -3,7 +3,8 @@
 import type { Player, PlayerId, Comparisons, Percentiles, PositionId, MeasurableKey, DistributionStatistics } from './domain';
 import type { UserId, SearchOptions, SearchResults, ValidationError } from './state';
 
-type LoginResponse = { userId: UserId } | { error: ValidationError };
+export type LoginResponse =
+  { success: true, userId: UserId } | { success: false, error: ValidationError };
 
 export interface Api {
   fetchPlayer: (id: PlayerId) => Promise<Player>,

@@ -82,10 +82,4 @@ export default async (path: string, args: {[string]: string}): Promise<Action[]>
     return [];
   }
   throw new HttpError(404, path);
-
-  /* 'player/:oldid'
-  'players/:year'
-  'position/:id'
-  'player_embed/:oldid'
-  'player_embed/:oldid/show/graph' */
 };

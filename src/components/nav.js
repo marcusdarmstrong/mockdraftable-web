@@ -18,13 +18,13 @@ type Props = {
 };
 
 const constructUrl = (state: State) => {
-  if (state.selectedPlayerId) {
+  if (state.page === 'PLAYER') {
     let url = `/player/${state.selectedPlayerId}`;
     if (state.selectedPositionId !== state.players[state.selectedPlayerId].positions.primary) {
       url = `${url}?position=${state.selectedPositionId}`;
     }
     return url;
-  } else if (state.searchOptions) {
+  } else if (state.page === 'SEARCH') {
     const { beginYear, endYear, sortOrder, page } = state.searchOptions;
     let url = `/search?position=${state.selectedPositionId}`;
     url = `${url}&beginYear=${beginYear}&endYear=${endYear}&sort=${sortOrder}&page=${page}`;
@@ -32,7 +32,7 @@ const constructUrl = (state: State) => {
       url = `${url}&measurable=${state.searchOptions.measurableId}`;
     }
     return url;
-  } else if (state.positionDetail) {
+  } else if (state.page === 'POSITION') {
     let url = '/positions';
     if (state.selectedPositionId !== 'ATH') {
       url = `${url}?position=${state.selectedPositionId}`;
@@ -98,10 +98,10 @@ class Nav extends React.Component {
 
 export default connect(
   (state: State) => ({
-    title: state.selectedPlayerId ? state.players[state.selectedPlayerId].name : 'MockDraftable',
+    title: state.page === 'PLAYER' ? state.players[state.selectedPlayerId].name : 'MockDraftable',
     url: constructUrl(state),
-    isSearch: !!state.searchOptions,
-    isPositionDetail: state.positionDetail,
+    isSearch: state.page === 'SEARCH',
+    isPositionDetail: state.page === 'POSITION',
   }),
   (dispatch: Dispatch<Action>) => ({
     showModal: component => dispatch(updateModalType(component)),

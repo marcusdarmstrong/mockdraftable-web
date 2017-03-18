@@ -11,7 +11,7 @@ import type { Player, Position, Measurable, MeasurableId } from '../types/domain
 import type { MeasurablePercentile } from '../types/graphing';
 import measurables, { format } from '../measurables';
 import SearchControls from './search-controls';
-import type { State, SearchOptions } from '../types/state';
+import type { SearchPageState, SearchOptions } from '../types/state';
 import { selectNewSearch } from '../actions';
 import SearchPaging from './search-paging';
 
@@ -93,7 +93,7 @@ const SearchResults = ({
   </div>;
 
 export default connect(
-  (state: State) => ({
+  (state: SearchPageState) => ({
     isSearching: state.isSearching,
     searchOptions: state.searchOptions,
     selectedPosition: state.positions[state.selectedPositionId],

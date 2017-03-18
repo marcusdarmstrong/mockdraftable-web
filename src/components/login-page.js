@@ -1,7 +1,9 @@
 // @flow
 
 import React from 'react';
+import type { Dispatch } from 'redux';
 import { connect } from 'react-redux';
+import type { Action } from '../actions';
 import LoginForm from './login-form';
 import SignUpForm from './sign-up-form';
 import type { UserId } from '../types/state';
@@ -58,7 +60,7 @@ class LoginPage extends React.Component {
 
 export default connect(
   () => ({}),
-  dispatch => ({
+  (dispatch: Dispatch<Action>) => ({
     loginUser: userId => dispatch([updateLoggedInUserId(userId), updateModalType('None')]),
   }),
 )(LoginPage);

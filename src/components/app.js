@@ -35,11 +35,10 @@ type Props = {
 
 export default connect(
   (state: State) => ({
-    isPlayerPage: !!state.selectedPlayerId,
-    isSearchPage: !!state.searchOptions,
-    isHomePage:
-      !state.selectedPlayerId && !state.searchOptions && !state.positionDetail,
-    isPositionPage: state.positionDetail,
+    isPlayerPage: state.page === 'PLAYER',
+    isSearchPage: state.page === 'SEARCH',
+    isHomePage: state.page === 'HOME',
+    isPositionPage: state.page === 'POSITION',
     embed: state.embed,
     modalType: state.modalType,
     positionName: state.positions[state.selectedPositionId].plural,

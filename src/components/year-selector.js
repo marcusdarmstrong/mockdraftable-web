@@ -6,7 +6,7 @@ import type { Dispatch } from 'redux';
 import MultiSlider from 'multi-slider';
 
 import type { Action } from '../actions';
-import type { State, SearchOptions } from '../types/state';
+import type { SearchPageState, SearchOptions } from '../types/state';
 import { selectNewSearch } from '../actions';
 
 type Props = {
@@ -40,7 +40,7 @@ const YearSelector = ({ min, max, low, high, onLowChange, onHighChange, searchOp
   </div>);
 };
 
-export default connect((state: State) => ({
+export default connect((state: SearchPageState) => ({
   low: state.searchOptions && state.searchOptions.beginYear,
   high: state.searchOptions && state.searchOptions.endYear,
   searchOptions: state.searchOptions,

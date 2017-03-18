@@ -7,7 +7,7 @@ import type { Position, Measurement, Measurable, MeasurableKey } from '../types/
 import FullGraph from './graphs/full-graph';
 import Measurables from './measurables';
 import { format } from '../measurables';
-import type { State } from '../types/state';
+import type { PlayerPageState } from '../types/state';
 
 type Props = {
   percentiles: Array<MeasurablePercentile>,
@@ -43,7 +43,7 @@ const MeasurablesSection = ({ measurements, percentiles, displayPosition, measur
   </div>);
 };
 
-export default connect((state: State) => ({
+export default connect((state: PlayerPageState) => ({
   displayPosition: state.positions[state.selectedPositionId],
   measurements: state.players[state.selectedPlayerId].measurements,
   measurables: state.measurables,

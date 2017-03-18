@@ -42,7 +42,7 @@ class LoginForm extends React.Component {
 
     const loginResponse = await api.loginUser(this.state.email, this.state.password);
 
-    if (loginResponse.userId) {
+    if (loginResponse.success) {
       this.props.loginUser(loginResponse.userId);
     } else {
       this.setState({ error: loginResponse.error });

@@ -30,16 +30,6 @@ export type SearchResults = {
   hasNextPage: boolean,
 };
 
-type SearchPageState = {
-  searchOptions?: SearchOptions,
-  searchResults?: SearchResults,
-  isSearching?: boolean,
-};
-
-type PlayerPageState = {
-  selectedPlayerId?: PlayerId,
-};
-
 export type EmbedPage = 'GRAPH' | 'COMPARISONS' | 'MEASURABLES';
 
 type EmbedState = {
@@ -51,23 +41,38 @@ type UiState = {
   modalType: ModalType,
 } & TypeAheadState;
 
-type PositionPageState = {
-  positionDetail: boolean,
+type AppState =
+  & GlobalAppState
+  & EmbedState;
+
+type Domain = {
+  players: { [PlayerId]: Player },
+  positions: { [PositionId]: Position },
+  measurables: { [MeasurableKey]: Measurable },
+  comparisons: { [PlayerId]: { [PositionId]: Comparisons } },
+  percentiles: { [PlayerId]: { [PositionId]: Percentiles } },
   distributionStatistics: { [PositionId]: { [MeasurableKey]: DistributionStatistics } };
 };
 
-type AppState = SearchPageState
-  & PlayerPageState
-  & GlobalAppState
-  & EmbedState
-  & PositionPageState;
+export type SharedState = Domain & AppState & UiState;
 
-type Domain = {
-  players: { [key: PlayerId]: Player },
-  positions: { [key: PositionId]: Position },
-  measurables: { [key: MeasurableKey]: Measurable },
-  comparisons: { [key: PlayerId]: { [key: PositionId]: Comparisons } },
-  percentiles: { [key: PlayerId]: { [key: PositionId]: Percentiles } },
+export type PlayerPageState = SharedState & {
+  page: 'PLAYER',
+  selectedPlayerId: PlayerId,
+};
+export type SearchPageState = SharedState & {
+  page: 'SEARCH',
+  searchOptions: SearchOptions,
+  searchResults: SearchResults,
+  isSearching: boolean,
 };
 
-export type State = Domain & AppState & UiState;
+export type PositionPageState = SharedState & {
+  page: 'POSITION',
+};
+
+export type HomePageState = SharedState & {
+  page: 'HOME';
+};
+
+export type State = HomePageState | PositionPageState | SearchPageState | PlayerPageState;

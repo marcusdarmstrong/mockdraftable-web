@@ -14,7 +14,14 @@ const getDecimalInches = (text: string) => {
   return inches;
 };
 
-const pullMeasurements = async (nflId: number) => {
+type NflMeasurements = {
+  height: number,
+  weight: number,
+  armLength: number,
+  handSize: number,
+};
+
+const pullMeasurements: (number) => Promise<?NflMeasurements> = async (nflId: number) => {
   let playerPageText: string =
     await (await fetch(`http://www.nfl.com/combine/profiles?id=${nflId}`)).text();
 

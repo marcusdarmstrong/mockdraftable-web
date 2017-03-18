@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import type { Dispatch } from 'redux';
 import type { Action } from '../actions';
 import type { MeasurablePercentile } from '../types/graphing';
-import type { State, EmbedPage } from '../types/state';
+import type { PlayerPageState, EmbedPage } from '../types/state';
 import type { Player, Position, MeasurableKey, Measurable } from '../types/domain';
 import FullGraph from './graphs/full-graph';
 import Measurables from './measurables';
@@ -107,7 +107,7 @@ const EmbededPlayer = ({
 };
 
 export default connect(
-  (state: State) => ({
+  (state: PlayerPageState) => ({
     selectedPlayer: state.players[state.selectedPlayerId],
     selectedPosition: state.positions[state.selectedPositionId],
     measurements: state.players[state.selectedPlayerId].measurements,

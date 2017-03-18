@@ -8,7 +8,7 @@ import { updateModalType } from '../actions';
 
 import type { Action } from '../actions';
 import type { Position } from '../types/domain';
-import type { State } from '../types/state';
+import type { PlayerPageState } from '../types/state';
 
 type Props = {
   selectedPlayerName: string,
@@ -40,7 +40,7 @@ const PlayerBar = ({ selectedPlayerName, selectedPosition, openPositionSelector 
 ;
 
 export default connect(
-  (state: State) => ({
+  (state: PlayerPageState) => ({
     selectedPlayerName: state.players[state.selectedPlayerId].name,
     selectedPosition: state.positions[state.selectedPositionId],
   }),

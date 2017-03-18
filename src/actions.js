@@ -245,7 +245,8 @@ export const doSearch = (options: SearchOptions, positionId: PositionId) =>
     dispatch(updateSearchOptions(options));
     dispatch(updateSelectedPosition(positionId));
     const results = await api.fetchSearchResults(options, positionId);
-    if (getState().searchOptions === options) {
+    const newState = getState();
+    if (newState.page === 'SEARCH' && newState.searchOptions === options) {
       await Promise.all(
         results.players.map(id => dispatch(loadPlayerIfNeeded(id)))
           .concat(results.players.map(id => dispatch(loadPercentilesIfNeeded(id, positionId)))),
@@ -264,16 +265,24 @@ export const selectDistributionStats = (positionId: PositionId) =>
   async (dispatch: Dispatch<Action>, getState: () => State, api: Api) => {
     const results = await api.fetchDistributionStats(positionId);
     Object.entries(results)
-      .forEach(entry => dispatch(loadDistributionStatistics(positionId, entry[0], entry[1])));
+      .forEach(entry =>
+        dispatch(
+          loadDistributionStatistics(
+            positionId,
+            ((Number(entry[0])): MeasurableKey),
+            ((entry[1]: any): DistributionStatistics),
+          ),
+        ),
+      );
     dispatch(updateSelectedPosition(positionId));
   };
 
 export const selectPosition = (positionId: PositionId) =>
   async (dispatch: Dispatch<Action>, getState: () => State) => {
     const state = getState();
-    if (state.selectedPlayerId) {
+    if (state.page === 'PLAYER') {
       await dispatch(selectPlayer(state.selectedPlayerId, positionId));
-    } else if (state.searchOptions) {
+    } else if (state.page === 'SEARCH') {
       await dispatch(doSearch(Object.assign({}, state.searchOptions, { page: 1 }), positionId));
     } else {
       await dispatch(selectDistributionStats(positionId));

@@ -4,17 +4,17 @@ import type { State } from './types/state';
 import type { Action } from './actions';
 import * as actions from './actions';
 
-export default (previousState: State, action: Action): State => {
+const reducer = (previousState: State, action: Action): State => {
   if (action.type === actions.LOAD_PLAYER) {
     return Object.assign(
-      {},
+      ({}: any),
       previousState,
       { players: Object.assign({}, previousState.players, { [action.player.id]: action.player }) },
     );
   }
   if (action.type === actions.LOAD_COMPARISONS) {
     return Object.assign(
-      {},
+      ({}: any),
       previousState,
       {
         comparisons: Object.assign({}, previousState.comparisons, {
@@ -27,7 +27,7 @@ export default (previousState: State, action: Action): State => {
   }
   if (action.type === actions.LOAD_PERCENTILES) {
     return Object.assign(
-      {},
+      ({}: any),
       previousState,
       {
         percentiles: Object.assign({}, previousState.percentiles, {
@@ -39,20 +39,28 @@ export default (previousState: State, action: Action): State => {
     );
   }
   if (action.type === actions.UPDATE_SELECTED_PLAYER) {
-    return Object.assign({}, previousState, { selectedPlayerId: action.playerId });
+    return Object.assign(
+      ({}: any),
+      previousState,
+      { page: 'PLAYER', selectedPlayerId: action.playerId },
+    );
   }
   if (action.type === actions.UPDATE_SELECTED_POSITION) {
-    return Object.assign({}, previousState, { selectedPositionId: action.positionId });
+    return Object.assign(({}: any), previousState, { selectedPositionId: action.positionId });
   }
   if (action.type === actions.UPDATE_SEARCH_OPTIONS) {
-    return Object.assign({}, previousState, { searchOptions: action.options });
+    return Object.assign(
+      ({}: any),
+      previousState,
+      { page: 'SEARCH', searchOptions: action.options },
+    );
   }
   if (action.type === actions.UPDATE_SEARCH_RESULTS) {
-    return Object.assign({}, previousState, { searchResults: action.results });
+    return Object.assign(({}: any), previousState, { searchResults: action.results });
   }
   if (action.type === actions.UPDATE_IS_SEARCHING) {
     if (action.isSearching) {
-      return Object.assign({}, previousState, {
+      return Object.assign(({}: any), previousState, {
         isSearching: true,
         searchResults: {
           hasNextPage: false,
@@ -60,43 +68,43 @@ export default (previousState: State, action: Action): State => {
         },
       });
     }
-    return Object.assign({}, previousState, {
+    return Object.assign(({}: any), previousState, {
       isSearching: false,
     });
   }
   if (action.type === actions.UPDATE_MODAL_TYPE) {
     if (previousState.modalType === 'TypeAhead' && action.modalType === 'None') {
-      return Object.assign({}, previousState, {
+      return Object.assign(({}: any), previousState, {
         modalType: action.modalType,
         typeAheadResults: undefined,
         typeAheadSearching: false,
       });
     }
-    return Object.assign({}, previousState, { modalType: action.modalType });
+    return Object.assign(({}: any), previousState, { modalType: action.modalType });
   }
   if (action.type === actions.UPDATE_TYPE_AHEAD_IS_SEARCHING) {
     if (action.isSearching) {
-      return Object.assign({}, previousState, {
+      return Object.assign(({}: any), previousState, {
         typeAheadSearching: true,
         typeAheadResults: [],
       });
     }
-    return Object.assign({}, previousState, {
+    return Object.assign(({}: any), previousState, {
       typeAheadSearching: false,
     });
   }
   if (action.type === actions.UPDATE_TYPE_AHEAD_RESULTS) {
-    return Object.assign({}, previousState, { typeAheadResults: action.results });
+    return Object.assign(({}: any), previousState, { typeAheadResults: action.results });
   }
   if (action.type === actions.UPDATE_EMBED_PAGE) {
-    return Object.assign({}, previousState, { embed: true, embedPage: action.state });
+    return Object.assign(({}: any), previousState, { embed: true, embedPage: action.state });
   }
   if (action.type === actions.LOAD_DISTRIBUTION_STATISTICS) {
     return Object.assign(
-      {},
+      ({}: any),
       previousState,
       {
-        positionDetail: true,
+        page: 'POSITION',
         distributionStatistics: Object.assign(
           {},
           previousState.distributionStatistics,
@@ -114,7 +122,10 @@ export default (previousState: State, action: Action): State => {
     );
   }
   if (action.type === actions.UPDATE_LOGGED_IN_USER) {
-    return Object.assign({}, previousState, { loggedInUserId: action.userId });
+    return Object.assign(({}: any), previousState, { loggedInUserId: action.userId });
   }
   return previousState;
 };
+
+export default reducer;
+

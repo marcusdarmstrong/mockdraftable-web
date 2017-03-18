@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import type { PlayerId, PositionId } from '../types/domain';
-import type { State } from '../types/state';
+import type { PlayerPageState } from '../types/state';
 
 type Props = {
   selectedPlayerId: PlayerId,
@@ -21,7 +21,7 @@ const EmbedCode = ({ selectedPlayerId, selectedPositionId }: Props) => <div>
   <pre>{`<iframe src="https://www.mockdraftable.com/embed/${selectedPlayerId}?position=${selectedPositionId}&page=COMPARISONS" width="480" height="651" frameborder="0" scrolling="no"></iframe>`}</pre>
 </div>;
 
-export default connect((state: State) => ({
+export default connect((state: PlayerPageState) => ({
   selectedPlayerId: state.selectedPlayerId,
   selectedPositionId: state.selectedPositionId,
 }))(EmbedCode);

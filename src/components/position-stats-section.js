@@ -4,8 +4,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { round } from 'lodash';
-import type { State } from '../types/state';
-import type { DistributionStatistics } from '../types/domain';
+import type { PositionPageState } from '../types/state';
+import type { DistributionStatistics, MeasurableKey } from '../types/domain';
 
 type MeasurableStatistics = {
   name: string,
@@ -36,10 +36,10 @@ const PositionStatsSection = ({ positionStats }: Props) =>
     </tbody>
   </table>;
 
-export default connect((state: State) => ({
+export default connect((state: PositionPageState) => ({
   positionStats:
     Object.entries(state.distributionStatistics[state.selectedPositionId]).map(entry => ({
-      name: state.measurables[entry[0]].name,
+      name: state.measurables[((entry[0]: any): MeasurableKey)].name,
       stats: entry[1],
     })),
 }))(PositionStatsSection);
