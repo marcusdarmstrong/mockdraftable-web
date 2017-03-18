@@ -3,10 +3,10 @@
 import React from 'react';
 import type { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import type { Action } from '../actions';
+import type { Action } from '../redux/actions';
 import type { State, ModalType } from '../types/state';
 import Page from './page';
-import { updateModalType } from '../actions';
+import { updateModalType } from '../redux/actions';
 
 
 type Props = {

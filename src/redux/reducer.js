@@ -1,6 +1,6 @@
 // @flow
 
-import type { State } from './types/state';
+import type { State } from '../types/state';
 import type { Action } from './actions';
 import * as actions from './actions';
 

@@ -3,11 +3,11 @@
 import React from 'react';
 import type { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import type { Action } from '../actions';
+import type { Action } from '../redux/actions';
 import LoginForm from './login-form';
 import SignUpForm from './sign-up-form';
 import type { UserId } from '../types/state';
-import { updateLoggedInUserId, updateModalType } from '../actions';
+import { updateLoggedInUserId, updateModalType } from '../redux/actions';
 
 type Props = {
   loginUser: (UserId) => void,

@@ -2,11 +2,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import type { Dispatch } from 'redux';
-import type { Action } from '../actions';
+import type { Action } from '../redux/actions';
 import AboutSection from './about-section';
 import MeasurablesSection from './measurables-section';
 import ComparisonSection from './comparison-section';
-import { updateModalType } from '../actions';
+import { updateModalType } from '../redux/actions';
 import PlayerBar from './player-bar';
 
 type Props = {

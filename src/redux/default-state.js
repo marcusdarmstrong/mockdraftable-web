@@ -1,9 +1,9 @@
 // @flow
 
-import { positions } from './positions';
-import { measurablesByKey } from './measurables';
-import type { PositionEligibilityStore } from './types/domain';
-import type { State } from './types/state';
+import { positions } from '../positions';
+import { measurablesByKey } from '../measurables';
+import type { PositionEligibilityStore } from '../types/domain';
+import type { State } from '../types/state';
 
 const defaultState = (positionEligibilityStore: PositionEligibilityStore): State => {
   const validPositions = positions.filter(pos => !!positionEligibilityStore.get(pos.id));

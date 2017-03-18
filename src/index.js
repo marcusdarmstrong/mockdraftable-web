@@ -16,27 +16,27 @@ import responseTime from 'response-time';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 
-import batcher from './redux-batcher';
-import type { BatchedAction } from './redux-batcher';
+import batcher from './packages/redux-batcher';
+import type { BatchedAction } from './packages/redux-batcher';
 
 import type { State } from './types/state';
 import type { LoginResponse } from './types/api';
-import { updateLoggedInUserId } from './actions';
+import { updateLoggedInUserId } from './redux/actions';
 import layout from './layout';
 import App from './components/app';
-import reducer from './reducer';
+import reducer from './redux/reducer';
 import init from './init';
 import translate from './router';
 import serverApi from './api/server';
 import bundles from './bundles.json';
-import { HttpError, errorHandler, asyncCatch } from './http';
+import { HttpError, errorHandler, asyncCatch } from './packages/http';
 import {
   setAuthTokenCookieForUserId,
   readAuthTokenFromCookies,
   deleteAuthTokenFromCookies,
-} from './auth-token';
-import requireHttps from './require-https';
-import defaultState from './default-state';
+} from './packages/auth-token';
+import requireHttps from './packages/require-https';
+import defaultState from './redux/default-state';
 import errorPage from './error';
 
 init().then((stores) => {

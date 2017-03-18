@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import type { Dispatch } from 'redux';
 import MultiSlider from 'multi-slider';
 
-import type { Action } from '../actions';
+import type { Action } from '../redux/actions';
 import type { SearchPageState, SearchOptions } from '../types/state';
-import { selectNewSearch } from '../actions';
+import { selectNewSearch } from '../redux/actions';
 
 type Props = {
   min: number,

@@ -1,0 +1,1 @@
+This folder holds source files that I've written for this project but don't really have anything to do with the project itself and as such could reasonably be pulled out into separate NPM repos once they're nice and stable.

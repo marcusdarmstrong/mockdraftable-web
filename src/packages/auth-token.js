@@ -3,7 +3,7 @@
 import md5 from 'md5';
 import crypto from 'crypto';
 import type { $Request, $Response } from 'express';
-import type { UserId } from './types/state';
+import type { UserId } from '../types/state';
 
 const algorithm = 'aes-256-ctr';
 const password = process.env.AUTH_TOKEN_PASSWORD || '';

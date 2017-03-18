@@ -3,14 +3,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import type { Dispatch } from 'redux';
-import type { Action } from '../actions';
+import type { Action } from '../redux/actions';
 import type { MeasurablePercentile } from '../types/graphing';
 import type { PlayerPageState, EmbedPage } from '../types/state';
 import type { Player, Position, MeasurableKey, Measurable } from '../types/domain';
 import FullGraph from './graphs/full-graph';
 import Measurables from './measurables';
 import { format } from '../measurables';
-import { updateEmbedPage as doUpdateEmbedPage } from '../actions';
+import { updateEmbedPage as doUpdateEmbedPage } from '../redux/actions';
 import ComparisonSection from './comparison-section';
 
 type Props = {

@@ -4,9 +4,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import type { Dispatch } from 'redux';
 
-import { updateModalType } from '../actions';
+import { updateModalType } from '../redux/actions';
 
-import type { Action } from '../actions';
+import type { Action } from '../redux/actions';
 import type { Position } from '../types/domain';
 import type { PlayerPageState } from '../types/state';
 

@@ -1,7 +1,7 @@
 // @flow
 
-import { Sorts } from './types/domain';
-import type { SearchOptions } from './types/state';
+import { Sorts } from '../types/domain';
+import type { SearchOptions } from '../types/state';
 
 const searchDefaults: SearchOptions = {
   beginYear: 1999,

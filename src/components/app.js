@@ -3,7 +3,7 @@
 import React from 'react';
 import type { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import type { Action } from '../actions';
+import type { Action } from '../redux/actions';
 
 import Nav from './nav';
 import PositionSelector from './position-selector';
@@ -13,7 +13,7 @@ import HomePage from './home-page';
 import SearchPage from './search-page';
 import Typeahead from './typeahead';
 import type { State, ModalType } from '../types/state';
-import { updateModalType, logout as doLogout } from '../actions';
+import { updateModalType, logout as doLogout } from '../redux/actions';
 import EmbededPlayer from './embeded-player';
 import EmbedCode from './embed-code';
 import PositionPage from './position-page';

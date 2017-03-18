@@ -4,14 +4,14 @@ import type { Api } from '../types/api';
 import type { Player, PlayerId, PositionId, Stores, MeasurableId, Sort } from '../types/domain';
 import type { SearchOptions } from '../types/state';
 
-import { throw500 } from '../http';
+import { throw500 } from '../packages/http';
 import getComparablePlayersAtPosition from '../services/comparisons/get-comparable-players-at-position';
 import getPercentileAtPosition from '../services/statistics/get-percentile-at-position';
 import getUserByEmail from '../services/users/get-user-by-email';
 import createUser from '../services/users/create-user';
 import measurables from '../measurables';
 import { Sorts } from '../types/domain';
-import { checkPassword } from '../pass-hash';
+import { checkPassword } from '../packages/pass-hash';
 
 const pageSize = 20;
 const typeAheadPageSize = 5;

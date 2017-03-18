@@ -6,13 +6,13 @@ import type { Dispatch } from 'redux';
 
 import SearchResult from './search-result';
 import { Sorts } from '../types/domain';
-import type { Action } from '../actions';
+import type { Action } from '../redux/actions';
 import type { Player, Position, Measurable, MeasurableId } from '../types/domain';
 import type { MeasurablePercentile } from '../types/graphing';
 import measurables, { format } from '../measurables';
 import SearchControls from './search-controls';
 import type { SearchPageState, SearchOptions } from '../types/state';
-import { selectNewSearch } from '../actions';
+import { selectNewSearch } from '../redux/actions';
 import SearchPaging from './search-paging';
 
 type DisplayableSearchResult = {

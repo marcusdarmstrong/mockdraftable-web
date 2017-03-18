@@ -7,12 +7,12 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { mousetrap, Mousetrap, bindShortcuts } from 'redux-shortcuts';
 import thunk from 'redux-thunk';
-import batcher from './redux-batcher';
+import batcher from './packages/redux-batcher';
 import App from './components/app';
-import reducer from './reducer';
+import reducer from './redux/reducer';
 import clientApi from './api/client';
-import searchDefaults from './search-defaults';
-import { doSearch, updateModalType } from './actions';
+import searchDefaults from './redux/search-defaults';
+import { doSearch, updateModalType } from './redux/actions';
 
 const store = createStore(
   reducer,

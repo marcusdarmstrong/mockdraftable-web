@@ -2,7 +2,7 @@
 
 import db from '../../connection';
 import onError from '../../util/on-error';
-import { createPassHash } from '../../pass-hash';
+import { createPassHash } from '../../packages/pass-hash';
 
 const createUser = async (email: string, password: string) =>
   db.oneOrNone(

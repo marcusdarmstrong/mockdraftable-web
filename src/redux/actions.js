@@ -3,9 +3,9 @@
 import type { Dispatch } from 'redux';
 import type { ThunkAction } from 'redux-thunk';
 
-import type { Player, PlayerId, PositionId, Comparisons, Percentiles, MeasurableKey, DistributionStatistics } from './types/domain';
-import type { Api } from './types/api';
-import type { UserId, State, SearchOptions, SearchResults, ModalType, EmbedPage } from './types/state';
+import type { Player, PlayerId, PositionId, Comparisons, Percentiles, MeasurableKey, DistributionStatistics } from '../types/domain';
+import type { Api } from '../types/api';
+import type { UserId, State, SearchOptions, SearchResults, ModalType, EmbedPage } from '../types/state';
 
 export const UPDATE_SELECTED_PLAYER = 'UPDATE_SELECTED_PLAYER';
 export const UPDATE_SELECTED_POSITION = 'UPDATE_SELECTED_POSITION';

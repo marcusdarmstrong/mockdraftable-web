@@ -3,9 +3,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import type { Dispatch } from 'redux';
-import type { Action } from '../actions';
+import type { Action } from '../redux/actions';
 import type { Position, PositionId } from '../types/domain';
-import { selectPosition as buildSelectPositionAction } from '../actions';
+import { selectPosition as buildSelectPositionAction } from '../redux/actions';
 import type { State } from '../types/state';
 
 type Props = {

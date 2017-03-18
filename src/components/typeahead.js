@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import type { Dispatch } from 'redux';
 import type { Player, PositionId, Position } from '../types/domain';
 import type { State } from '../types/state';
-import type { Action } from '../actions';
-import { selectTypeAheadSearch } from '../actions';
+import type { Action } from '../redux/actions';
+import { selectTypeAheadSearch } from '../redux/actions';
 
 type Props = {
   updateSearch: string => void,

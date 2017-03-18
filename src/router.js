@@ -1,16 +1,16 @@
 // @flow
 
 import { Sorts } from './types/domain';
-import { HttpRedirect, HttpError, throw404 } from './http';
+import { HttpRedirect, HttpError, throw404 } from './packages/http';
 import {
   selectPlayer,
   updateSelectedPosition,
   selectNewSearch,
   updateEmbedPage,
   selectDistributionStats,
-} from './actions';
+} from './redux/actions';
 import getPlayerByOldId from './services/players/get-player-by-old-id';
-import type { Action } from './actions';
+import type { Action } from './redux/actions';
 
 export default async (path: string, args: {[string]: string}): Promise<Action[]> => {
   if (path === '/search') {
