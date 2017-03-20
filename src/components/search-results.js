@@ -85,11 +85,13 @@ const SearchResults = ({
         )}
       </div>
     }
-    {players.length !== 0 && (<SearchPaging
-      currentPage={Number(searchOptions.page)}
-      hasNextPage={hasNextPage}
-      selectPage={selectPage(searchOptions)}
-    />)}
+    {players.length !== 0 && (
+      <SearchPaging
+        currentPage={Number(searchOptions.page)}
+        hasNextPage={hasNextPage}
+        selectPage={selectPage(searchOptions)}
+      />
+    )}
   </div>;
 
 export default connect(
