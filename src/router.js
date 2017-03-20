@@ -11,7 +11,7 @@ import {
 } from './redux/actions';
 import type { Action } from './redux/actions';
 
-export default async (path: string, args: {[string]: string}): Promise<Action[]> => {
+export default (path: string, args: {[string]: string}): Array<Action> => {
   if (path === '/search') {
     const actions = [];
     if (args.position) {

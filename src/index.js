@@ -132,9 +132,7 @@ init().then((stores) => {
     );
 
     store.dispatch(updateLoggedInUserId(readAuthTokenFromCookies(req)));
-
-    const actions = await translate(req.path, req.query);
-    await store.dispatch(actions);
+    await store.dispatch(translate(req.path, req.query));
 
     const jsBundleName: string = bundles.js_bundle_name || 'public/bundle.js';
     const cssBundleName: string = bundles.css_bundle_name || 'public/bundle.css';
