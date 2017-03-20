@@ -76,6 +76,6 @@
     "hashmark": "4.1.0",
     "node-sass": "4.5.0",
     "node-sass-module-importer": "0.1.0",
-    "uglify-js": "2.8.13"
+    "uglify-js": "2.8.14"
   }
 }
