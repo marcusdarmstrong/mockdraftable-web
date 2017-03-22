@@ -18,7 +18,7 @@ const clientApi: Api = {
   fetchTypeAheadResults: async (search: string) =>
     (await fetch(`/api/typeahead?search=${search}`)).json(),
   fetchDistributionStats: async (pos: PositionId) =>
-    (await fetch(`api/stats?pos=${pos}`)).json(),
+    (await fetch(`/api/stats?pos=${pos}`)).json(),
   loginUser: async (email: string, password: string) =>
     (await fetch('/api/login', {
       method: 'POST',

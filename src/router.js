@@ -1,65 +1,40 @@
 // @flow
 
-import { Sorts } from './types/domain';
-import { HttpError } from './packages/http';
-import {
-  selectPlayer,
-  updateSelectedPosition,
-  selectNewSearch,
-  updateEmbedPage,
-  selectDistributionStats,
-} from './redux/actions';
-import type { Action } from './redux/actions';
+import * as playerRoute from './routes/player-route';
+import * as searchRoute from './routes/search-route';
+import * as positionRoute from './routes/position-route';
+import * as embedRoute from './routes/embed-route';
+import * as homeRoute from './routes/home-route';
 
-export default (path: string, args: {[string]: string}): Array<Action> => {
-  if (path === '/search') {
-    const actions = [];
-    if (args.position) {
-      actions.push(updateSelectedPosition(args.position));
-    }
-    // TODO: Sanitize years
-    if (args.measurable) {
-      actions.push(selectNewSearch({
-        beginYear: Number(args.beginYear) || 1999,
-        endYear: Number(args.endYear) || 2017,
-        measurableId: args.measurable,
-        sortOrder: (args.sort === Sorts.ASC) ? Sorts.ASC : Sorts.DESC,
-        page: Number(args.page) || 1,
-      }));
-    } else {
-      actions.push(selectNewSearch({
-        beginYear: Number(args.beginYear) || 1999,
-        endYear: Number(args.endYear) || 2017,
-        sortOrder: (args.sort === Sorts.ASC) ? Sorts.ASC : Sorts.DESC,
-        page: Number(args.page) || 1,
-      }));
-    }
-    return actions;
-  } else if (path.startsWith('/player/')) {
-    const segments = path.split('/');
-    if (segments.length < 3) {
-      throw new HttpError(404, path);
-    }
+import type { State } from './types/state';
 
-    return [selectPlayer(segments[2], args.position)];
-  } else if (path.startsWith('/embed/')) {
-    const segments = path.split('/');
-    if (segments.length < 3) {
-      throw new HttpError(404, path);
-    }
+const routeConfig = [playerRoute, searchRoute, embedRoute, positionRoute, homeRoute];
 
-    let page = 'GRAPH';
-    if (args.page === 'MEASURABLES') {
-      page = 'MEASURABLES';
-    } else if (args.page === 'COMPARISONS') {
-      page = 'COMPARISONS';
-    }
+const actionsConfig = routeConfig.map(r => r.actions);
+const urlConfig = routeConfig.map(r => r.url);
+const titleConfig = routeConfig.map(r => r.title);
 
-    return [selectPlayer(segments[2], args.position), updateEmbedPage(page)];
-  } else if (path === '/positions') {
-    return [selectDistributionStats(args.position || 'ATH')];
-  } else if (path === '/') {
-    return [];
+const getTitle = (state: State) =>
+  titleConfig.reduce((accum, val) => accum || val.apply(null, [state]), null);
+
+const translateUrl = (path: string, args: { [string]: string }) =>
+  actionsConfig.reduce((accum, val) => accum || val.apply(null, [path, args]), null);
+
+const translateState = (state: State) =>
+  urlConfig.reduce((accum, val) => accum || val.apply(null, [state]), null);
+
+const parseUrl = (urlstring: string) => {
+  const components = urlstring.split('?');
+  if (components.length === 1) {
+    return { path: components[0], args: {} };
   }
-  throw new HttpError(404, path);
+  const search = components[1];
+  const data = decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"');
+  const args = data === '' ? {} : JSON.parse(`{"${data}"}`);
+  return {
+    path: components[0],
+    args,
+  };
 };
+
+export { translateUrl, translateState, getTitle, parseUrl };

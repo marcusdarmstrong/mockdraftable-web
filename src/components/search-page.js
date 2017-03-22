@@ -13,8 +13,6 @@ export default () => <div className="window container-fluid col-12 col-lg-10 off
       <YearSelector
         min={1999}
         max={2017}
-        onLowChange={() => false}
-        onHighChange={() => false}
       />
       <h4>Position</h4>
       <PositionSelector />

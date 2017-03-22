@@ -3,6 +3,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import Link from './link';
 import type { Player, Position, PositionId } from '../types/domain';
 import type { PlayerPageState } from '../types/state';
 
@@ -17,12 +18,18 @@ const AboutSection = ({ selectedPlayer, selectedPositionId, positions }: Props) 
     <h3>About</h3>
     <dl>
       <dt>Draft Class:</dt>
-      <dd>{selectedPlayer.draft}</dd>
+      <dd>
+        <Link
+          href={`/search?beginYear=${selectedPlayer.draft}&endYear=${selectedPlayer.draft}`}
+        >
+          {selectedPlayer.draft}
+        </Link>
+      </dd>
       <dt>Position:</dt>
       <dd className="h4">
         <div className="list-inline">
           {positions.map(p =>
-            <a
+            <Link
               href={
                 selectedPlayer.positions.primary === p.id
                   ? `/player/${selectedPlayer.id}`
@@ -43,7 +50,7 @@ const AboutSection = ({ selectedPlayer, selectedPositionId, positions }: Props) 
               title={p.name}
             >
               {p.abbreviation}
-            </a>,
+            </Link>,
           )}
         </div>
       </dd>

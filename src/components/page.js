@@ -7,19 +7,33 @@ type Props = {
   url: string,
 };
 
+let hasReplaced = false;
+const updateHistory = (title, url) => {
+  if (hasReplaced) {
+    window.history.pushState({}, title, url);
+  } else {
+    window.history.replaceState({}, title, url);
+    hasReplaced = true;
+  }
+};
+
 export default class Page extends React.Component {
-  componentWillReceiveProps(nextProps: Props) {
-    if (this.props.url !== nextProps.url) {
-      if (window && history && history.pushState) {
-        window.history.pushState({}, nextProps.title, nextProps.url);
-        window.document.title = nextProps.title;
-      } else if (window) {
-        window.location = nextProps.url;
-      }
-    }
+  shouldComponentUpdate(nextProps: Props) {
+    return typeof window !== 'undefined' && (
+      this.props.url !== nextProps.url
+        && `${window.location.pathname}${window.location.search}` !== nextProps.url
+    );
   }
 
   props: Props;
 
-  render() { return null; }
+  render() {
+    if (typeof window !== 'undefined' && history && history.pushState) {
+      updateHistory(this.props.title, this.props.url);
+      window.document.title = this.props.title;
+    } else if (typeof window !== 'undefined') {
+      window.location = this.props.url;
+    }
+    return null;
+  }
 }

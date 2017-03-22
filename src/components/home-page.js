@@ -3,6 +3,7 @@
 import React from 'react';
 
 import TypeAhead from './typeahead';
+import Link from './link';
 
 export default () => <div className="window container-fluid col-12 col-lg-10 offset-lg-1">
   <div className="row">
@@ -13,10 +14,10 @@ export default () => <div className="window container-fluid col-12 col-lg-10 off
         you discover.
       </p>
       <p>
-        <a href="/search" className="btn btn-lg btn-primary btn-block">Explore the Database &raquo;</a>
+        <Link href="/search" className="btn btn-lg btn-primary btn-block">Explore the Database &raquo;</Link>
       </p>
       <p className="text-center">
-        Or take a look at <a href="/positions">Aggregate Data</a>.
+        Or take a look at <Link href="/positions">Aggregate Data</Link>.
       </p>
       <hr className="my-4" />
       <TypeAhead />

@@ -30,7 +30,7 @@ const SearchControls = ({
         ({ target }: SyntheticInputEvent) =>
           selectMeasurable((target.value === defaultVal) ? undefined : target.value)
       }
-      defaultValue={selectedMeasurable || defaultVal}
+      value={selectedMeasurable || defaultVal}
     >
       <option value={defaultVal}>Name</option>
       {allMeasurables.map(m => <option key={m.key} value={m.id}>{m.name}</option>)}

@@ -42,45 +42,53 @@ const reducer = (previousState: State, action: Action): State => {
     return Object.assign(
       ({}: any),
       previousState,
-      { page: 'PLAYER', selectedPlayerId: action.playerId },
+      {
+        page: 'PLAYER',
+        selectedPlayerId: action.playerId,
+        selectedPositionId: action.positionId,
+        modalType: previousState.modalType === 'TypeAhead' ? 'None' : previousState.modalType,
+        typeAheadResults: [],
+        typeAheadSearching: false,
+      },
     );
   }
   if (action.type === actions.UPDATE_SELECTED_POSITION) {
-    return Object.assign(({}: any), previousState, { selectedPositionId: action.positionId });
+    return Object.assign(({}: any), previousState, {
+      page: 'POSITION',
+      selectedPositionId: action.positionId,
+    });
   }
   if (action.type === actions.UPDATE_SEARCH_OPTIONS) {
     return Object.assign(
       ({}: any),
       previousState,
-      { page: 'SEARCH', searchOptions: action.options },
-    );
-  }
-  if (action.type === actions.UPDATE_SEARCH_RESULTS) {
-    return Object.assign(({}: any), previousState, { searchResults: action.results });
-  }
-  if (action.type === actions.UPDATE_IS_SEARCHING) {
-    if (action.isSearching) {
-      return Object.assign(({}: any), previousState, {
+      {
+        page: 'SEARCH',
+        searchOptions: action.options,
         isSearching: true,
         searchResults: {
           hasNextPage: false,
           players: [],
         },
-      });
-    }
-    return Object.assign(({}: any), previousState, {
-      isSearching: false,
-    });
+        selectedPositionId: action.positionId,
+      },
+    );
+  }
+  if (action.type === actions.UPDATE_SEARCH_RESULTS) {
+    return Object.assign(
+      ({}: any),
+      previousState, {
+        searchResults: action.results,
+        isSearching: false,
+      },
+    );
   }
   if (action.type === actions.UPDATE_MODAL_TYPE) {
-    if (previousState.modalType === 'TypeAhead' && action.modalType === 'None') {
-      return Object.assign(({}: any), previousState, {
-        modalType: action.modalType,
-        typeAheadResults: undefined,
-        typeAheadSearching: false,
-      });
-    }
-    return Object.assign(({}: any), previousState, { modalType: action.modalType });
+    return Object.assign(({}: any), previousState, {
+      modalType: action.modalType,
+      typeAheadResults: [],
+      typeAheadSearching: false,
+    });
   }
   if (action.type === actions.UPDATE_TYPE_AHEAD_IS_SEARCHING) {
     if (action.isSearching) {
@@ -94,7 +102,11 @@ const reducer = (previousState: State, action: Action): State => {
     });
   }
   if (action.type === actions.UPDATE_TYPE_AHEAD_RESULTS) {
-    return Object.assign(({}: any), previousState, { typeAheadResults: action.results });
+    return Object.assign(
+      ({}: any),
+      previousState,
+      { typeAheadResults: action.results, typeAheadSearching: false },
+    );
   }
   if (action.type === actions.UPDATE_EMBED_PAGE) {
     return Object.assign(({}: any), previousState, { embed: true, embedPage: action.state });
@@ -104,7 +116,6 @@ const reducer = (previousState: State, action: Action): State => {
       ({}: any),
       previousState,
       {
-        page: 'POSITION',
         distributionStatistics: Object.assign(
           {},
           previousState.distributionStatistics,
@@ -123,6 +134,9 @@ const reducer = (previousState: State, action: Action): State => {
   }
   if (action.type === actions.UPDATE_LOGGED_IN_USER) {
     return Object.assign(({}: any), previousState, { loggedInUserId: action.userId });
+  }
+  if (action.type === actions.UPDATE_PAGE) {
+    return Object.assign(({}: any), previousState, { page: action.page });
   }
   return previousState;
 };

@@ -14,22 +14,24 @@ export const LOAD_PLAYER = 'LOAD_PLAYER';
 export const LOAD_COMPARISONS = 'LOAD_COMPARISONS';
 export const LOAD_PERCENTILES = 'LOAD_PERCENTILES';
 export const UPDATE_SEARCH_RESULTS = 'UPDATE_SEARCH_RESULTS';
-export const UPDATE_IS_SEARCHING = 'UPDATE_IS_SEARCHING';
 export const UPDATE_MODAL_TYPE = 'UPDATE_MODAL_TYPE';
 export const UPDATE_TYPE_AHEAD_IS_SEARCHING = 'UPDATE_TYPE_AHEAD_IS_SEARCHING';
 export const UPDATE_TYPE_AHEAD_RESULTS = 'UPDATE_TYPE_AHEAD_RESULTS';
 export const UPDATE_EMBED_PAGE = 'UPDATE_EMBED_PAGE';
 export const LOAD_DISTRIBUTION_STATISTICS = 'LOAD_DISTRIBUTION_STATISTICS';
 export const UPDATE_LOGGED_IN_USER = 'UPDATE_LOGGED_IN_USER';
+export const UPDATE_PAGE = 'UPDATE_PAGE';
 
-export const updateSelectedPlayer = (id: PlayerId) => ({
+export const updateSelectedPlayer = (id: PlayerId, positionId: PositionId) => ({
   type: UPDATE_SELECTED_PLAYER,
   playerId: id,
+  positionId,
 });
 
 export type UpdateSelectedPlayerAction = {
   type: 'UPDATE_SELECTED_PLAYER',
   playerId: PlayerId,
+  positionId: PositionId,
 };
 
 export const updateSelectedPosition = (positionId: PositionId) => ({
@@ -42,14 +44,16 @@ export type UpdateSelectedPositionAction = {
   positionId: PositionId,
 };
 
-export const updateSearchOptions = (newOptions: SearchOptions) => ({
+export const updateSearchOptions = (newOptions: SearchOptions, positionId: PositionId) => ({
   type: UPDATE_SEARCH_OPTIONS,
   options: newOptions,
+  positionId,
 });
 
 export type UpdateSearchOptionsAction = {
   type: 'UPDATE_SEARCH_OPTIONS',
   options: SearchOptions,
+  positionId: PositionId,
 };
 
 export const updateSearchResults = (newResults: SearchResults) => ({
@@ -60,16 +64,6 @@ export const updateSearchResults = (newResults: SearchResults) => ({
 export type UpdateSearchResultsAction = {
   type: 'UPDATE_SEARCH_RESULTS',
   results: SearchResults,
-};
-
-export const updateIsSearching = (isSearching: boolean) => ({
-  type: 'UPDATE_IS_SEARCHING',
-  isSearching,
-});
-
-export type UpdateIsSearchingAction = {
-  type: 'UPDATE_IS_SEARCHING',
-  isSearching: boolean,
 };
 
 export const updateModalType = (modalType: ModalType) => ({
@@ -120,6 +114,16 @@ export const updateLoggedInUserId = (userId: ?UserId) => ({
 export type UpdateLoggedInUserIdAction = {
   type: 'UPDATE_LOGGED_IN_USER',
   userId: ?UserId,
+};
+
+export const updatePage = (page: string) => ({
+  type: UPDATE_PAGE,
+  page,
+});
+
+export type UpdatePageAction = {
+  type: 'UPDATE_PAGE',
+  page: string,
 };
 
 export type LoadPlayerAction = {
@@ -183,7 +187,6 @@ export type Action =
   | UpdateSelectedPositionAction
   | UpdateSearchOptionsAction
   | UpdateSearchResultsAction
-  | UpdateIsSearchingAction
   | UpdateModalTypeAction
   | UpdateTypeAheadIsSearchingAction
   | UpdateTypeAheadResultsAction
@@ -235,15 +238,12 @@ export const selectPlayer = (id: PlayerId, positionIdOverride: ?PositionId) =>
         .concat(comparisons.map(c => dispatch(loadPercentilesIfNeeded(c.playerId, positionId)))),
     );
 
-    dispatch(updateSelectedPosition(positionId));
-    dispatch(updateSelectedPlayer(id));
+    dispatch(updateSelectedPlayer(id, positionId));
   };
 
 export const doSearch = (options: SearchOptions, positionId: PositionId) =>
   async (dispatch: Dispatch<Action>, getState: () => State, api: Api) => {
-    dispatch(updateIsSearching(true));
-    dispatch(updateSearchOptions(options));
-    dispatch(updateSelectedPosition(positionId));
+    dispatch(updateSearchOptions(options, positionId));
     const results = await api.fetchSearchResults(options, positionId);
     const newState = getState();
     if (newState.page === 'SEARCH' && newState.searchOptions === options) {
@@ -252,7 +252,6 @@ export const doSearch = (options: SearchOptions, positionId: PositionId) =>
           .concat(results.players.map(id => dispatch(loadPercentilesIfNeeded(id, positionId)))),
       );
       dispatch(updateSearchResults(results));
-      dispatch(updateIsSearching(false));
     }
   };
 
@@ -296,7 +295,6 @@ export const selectTypeAheadSearch = (search: string) =>
     if (getState().typeAheadSearching) {
       await Promise.all(results.map(id => dispatch(loadPlayerIfNeeded(id))));
       dispatch(updateTypeAheadResults(results));
-      dispatch(updateTypeAheadIsSearching(false));
     }
   };
 

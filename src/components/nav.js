@@ -6,8 +6,9 @@ import { connect } from 'react-redux';
 import type { Action } from '../redux/actions';
 import type { State, ModalType } from '../types/state';
 import Page from './page';
+import Link from './link';
 import { updateModalType } from '../redux/actions';
-
+import { translateState, getTitle } from '../router';
 
 type Props = {
   title: string,
@@ -15,31 +16,6 @@ type Props = {
   showModal: ModalType => void,
   isSearch: boolean,
   isPositionDetail: boolean,
-};
-
-const constructUrl = (state: State) => {
-  if (state.page === 'PLAYER') {
-    let url = `/player/${state.selectedPlayerId}`;
-    if (state.selectedPositionId !== state.players[state.selectedPlayerId].positions.primary) {
-      url = `${url}?position=${state.selectedPositionId}`;
-    }
-    return url;
-  } else if (state.page === 'SEARCH') {
-    const { beginYear, endYear, sortOrder, page } = state.searchOptions;
-    let url = `/search?position=${state.selectedPositionId}`;
-    url = `${url}&beginYear=${beginYear}&endYear=${endYear}&sort=${sortOrder}&page=${page}`;
-    if (state.searchOptions.measurableId) {
-      url = `${url}&measurable=${state.searchOptions.measurableId}`;
-    }
-    return url;
-  } else if (state.page === 'POSITION') {
-    let url = '/positions';
-    if (state.selectedPositionId !== 'ATH') {
-      url = `${url}?position=${state.selectedPositionId}`;
-    }
-    return url;
-  }
-  return '/';
 };
 
 class Nav extends React.Component {
@@ -68,17 +44,17 @@ class Nav extends React.Component {
         <button className={togglerClasses} type="button" onClick={this.toggleCollapsed}>
           <span className="navbar-toggler-icon" />
         </button>
-        <Page title={`${title} - MockDraftable`} url={url} />
-        <a className="navbar-brand mr-auto p-0" href="/">
+        <Page title={title} url={url} />
+        <Link className="navbar-brand mr-auto p-0" href="/">
           <img src="/public/icon-white.png" alt="MockDraftable" />
           MockDraftable
-        </a>
+        </Link>
         <div className={collapseClasses} id="navbarNavAltMarkup">
           <div className="navbar-nav">
-            <a className={isSearch ? activeItemClass : itemClass} href="/search">Advanced Search</a>
-            <a className={isPositionDetail ? activeItemClass : itemClass} href="/positions">
+            <Link className={isSearch ? activeItemClass : itemClass} href="/search">Advanced Search</Link>
+            <Link className={isPositionDetail ? activeItemClass : itemClass} href="/positions">
               Position Data
-            </a>
+            </Link>
           </div>
         </div>
         <button
@@ -98,8 +74,8 @@ class Nav extends React.Component {
 
 export default connect(
   (state: State) => ({
-    title: state.page === 'PLAYER' ? state.players[state.selectedPlayerId].name : 'MockDraftable',
-    url: constructUrl(state),
+    title: getTitle(state) || 'MockDraftable',
+    url: translateState(state),
     isSearch: state.page === 'SEARCH',
     isPositionDetail: state.page === 'POSITION',
   }),

@@ -26,10 +26,10 @@ import layout from './layout';
 import App from './components/app';
 import reducer from './redux/reducer';
 import init from './init';
-import translate from './router';
+import { translateUrl } from './router';
 import serverApi from './api/server';
 import bundles from './bundles.json';
-import { HttpError, errorHandler, asyncCatch } from './packages/http';
+import { HttpError, errorHandler, asyncCatch, throw404 } from './packages/http';
 import {
   setAuthTokenCookieForUserId,
   readAuthTokenFromCookies,
@@ -132,7 +132,7 @@ init().then((stores) => {
     );
 
     store.dispatch(updateLoggedInUserId(readAuthTokenFromCookies(req)));
-    await store.dispatch(translate(req.path, req.query));
+    await store.dispatch(translateUrl(req.path, req.query) || throw404(req.path));
 
     const jsBundleName: string = bundles.js_bundle_name || 'public/bundle.js';
     const cssBundleName: string = bundles.css_bundle_name || 'public/bundle.css';

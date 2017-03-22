@@ -1,6 +1,10 @@
 // @flow
 
 import React from 'react';
+import type { Dispatch } from 'redux';
+import { connect } from 'react-redux';
+import type { Action } from '../redux/actions';
+import { translateUrl, parseUrl } from '../router';
 
 export type Props = {
   href: string,
@@ -8,12 +12,14 @@ export type Props = {
   className?: string,
   children: Element<any>,
   callback: (string) => void,
+  style?: { [string]: string },
 };
 
-export default class Link extends React.Component {
+class Link extends React.Component {
   static defaultProps = {
     className: '',
     title: '',
+    style: {},
   }
 
   props: Props;
@@ -24,8 +30,26 @@ export default class Link extends React.Component {
   }
 
   render() {
-    return (<a href={this.props.href} onClick={this.click} className={this.props.className}>
-      {this.props.children}
-    </a>);
+    return (
+      <a
+        href={this.props.href}
+        onClick={this.click}
+        className={this.props.className}
+        title={this.props.title}
+        style={this.props.style}
+      >
+        {this.props.children}
+      </a>
+    );
   }
 }
+
+export default connect(
+  () => ({}),
+  (dispatch: Dispatch<Action>) => ({
+    callback: (href) => {
+      const url = parseUrl(href);
+      dispatch(translateUrl(url.path, url.args));
+    },
+  }),
+)(Link);

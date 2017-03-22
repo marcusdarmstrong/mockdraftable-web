@@ -7,6 +7,7 @@ import type { Player, PositionId, Position } from '../types/domain';
 import type { State } from '../types/state';
 import type { Action } from '../redux/actions';
 import { selectTypeAheadSearch } from '../redux/actions';
+import Link from './link';
 
 type Props = {
   updateSearch: string => void,
@@ -24,7 +25,7 @@ const TypeAhead = ({ updateSearch, searchResults, positions }: Props) => <div>
   />
   <div className="list-group mt-2">
     {searchResults.map(p =>
-      <a
+      <Link
         key={p.id}
         href={`/player/${p.id}`}
         className="list-group-item list-group-item-action justify-content-between"
@@ -40,7 +41,7 @@ const TypeAhead = ({ updateSearch, searchResults, positions }: Props) => <div>
           </span>
           <span className="align-middle ml-2">{p.school && `${p.school},`} {p.draft}</span>
         </div>
-      </a>,
+      </Link>,
     )}
   </div>
 </div>;

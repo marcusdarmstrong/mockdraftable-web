@@ -4,6 +4,7 @@ import React from 'react';
 import SparkGraph from './graphs/spark-graph';
 import type { Position } from '../types/domain';
 import type { MeasurablePercentile } from '../types/graphing';
+import Link from './link';
 
 type Props = {
   name: string,
@@ -18,7 +19,7 @@ type Props = {
 
 const SearchResult =
   ({ name, playerPosition, selectedPosition, id, percentiles, measurable, school, draft }: Props) =>
-    <a
+    <Link
       href={`/player/${id}?position=${selectedPosition.id}`}
       className="list-group-item list-group-item-action justify-content-between"
     >
@@ -34,7 +35,7 @@ const SearchResult =
         <span className="align-middle ml-2">{school && `${school}, `}{draft}</span>
       </div>
       <SparkGraph percentiles={percentiles} overlay={measurable} color={selectedPosition.color} />
-    </a>;
+    </Link>;
 
 SearchResult.defaultProps = {
   measurable: undefined,

@@ -34,15 +34,15 @@ const YearSelector = ({ min, max, low, high, onLowChange, onHighChange, searchOp
   return (<div className="row no-gutters align-items-center justify-content-between">
     <div className="ml-1 h6">{low}</div>
     <div className="col-8">
-      <MultiSlider defaultValues={[low - min, high - low, max - high]} onChange={handler} />
+      <MultiSlider values={[low - min, high - low, max - high]} onChange={handler} />
     </div>
     <div className="mr-1 h6">{high}</div>
   </div>);
 };
 
 export default connect((state: SearchPageState) => ({
-  low: state.searchOptions && state.searchOptions.beginYear,
-  high: state.searchOptions && state.searchOptions.endYear,
+  low: state.searchOptions.beginYear,
+  high: state.searchOptions.endYear,
   searchOptions: state.searchOptions,
 }), (dispatch: Dispatch<Action>) => ({
   onLowChange: searchOptions => (newLow) => {

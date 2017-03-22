@@ -11,8 +11,8 @@ import batcher from './packages/redux-batcher';
 import App from './components/app';
 import reducer from './redux/reducer';
 import clientApi from './api/client';
-import searchDefaults from './redux/search-defaults';
-import { doSearch, updateModalType } from './redux/actions';
+import { updateModalType } from './redux/actions';
+import { translateUrl, parseUrl } from './router';
 
 const store = createStore(
   reducer,
@@ -33,18 +33,8 @@ mousetrap.stopCallback = (e, element, combo, sequence) => {
 };
 
 window.onpopstate = () => {
-  const search = document.location.search.substring(1);
-  const data = decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"');
-  const args = data === '' ? {} : JSON.parse(`{"${data}"}`);
-  if (document.location.pathname === '/search') {
-    store.dispatch(doSearch({
-      beginYear: Number(args.beginYear) || searchDefaults.beginYear,
-      endYear: Number(args.endYear) || searchDefaults.endYear,
-      page: Number(args.page) || searchDefaults.page,
-      sortOrder: args.sort || searchDefaults.sortOrder,
-      measurableId: args.measurable,
-    }, args.position || 'ATH'));
-  }
+  const url = parseUrl(`${document.location.pathname}?${document.location.search}`);
+  store.dispatch(translateUrl(url.path, url.args));
 };
 
 ReactDOM.render(
