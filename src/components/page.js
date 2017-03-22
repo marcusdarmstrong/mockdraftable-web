@@ -31,6 +31,7 @@ export default class Page extends React.Component {
     if (typeof window !== 'undefined' && history && history.pushState) {
       updateHistory(this.props.title, this.props.url);
       window.document.title = this.props.title;
+      window.scrollTo(0, 0);
     } else if (typeof window !== 'undefined') {
       window.location = this.props.url;
     }
