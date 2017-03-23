@@ -115,7 +115,21 @@ const doImport = async () => {
 
       const measurableKey = validMeasurables[measurable];
 
-      await insertMeasurement(dbPlayer.id, measurableKey, player.result);
+      const alreadyImported = !!await db.oneOrNone(
+        `select id 
+          from t_measurement
+          where player_id=$(playerId)
+            and measurable_id=$(measurableKey)
+            and measurement=$(measurement)
+            and source=1`,
+        { playerId: dbPlayer.id, measurableKey, measurement: player.result },
+      );
+
+      if (!alreadyImported) {
+        await insertMeasurement(dbPlayer.id, measurableKey, player.result);
+      } else {
+        console.log(`Already imported ${measurable} for ${player.firstName} ${player.lastName}`);
+      }
     } catch (e) {
       console.log(`Failed to find player: ${e.message} ${JSON.stringify(player)}`);
       return false;
