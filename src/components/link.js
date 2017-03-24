@@ -25,6 +25,7 @@ class Link extends React.Component {
   props: Props;
 
   click = (event: SyntheticEvent) => {
+    if (event.ctrlKey || event.metaKey) { return; }
     event.preventDefault();
     this.props.callback(this.props.href);
   }
