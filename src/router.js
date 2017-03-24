@@ -7,21 +7,26 @@ import * as embedRoute from './routes/embed-route';
 import * as homeRoute from './routes/home-route';
 
 import type { State } from './types/state';
+import type { Action } from './redux/actions';
 
 const routeConfig = [playerRoute, searchRoute, embedRoute, positionRoute, homeRoute];
 
-const actionsConfig = routeConfig.map(r => r.actions);
-const urlConfig = routeConfig.map(r => r.url);
-const titleConfig = routeConfig.map(r => r.title);
+const actionsConfig: Array<(string, { [string]: string }) => ?Array<Action>> =
+  routeConfig.map(r => r.actions);
+const urlConfig: Array<State => ?string> = routeConfig.map(r => r.url);
+const titleConfig: Array<State => ?string> = routeConfig.map(r => r.title);
 
-const getTitle = (state: State) =>
-  titleConfig.reduce((accum, val) => accum || val.apply(null, [state]), null);
+// I feel like this should be somewhere in lodash, but alas.
+function findResult<A>(funcs: Array<(...*) => A>, ...args: *): ?A {
+  return funcs.reduce((res, func) => res || func(...args), null);
+}
 
-const translateUrl = (path: string, args: { [string]: string }) =>
-  actionsConfig.reduce((accum, val) => accum || val.apply(null, [path, args]), null);
+const getTitle = (state: State): ?string => findResult(titleConfig, state);
 
-const translateState = (state: State) =>
-  urlConfig.reduce((accum, val) => accum || val.apply(null, [state]), null);
+const translateUrl = (path: string, args: { [string]: string }): ?Array<Action> =>
+  findResult(actionsConfig, path, args);
+
+const translateState = (state: State): ?string => findResult(urlConfig, state);
 
 const parseUrl = (urlstring: string) => {
   const components = urlstring.split('?');
