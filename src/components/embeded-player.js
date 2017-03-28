@@ -2,16 +2,14 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import type { Dispatch } from 'redux';
-import type { Action } from '../redux/actions';
 import type { MeasurablePercentile } from '../types/graphing';
 import type { PlayerPageState, EmbedPage } from '../types/state';
 import type { Player, Position, MeasurableKey, Measurable } from '../types/domain';
 import FullGraph from './graphs/full-graph';
 import Measurables from './measurables';
 import { format } from '../measurables';
-import { updateEmbedPage as doUpdateEmbedPage } from '../redux/actions';
 import ComparisonSection from './comparison-section';
+import Link from './link';
 
 type Props = {
   selectedPlayer: Player,
@@ -19,7 +17,6 @@ type Props = {
   measurables: { [key: MeasurableKey]: Measurable },
   percentiles: Array<MeasurablePercentile>,
   embedPage: EmbedPage,
-  updateEmbedPage: EmbedPage => void,
 };
 
 const EmbededPlayer = ({
@@ -28,7 +25,6 @@ const EmbededPlayer = ({
   percentiles,
   measurables,
   embedPage,
-  updateEmbedPage,
 }: Props) => {
   const keyedMeasurements: { [MeasurableKey]: string } = selectedPlayer.measurements
     .reduce((a, { measurableKey, measurement }) =>
@@ -62,6 +58,8 @@ const EmbededPlayer = ({
     );
   }
 
+  const baseUrl = `/embed/${selectedPlayer.id}?position=${selectedPosition.id}&page=`;
+
   /* eslint-disable jsx-a11y/href-no-hash */
   return (<div className="card" style={{ width: '480px', height: '651px' }}>
     <div className="card-header">
@@ -80,20 +78,20 @@ const EmbededPlayer = ({
       <ul className="nav nav-pills card-footer-pills">
         <li className="nav-item">
           {embedPage === 'GRAPH'
-            ? <a className="nav-link active" href="#">Graph</a>
-            : <a className="nav-link" href="#" onClick={updateEmbedPage('GRAPH')}>Graph</a>
+            ? <span className="nav-link active" href="#">Graph</span>
+            : <Link className="nav-link" href={`${baseUrl}GRAPH`}>Graph</Link>
           }
         </li>
         <li className="nav-item">
           {embedPage === 'MEASURABLES'
-            ? <a className="nav-link active" href="#">Measurables</a>
-            : <a className="nav-link" href="#" onClick={updateEmbedPage('MEASURABLES')}>Measurables</a>
+            ? <span className="nav-link active" href="#">Measurables</span>
+            : <Link className="nav-link" href={`${baseUrl}MEASURABLES`}>Measurables</Link>
           }
         </li>
         <li className="nav-item">
           {embedPage === 'COMPARISONS'
-            ? <a className="nav-link active" href="#">Comparisons</a>
-            : <a className="nav-link" href="#" onClick={updateEmbedPage('COMPARISONS')}>Comparisons</a>
+            ? <span className="nav-link active" href="#">Comparisons</span>
+            : <Link className="nav-link" href={`${baseUrl}COMPARISONS`}>Comparisons</Link>
           }
         </li>
       </ul>
@@ -121,8 +119,5 @@ export default connect(
         },
       })),
     embedPage: state.embedPage,
-  }),
-  (dispatch: Dispatch<Action>) => ({
-    updateEmbedPage: state => () => dispatch(doUpdateEmbedPage(state)),
   }),
 )(EmbededPlayer);
