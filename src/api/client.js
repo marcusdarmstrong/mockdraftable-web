@@ -11,14 +11,16 @@ const clientApi: Api = {
     (await fetch(`/api/player?id=${id}`)).json(),
   fetchComparisons: async (id: PlayerId, pos: PositionId) =>
     (await fetch(`/api/comparisons?id=${id}&pos=${pos}`)).json(),
-  fetchPercentiles: async (id: PlayerId, pos: PositionId) =>
-    (await fetch(`/api/percentiles?id=${id}&pos=${pos}`)).json(),
   fetchSearchResults: async (opts: SearchOptions, pos: PositionId) =>
     (await fetch(`/api/search?opts=${JSON.stringify(opts)}&pos=${pos}`)).json(),
   fetchTypeAheadResults: async (search: string) =>
     (await fetch(`/api/typeahead?search=${search}`)).json(),
   fetchDistributionStats: async (pos: PositionId) =>
     (await fetch(`/api/stats?pos=${pos}`)).json(),
+  fetchMultiplePlayers: async (ids: Array<PlayerId>) =>
+    (await fetch(`/api/multiple-players?ids=${JSON.stringify(ids)}`)).json(),
+  fetchMultiplePercentiles: async (ids: Array<PlayerId>, pos: PositionId) =>
+    (await fetch(`/api/multiple-percentiles?ids=${JSON.stringify(ids)}&pos=${pos}`)).json(),
   loginUser: async (email: string, password: string) =>
     (await fetch('/api/login', {
       method: 'POST',

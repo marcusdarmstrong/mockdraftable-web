@@ -5,6 +5,34 @@ import type { Action } from './actions';
 import * as actions from './actions';
 
 const reducer = (previousState: State, action: Action): State => {
+  if (action.type === actions.LOAD_MULTIPLE_PLAYERS) {
+    const newPlayers = action.players.reduce((accum, player) =>
+      Object.assign({}, accum, { [player.id]: player }), {});
+    return Object.assign(
+      ({}: any),
+      previousState,
+      { players: Object.assign({}, previousState.players, newPlayers) },
+    );
+  }
+  if (action.type === actions.LOAD_MULTIPLE_PERCENTILES) {
+    let newState = previousState;
+    Object.entries(action.percentiles).forEach((pair) => {
+      const playerId = pair[0];
+      const percentiles = pair[1];
+      newState = Object.assign(
+        ({}: any),
+        newState,
+        {
+          percentiles: Object.assign({}, newState.percentiles, {
+            [playerId]: Object.assign({}, newState.percentiles[playerId], {
+              [action.positionId]: percentiles,
+            }),
+          }),
+        },
+      );
+    });
+    return newState;
+  }
   if (action.type === actions.LOAD_PLAYER) {
     return Object.assign(
       ({}: any),
@@ -20,19 +48,6 @@ const reducer = (previousState: State, action: Action): State => {
         comparisons: Object.assign({}, previousState.comparisons, {
           [action.playerId]: Object.assign({}, previousState.comparisons[action.playerId], {
             [action.positionId]: action.comparisons,
-          }),
-        }),
-      },
-    );
-  }
-  if (action.type === actions.LOAD_PERCENTILES) {
-    return Object.assign(
-      ({}: any),
-      previousState,
-      {
-        percentiles: Object.assign({}, previousState.percentiles, {
-          [action.playerId]: Object.assign({}, previousState.percentiles[action.playerId], {
-            [action.positionId]: action.percentiles,
           }),
         }),
       },

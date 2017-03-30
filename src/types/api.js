@@ -9,10 +9,12 @@ export type LoginResponse =
 export interface Api {
   fetchPlayer: (id: PlayerId) => Promise<Player>,
   fetchComparisons: (id: PlayerId, pos: PositionId) => Promise<Comparisons>,
-  fetchPercentiles: (id: PlayerId, pos: PositionId) => Promise<Percentiles>,
   fetchSearchResults: (opts: SearchOptions, pos: PositionId) => Promise<SearchResults>,
   fetchTypeAheadResults: (search: string) => Promise<Array<PlayerId>>,
   fetchDistributionStats: (pos: PositionId) => Promise<{ [MeasurableKey]: DistributionStatistics}>,
+  fetchMultiplePlayers: (ids: Array<PlayerId>) => Promise<Array<Player>>,
+  fetchMultiplePercentiles: (ids: Array<PlayerId>, pos: PositionId) =>
+    Promise<{ [PlayerId]: Percentiles }>,
   loginUser: (email: string, password: string) => Promise<LoginResponse>,
   createUser: (email: string, password: string) => Promise<LoginResponse>,
   doesUserExist: (email: string) => Promise<LoginResponse>,

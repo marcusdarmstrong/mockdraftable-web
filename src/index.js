@@ -72,11 +72,14 @@ init().then((stores) => {
   app.get('/api/player', asyncCatch(async (req: $Request, res) => {
     res.json(await api.fetchPlayer(req.query.id));
   }));
+  app.get('/api/multiple-players', asyncCatch(async (req: $Request, res) => {
+    res.json(await api.fetchMultiplePlayers(JSON.parse(req.query.ids)));
+  }));
   app.get('/api/comparisons', asyncCatch(async (req: $Request, res) => {
     res.json(await api.fetchComparisons(req.query.id, req.query.pos));
   }));
-  app.get('/api/percentiles', asyncCatch(async (req: $Request, res) => {
-    res.json(await api.fetchPercentiles(req.query.id, req.query.pos));
+  app.get('/api/multiple-percentiles', asyncCatch(async (req: $Request, res) => {
+    res.json(await api.fetchMultiplePercentiles(JSON.parse(req.query.ids), req.query.pos));
   }));
   app.get('/api/typeahead', asyncCatch(async (req: $Request, res) => {
     res.json(await api.fetchTypeAheadResults(req.query.search));

@@ -12,7 +12,8 @@ export const UPDATE_SELECTED_POSITION = 'UPDATE_SELECTED_POSITION';
 export const UPDATE_SEARCH_OPTIONS = 'UPDATE_SEARCH_OPTIONS';
 export const LOAD_PLAYER = 'LOAD_PLAYER';
 export const LOAD_COMPARISONS = 'LOAD_COMPARISONS';
-export const LOAD_PERCENTILES = 'LOAD_PERCENTILES';
+export const LOAD_MULTIPLE_PLAYERS = 'LOAD_MULTIPLE_PLAYERS';
+export const LOAD_MULTIPLE_PERCENTILES = 'LOAD_MULTIPLE_PERCENTILES';
 export const UPDATE_SEARCH_RESULTS = 'UPDATE_SEARCH_RESULTS';
 export const UPDATE_MODAL_TYPE = 'UPDATE_MODAL_TYPE';
 export const UPDATE_TYPE_AHEAD_IS_SEARCHING = 'UPDATE_TYPE_AHEAD_IS_SEARCHING';
@@ -136,6 +137,16 @@ export const loadPlayer = (player: Player): LoadPlayerAction => ({
   player,
 });
 
+export type LoadMultiplePlayersAction = {
+  type: 'LOAD_MULTIPLE_PLAYERS',
+  players: Array<Player>,
+};
+
+export const loadMultiplePlayers = (players: Array<Player>): LoadMultiplePlayersAction => ({
+  type: LOAD_MULTIPLE_PLAYERS,
+  players,
+});
+
 export type LoadComparisonsAction = {
   type: 'LOAD_COMPARISONS',
   playerId: PlayerId,
@@ -152,19 +163,17 @@ export const loadComparisons =
       comparisons,
     });
 
-export const loadPercentiles =
-  (playerId: PlayerId, positionId: PositionId, percentiles: Percentiles) => ({
-    type: LOAD_PERCENTILES,
-    playerId,
-    positionId,
+export const loadMultiplePercentiles =
+  (percentiles: { [PlayerId]: Percentiles }, positionId: PositionId) => ({
+    type: LOAD_MULTIPLE_PERCENTILES,
     percentiles,
+    positionId,
   });
 
-export type LoadPercentilesAction = {
-  type: 'LOAD_PERCENTILES',
-  playerId: PlayerId,
+export type LoadMultiplePercentilesAction = {
+  type: 'LOAD_MULTIPLE_PERCENTILES',
+  percentiles: { [PlayerId]: Percentiles },
   positionId: PositionId,
-  percentiles: Percentiles,
 };
 
 export const loadDistributionStatistics =
@@ -194,8 +203,9 @@ export type Action =
   | UpdateLoggedInUserIdAction
   | LoadPlayerAction
   | LoadComparisonsAction
-  | LoadPercentilesAction
   | LoadDistributionStatisticsAction
+  | LoadMultiplePlayersAction
+  | LoadMultiplePercentilesAction
   | ThunkAction;
 
 type Dispatcher = Dispatch<Action>;
@@ -208,14 +218,6 @@ const loadPlayerIfNeeded = (id: PlayerId) =>
     }
   };
 
-const loadPercentilesIfNeeded = (id: PlayerId, pos: PositionId) =>
-  async (dispatch: Dispatcher, getState: () => State, api: Api) => {
-    const state = getState();
-    if (!state.percentiles[id] || !state.percentiles[id][pos]) {
-      dispatch(loadPercentiles(id, pos, await api.fetchPercentiles(id, pos)));
-    }
-  };
-
 const loadComparisonsIfNeeded = (id: PlayerId, pos: PositionId) =>
   async (dispatch: Dispatcher, getState: () => State, api: Api) => {
     const state = getState();
@@ -224,19 +226,48 @@ const loadComparisonsIfNeeded = (id: PlayerId, pos: PositionId) =>
     }
   };
 
+const getMissingPercentiles = (state, positionId, playerIds) =>
+  playerIds.reduce((accum, playerId) => {
+    if (!state.percentiles[playerId] || !state.percentiles[playerId][positionId]) {
+      accum.push(playerId);
+    }
+    return accum;
+  }, []);
+
+const getMissingPlayers = (state, playerIds) =>
+  playerIds.reduce((accum, playerId) => {
+    if (!state.players[playerId]) {
+      accum.push(playerId);
+    }
+    return accum;
+  }, []);
+
 export const selectPlayer = (id: PlayerId, positionIdOverride: ?PositionId) =>
-  async (dispatch: Dispatch<Action>, getState: () => State) => {
+  async (dispatch: Dispatch<Action>, getState: () => State, api: Api) => {
     await dispatch(loadPlayerIfNeeded(id));
     const player = getState().players[id];
     const positionId = positionIdOverride || player.positions.primary;
     await dispatch(loadComparisonsIfNeeded(id, positionId));
-    const comparisons = getState().comparisons[id][positionId];
+    const state = getState();
+    const comparisons = state.comparisons[id][positionId];
 
-    await Promise.all(
-      [dispatch(loadPercentilesIfNeeded(id, positionId))]
-        .concat(comparisons.map(c => dispatch(loadPlayerIfNeeded(c.playerId))))
-        .concat(comparisons.map(c => dispatch(loadPercentilesIfNeeded(c.playerId, positionId)))),
-    );
+    const allPlayerIds = comparisons.map(c => c.playerId);
+    const missingPlayers = getMissingPlayers(state, allPlayerIds);
+    const missingPercentiles = getMissingPercentiles(state, positionId, allPlayerIds.concat(id));
+
+    await Promise.all([
+      dispatch(
+        loadMultiplePercentiles(
+          await api.fetchMultiplePercentiles(missingPercentiles, positionId),
+          positionId,
+        ),
+      ),
+      dispatch(
+        loadMultiplePlayers(
+          await api.fetchMultiplePlayers(missingPlayers),
+        ),
+      ),
+    ]);
 
     dispatch(updateSelectedPlayer(id, positionId));
   };
@@ -247,10 +278,23 @@ export const doSearch = (options: SearchOptions, positionId: PositionId) =>
     const results = await api.fetchSearchResults(options, positionId);
     const newState = getState();
     if (newState.page === 'SEARCH' && newState.searchOptions === options) {
-      await Promise.all(
-        results.players.map(id => dispatch(loadPlayerIfNeeded(id)))
-          .concat(results.players.map(id => dispatch(loadPercentilesIfNeeded(id, positionId)))),
-      );
+      const missingPlayers = getMissingPlayers(newState, results.players);
+      const missingPercentiles = getMissingPercentiles(newState, positionId, results.players);
+
+      await Promise.all([
+        dispatch(
+          loadMultiplePlayers(
+            await api.fetchMultiplePlayers(missingPlayers),
+          ),
+        ),
+        dispatch(
+          loadMultiplePercentiles(
+            await api.fetchMultiplePercentiles(missingPercentiles, positionId),
+            positionId,
+          ),
+        ),
+      ]);
+
       dispatch(updateSearchResults(results));
     }
   };
@@ -293,7 +337,11 @@ export const selectTypeAheadSearch = (search: string) =>
     dispatch(updateTypeAheadIsSearching(true));
     const results = await api.fetchTypeAheadResults(search);
     if (getState().typeAheadSearching) {
-      await Promise.all(results.map(id => dispatch(loadPlayerIfNeeded(id))));
+      await dispatch(
+        loadMultiplePlayers(
+          await api.fetchMultiplePlayers(getMissingPlayers(getState(), results)),
+        ),
+      );
       dispatch(updateTypeAheadResults(results));
     }
   };

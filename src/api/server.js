@@ -45,6 +45,7 @@ const byMeasurable = (measurableId: MeasurableId, sort: Sort) => {
   };
 };
 
+
 const api: (Stores) => Api =
   ({ playerStore, statisticsStore, positionEligibilityStore, measurementStore }) => {
     const compLookup = getComparablePlayersAtPosition(
@@ -54,18 +55,18 @@ const api: (Stores) => Api =
     );
     const percLookup = getPercentileAtPosition(measurementStore);
 
+    const lookupPlayerOrDie =
+      (id: PlayerId) => playerStore.get(id) || throw500(`Requested invalid player: ${id}`);
+
+    const getPercentiles = (id: PlayerId, pos: PositionId) =>
+      lookupPlayerOrDie(id).measurements.map(({ measurableKey, measurement }) => ({
+        measurableKey,
+        percentile: percLookup(pos, measurableKey, measurement),
+      }));
+
     return {
-      fetchPlayer: async (id: PlayerId) =>
-        playerStore.get(id) || throw500(`Internally requested invalid player: ${id}`),
-      fetchComparisons: async (id: PlayerId, pos: PositionId) =>
-        compLookup(id, pos, 10),
-      fetchPercentiles: async (id: PlayerId, pos: PositionId) => {
-        const player = playerStore.get(id) || throw500(`Internally requested invalid player: ${id}`);
-        return player.measurements.map(({ measurableKey, measurement }) => ({
-          measurableKey,
-          percentile: percLookup(pos, measurableKey, measurement),
-        }));
-      },
+      fetchPlayer: async (id: PlayerId) => lookupPlayerOrDie(id),
+      fetchComparisons: async (id: PlayerId, pos: PositionId) => compLookup(id, pos, 10),
       fetchSearchResults: async (opts: SearchOptions, pos: PositionId) => {
         const beginIndex = pageSize * (opts.page - 1);
         const playerIds = positionEligibilityStore.get(pos)
@@ -140,6 +141,9 @@ const api: (Stores) => Api =
         }
       },
       logout: async () => true,
+      fetchMultiplePlayers: async (ids: Array<PlayerId>) => ids.map(lookupPlayerOrDie),
+      fetchMultiplePercentiles: async (ids: Array<PlayerId>, pos: PositionId) =>
+        ids.reduce((accum, id) => Object.assign({}, accum, { [id]: getPercentiles(id, pos) }), {}),
     };
   };
 
