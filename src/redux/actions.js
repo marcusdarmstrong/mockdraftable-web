@@ -262,7 +262,6 @@ export const selectPlayer = (id: PlayerId, positionIdOverride: ?PositionId) =>
 
     dispatch(loadMultiplePlayers(players));
     dispatch(loadMultiplePercentiles(percentiles, positionId));
-
     dispatch(updateSelectedPlayer(id, positionId));
   };
 
@@ -323,11 +322,8 @@ export const selectTypeAheadSearch = (search: string) =>
     dispatch(updateTypeAheadIsSearching(true));
     const results = await api.fetchTypeAheadResults(search);
     if (getState().typeAheadSearching) {
-      dispatch(
-        loadMultiplePlayers(
-          await api.fetchMultiplePlayers(getMissingPlayers(getState(), results)),
-        ),
-      );
+      const players = await api.fetchMultiplePlayers(getMissingPlayers(getState(), results));
+      dispatch(loadMultiplePlayers(players));
       dispatch(updateTypeAheadResults(results));
     }
   };
