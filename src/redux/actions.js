@@ -255,19 +255,13 @@ export const selectPlayer = (id: PlayerId, positionIdOverride: ?PositionId) =>
     const missingPlayers = getMissingPlayers(state, allPlayerIds);
     const missingPercentiles = getMissingPercentiles(state, positionId, allPlayerIds.concat(id));
 
-    await Promise.all([
-      dispatch(
-        loadMultiplePercentiles(
-          await api.fetchMultiplePercentiles(missingPercentiles, positionId),
-          positionId,
-        ),
-      ),
-      dispatch(
-        loadMultiplePlayers(
-          await api.fetchMultiplePlayers(missingPlayers),
-        ),
-      ),
+    const [players, percentiles] = await Promise.all([
+      api.fetchMultiplePlayers(missingPlayers),
+      api.fetchMultiplePercentiles(missingPercentiles, positionId),
     ]);
+
+    dispatch(loadMultiplePlayers(players));
+    dispatch(loadMultiplePercentiles(percentiles, positionId));
 
     dispatch(updateSelectedPlayer(id, positionId));
   };
@@ -281,20 +275,13 @@ export const doSearch = (options: SearchOptions, positionId: PositionId) =>
       const missingPlayers = getMissingPlayers(newState, results.players);
       const missingPercentiles = getMissingPercentiles(newState, positionId, results.players);
 
-      await Promise.all([
-        dispatch(
-          loadMultiplePlayers(
-            await api.fetchMultiplePlayers(missingPlayers),
-          ),
-        ),
-        dispatch(
-          loadMultiplePercentiles(
-            await api.fetchMultiplePercentiles(missingPercentiles, positionId),
-            positionId,
-          ),
-        ),
+      const [players, percentiles] = await Promise.all([
+        api.fetchMultiplePlayers(missingPlayers),
+        api.fetchMultiplePercentiles(missingPercentiles, positionId),
       ]);
 
+      dispatch(loadMultiplePlayers(players));
+      dispatch(loadMultiplePercentiles(percentiles, positionId));
       dispatch(updateSearchResults(results));
     }
   };
@@ -307,16 +294,15 @@ export const selectNewSearch = (options: SearchOptions) =>
 export const selectDistributionStats = (positionId: PositionId) =>
   async (dispatch: Dispatch<Action>, getState: () => State, api: Api) => {
     const results = await api.fetchDistributionStats(positionId);
-    Object.entries(results)
-      .forEach(entry =>
-        dispatch(
-          loadDistributionStatistics(
-            positionId,
-            ((Number(entry[0])): MeasurableKey),
-            ((entry[1]: any): DistributionStatistics),
-          ),
+    Object.entries(results).forEach(entry =>
+      dispatch(
+        loadDistributionStatistics(
+          positionId,
+          ((Number(entry[0])): MeasurableKey),
+          ((entry[1]: any): DistributionStatistics),
         ),
-      );
+      ),
+    );
     dispatch(updateSelectedPosition(positionId));
   };
 
@@ -337,7 +323,7 @@ export const selectTypeAheadSearch = (search: string) =>
     dispatch(updateTypeAheadIsSearching(true));
     const results = await api.fetchTypeAheadResults(search);
     if (getState().typeAheadSearching) {
-      await dispatch(
+      dispatch(
         loadMultiplePlayers(
           await api.fetchMultiplePlayers(getMissingPlayers(getState(), results)),
         ),
