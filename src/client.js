@@ -33,7 +33,7 @@ mousetrap.stopCallback = (e, element, combo, sequence) => {
 };
 
 window.onpopstate = () => {
-  const url = parseUrl(`${document.location.pathname}?${document.location.search}`);
+  const url = parseUrl(`${document.location.pathname}${document.location.search}`);
   store.dispatch(translateUrl(url.path, url.args));
 };
 
