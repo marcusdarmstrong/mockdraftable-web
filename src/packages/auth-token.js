@@ -13,9 +13,8 @@ const createAuthToken = (id: UserId) => {
   if (!id) {
     return null;
   }
-  const manifest = [Number(id), md5(id)];
+  const manifest = [Number(id), md5(id.toString())];
   const text = JSON.stringify(manifest);
-
   const cipher = crypto.createCipher(algorithm, password);
   let crypted = cipher.update(text, 'utf8', 'hex');
   crypted += cipher.final('hex');
@@ -35,6 +34,7 @@ const decodeAuthToken = (token: string) => {
     if (manifest && manifest.length === 2 && md5(manifest[0].toString()) === manifest[1]) {
       return manifest[0];
     }
+    console.error('Token didn\'t validate');
   } catch (e) {
     console.error(e.message);
   }

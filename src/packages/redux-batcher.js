@@ -2,7 +2,7 @@
 
 import type { MiddlewareAPI, Action, Dispatch } from 'redux';
 
-export type BatchedAction = Array<Action> | Action | (() => any) | Promise<any>;
+export type BatchedAction = Array<Action> | Action | ((...any) => any) | Promise<any>;
 
 export default <S> ({ dispatch }: MiddlewareAPI<S, BatchedAction>) =>
   (next: Dispatch<BatchedAction>): Dispatch<BatchedAction> =>

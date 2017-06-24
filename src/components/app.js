@@ -18,12 +18,14 @@ import EmbededPlayer from './embeded-player';
 import EmbedCode from './embed-code';
 import PositionPage from './position-page';
 import LoginPage from './login-page';
+import AddPlayerPage from './add-player-page';
 
 type Props = {
   isPlayerPage: boolean,
   isSearchPage: boolean,
   isHomePage: boolean,
   isPositionPage: boolean,
+  isAddPlayerPage: boolean,
   modalType: ModalType,
   closeModal: () => void,
   openLoginModal: () => void,
@@ -39,6 +41,7 @@ export default connect(
     isSearchPage: state.page === 'SEARCH',
     isHomePage: state.page === 'HOME',
     isPositionPage: state.page === 'POSITION',
+    isAddPlayerPage: state.page === 'ADD_PLAYER',
     embed: state.embed,
     modalType: state.modalType,
     positionName: state.positions[state.selectedPositionId].plural,
@@ -53,6 +56,7 @@ export default connect(
   isPlayerPage,
   isSearchPage,
   isHomePage,
+  isAddPlayerPage,
   modalType,
   closeModal,
   openLoginModal,
@@ -90,6 +94,7 @@ export default connect(
     {isSearchPage && <SearchPage />}
     {isHomePage && <HomePage />}
     {isPositionPage && <PositionPage positionName={positionName} />}
+    {isAddPlayerPage && <AddPlayerPage />}
     {/* eslint-disable jsx-a11y/no-static-element-interactions */}
     {modalType !== 'None' && <div className="modal-backdrop show" onClick={() => closeModal()} />}
     {/* eslint-enable jsx-a11y/no-static-element-interactions */}

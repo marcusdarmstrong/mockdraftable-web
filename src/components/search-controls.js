@@ -20,37 +20,39 @@ const SearchControls = ({
   selectMeasurable,
   selectedSortOrder,
   toggleSortOrder,
-}: Props) => <div>
-  <div className="form-inline justify-content-start mb-2">
-    <label className="mr-2 mb-0" htmlFor="measurable-selector">Sort By</label>
-    <select
-      id="measurable-selector"
-      className="custom-select"
-      onChange={
-        ({ target }: SyntheticInputEvent) =>
-          selectMeasurable((target.value === defaultVal) ? undefined : target.value)
+}: Props) => (
+  <div>
+    <div className="form-inline justify-content-start mb-2">
+      <label className="mr-2 mb-0" htmlFor="measurable-selector">Sort By</label>
+      <select
+        id="measurable-selector"
+        className="custom-select"
+        onChange={
+          ({ target }: SyntheticInputEvent) =>
+            selectMeasurable((target.value === defaultVal) ? undefined : target.value)
+        }
+        value={selectedMeasurable || defaultVal}
+      >
+        <option value={defaultVal}>Name</option>
+        {allMeasurables.map(m => <option key={m.key} value={m.id}>{m.name}</option>)}
+      </select>
+      {selectedSortOrder === Sorts.DESC
+        ? (<div className="btn-group ml-auto">
+          <button type="button" className="btn btn-secondary active">{'\u21E7'}</button>
+          <button type="button" className="btn btn-secondary" onClick={toggleSortOrder}>
+            {'\u21E9'}
+          </button>
+        </div>)
+        : (<div className="btn-group ml-auto">
+          <button type="button" className="btn btn-secondary" onClick={toggleSortOrder}>
+            {'\u21E7'}
+          </button>
+          <button type="button" className="btn btn-secondary active">{'\u21E9'}</button>
+        </div>)
       }
-      value={selectedMeasurable || defaultVal}
-    >
-      <option value={defaultVal}>Name</option>
-      {allMeasurables.map(m => <option key={m.key} value={m.id}>{m.name}</option>)}
-    </select>
-    {selectedSortOrder === Sorts.DESC
-      ? (<div className="btn-group ml-auto">
-        <button type="button" className="btn btn-secondary active">{'\u21E7'}</button>
-        <button type="button" className="btn btn-secondary" onClick={toggleSortOrder}>
-          {'\u21E9'}
-        </button>
-      </div>)
-      : (<div className="btn-group ml-auto">
-        <button type="button" className="btn btn-secondary" onClick={toggleSortOrder}>
-          {'\u21E7'}
-        </button>
-        <button type="button" className="btn btn-secondary active">{'\u21E9'}</button>
-      </div>)
-    }
+    </div>
   </div>
-</div>;
+);
 
 SearchControls.defaultProps = {
   selectedMeasurable: undefined,

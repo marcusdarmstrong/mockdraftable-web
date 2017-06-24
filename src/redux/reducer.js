@@ -1,5 +1,7 @@
 // @flow
 
+import { union } from 'lodash';
+
 import type { State } from '../types/state';
 import type { Action } from './actions';
 import * as actions from './actions';
@@ -16,6 +18,7 @@ const reducer = (previousState: State, action: Action): State => {
   }
   if (action.type === actions.LOAD_MULTIPLE_PERCENTILES) {
     let newState = previousState;
+    const positionId = action.positionId;
     Object.entries(action.percentiles).forEach((pair) => {
       const playerId = pair[0];
       const percentiles = pair[1];
@@ -25,7 +28,7 @@ const reducer = (previousState: State, action: Action): State => {
         {
           percentiles: Object.assign({}, newState.percentiles, {
             [playerId]: Object.assign({}, newState.percentiles[playerId], {
-              [action.positionId]: percentiles,
+              [positionId]: percentiles,
             }),
           }),
         },
@@ -148,10 +151,21 @@ const reducer = (previousState: State, action: Action): State => {
     );
   }
   if (action.type === actions.UPDATE_LOGGED_IN_USER) {
-    return Object.assign(({}: any), previousState, { loggedInUserId: action.userId });
+    return Object.assign(({}: any), previousState, {
+      loggedInUserId: action.userId,
+      isContributor: action.isContributor,
+      isAdmin: action.isAdmin,
+    });
   }
   if (action.type === actions.UPDATE_PAGE) {
     return Object.assign(({}: any), previousState, { page: action.page });
+  }
+  if (action.type === actions.LOAD_SCHOOLS) {
+    return Object.assign(({}: any), previousState, {
+      page: 'ADD_PLAYER',
+      schools: union(previousState.schools, action.schools)
+        .sort((a, b) => a.name < b.name ? -1 : 1),
+    });
   }
   return previousState;
 };

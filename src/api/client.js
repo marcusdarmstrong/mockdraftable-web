@@ -2,9 +2,9 @@
 
 import fetch from 'isomorphic-fetch';
 
-import type { Api } from '../types/api';
+import type { Api, AddPlayerDetails } from '../types/api';
 import type { PlayerId, PositionId } from '../types/domain';
-import type { SearchOptions } from '../types/state';
+import type { UserId, SearchOptions } from '../types/state';
 
 const clientApi: Api = {
   fetchPlayer: async (id: PlayerId) =>
@@ -57,6 +57,19 @@ const clientApi: Api = {
       },
       credentials: 'same-origin',
     })).json(),
+  addPlayer: async (details: AddPlayerDetails) =>
+    (await fetch('/api/add-player', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      credentials: 'same-origin',
+      body: JSON.stringify(details),
+    })).json(),
+  getSchools: async () => (await fetch('/api/get-schools')).json(),
+  getUserPermissions: async (id: UserId) =>
+    (await fetch(`/api/get-user-permissions?id=${id}`)).json(),
 };
 
 export default clientApi;

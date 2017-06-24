@@ -16,6 +16,8 @@ type Props = {
   showModal: ModalType => void,
   isSearch: boolean,
   isPositionDetail: boolean,
+  isContributor: boolean,
+  isAddPlayer: boolean,
 };
 
 class Nav extends React.Component {
@@ -32,7 +34,8 @@ class Nav extends React.Component {
   };
 
   render() {
-    const { title, url, isSearch, isPositionDetail, showModal } = this.props;
+    const { isAddPlayer, isSearch, isPositionDetail } = this.props;
+    const { title, url, showModal, isContributor } = this.props;
     const itemClass = 'nav-item nav-link';
     const activeItemClass = `${itemClass} active`;
     let collapseClasses = 'collapse navbar-collapse ml-2';
@@ -55,6 +58,9 @@ class Nav extends React.Component {
             <Link className={isPositionDetail ? activeItemClass : itemClass} href="/positions">
               Position Data
             </Link>
+            {isContributor &&
+              <Link className={isAddPlayer ? activeItemClass : itemClass} href="/add-player">Add Player</Link>
+            }
           </div>
         </div>
         <button
@@ -78,6 +84,8 @@ export default connect(
     url: translateState(state),
     isSearch: state.page === 'SEARCH',
     isPositionDetail: state.page === 'POSITION',
+    isAddPlayer: state.page === 'ADD_PLAYER',
+    isContributor: state.isContributor,
   }),
   (dispatch: Dispatch<Action>) => ({
     showModal: component => dispatch(updateModalType(component)),

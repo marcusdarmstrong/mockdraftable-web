@@ -98,6 +98,7 @@ class SignUpForm extends React.Component {
       );
     }
 
+    /* eslint-disable jsx-a11y/no-autofocus */
     return (
       <div className="mb-2">
         {this.state.error && (
@@ -117,6 +118,7 @@ class SignUpForm extends React.Component {
         </form>
       </div>
     );
+    /* eslint-enable jsx-a11y/no-autofocus */
   }
 }
 

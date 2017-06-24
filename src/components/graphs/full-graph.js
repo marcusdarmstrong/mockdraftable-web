@@ -40,7 +40,7 @@ export default ({ percentiles, color }: Props) => {
       viewBox={`0 0 ${2 * (scale + offset)} ${2 * (scale + offset)}`}
       width="100%"
     >
-      {[0.2, 0.4, 0.6, 0.8].map(f =>
+      {[0.2, 0.4, 0.6, 0.8].map(f => (
         <SpiderGraph
           key={f}
           className="grid"
@@ -48,8 +48,8 @@ export default ({ percentiles, color }: Props) => {
           factors={Array(count).fill(f)}
           scale={scale}
           offset={offset}
-        />,
-      )}
+        />
+      ))}
       <SpiderGraph
         className="divider"
         points={pointList}
@@ -57,7 +57,7 @@ export default ({ percentiles, color }: Props) => {
         scale={scale}
         offset={offset}
       />
-      {points.map(p =>
+      {points.map(p => (
         <Axis
           key={p.measurable.id}
           id={p.measurable.id}
@@ -65,8 +65,8 @@ export default ({ percentiles, color }: Props) => {
           offset={offset}
           scale={scale}
           point={p.point}
-        />,
-      )}
+        />
+      ))}
       <SpiderGraph
         className="graph"
         points={pointList}

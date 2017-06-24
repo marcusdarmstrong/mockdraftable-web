@@ -8,6 +8,7 @@ export type Key = number;
 export type MeasurableKey = Key;
 export type PositionKey = Key;
 export type PlayerKey = Key;
+export type SchoolKey = Key;
 
 export const Sorts = {
   ASC: 'ASC',
@@ -45,6 +46,10 @@ export type PlayerPositions = {
   all: Array<PositionId>,
 };
 
+export type School = {
+  id: SchoolKey,
+  name: string,
+};
 
 export const PlayerStatuses = {
   OKAY: 'OKAY',

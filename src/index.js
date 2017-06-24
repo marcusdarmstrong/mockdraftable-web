@@ -21,12 +21,12 @@ import type { BatchedAction } from './packages/redux-batcher';
 
 import type { State } from './types/state';
 import type { LoginResponse } from './types/api';
-import { updateLoggedInUserId } from './redux/actions';
+import { selectLoggedInUserId } from './redux/actions';
 import layout from './layout';
 import App from './components/app';
 import reducer from './redux/reducer';
 import init from './init';
-import { translateUrl } from './router';
+import { translateUrl, getTitle } from './router';
 import serverApi from './api/server';
 import bundles from './bundles.json';
 import { HttpError, errorHandler, asyncCatch, throw404 } from './packages/http';
@@ -39,6 +39,7 @@ import requireHttps from './packages/require-https';
 import defaultState from './redux/default-state';
 import errorPage from './error';
 import oldUrlMiddleware from './old-url-middleware';
+import getUserById from './services/users/get-user-by-id';
 
 init().then((stores) => {
   const app = express();
@@ -90,9 +91,16 @@ init().then((stores) => {
   app.get('/api/does-user-exist', asyncCatch(async (req: $Request, res) => {
     res.json(await api.doesUserExist(req.query.email));
   }));
+  app.get('/api/get-user-permissions', asyncCatch(async (req: $Request, res) => {
+    res.json(await api.getUserPermissions(req.query.id));
+  }));
   app.get('/api/logout', asyncCatch(async (req: $Request, res) => {
     deleteAuthTokenFromCookies(res);
     res.json(await api.logout());
+  }));
+
+  app.get('/api/get-schools', asyncCatch(async (req: $Request, res) => {
+    res.json(await api.getSchools());
   }));
 
   app.use(bodyParser.json());
@@ -125,6 +133,37 @@ init().then((stores) => {
     res.json(result);
   }));
 
+  app.post('/api/add-player', asyncCatch(async (req: $Request, res) => {
+    if (!req.body
+      || typeof req.body.firstName !== 'string'
+      || typeof req.body.lastName !== 'string'
+      || typeof req.body.draftYear !== 'number'
+      || typeof req.body.schoolKey !== 'number'
+      || (typeof req.body.newSchoolName !== 'string' && req.body.newSchoolName !== null)
+    ) {
+      throw new HttpError(400, '/api/addPlayer requires a complete player');
+    }
+    const details = {
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      draftYear: req.body.draftYear,
+      schoolKey: req.body.schoolKey,
+      newSchoolName: req.body.newSchoolName,
+    };
+
+    const userId = readAuthTokenFromCookies(req);
+    if (!userId || userId < 0) {
+      throw new HttpError(403, 'Forbidden');
+    }
+
+    const user = await getUserById(userId);
+    if (!user || user.status < 2) {
+      throw new HttpError(403, 'Forbidden');
+    }
+
+    res.json(await api.addPlayer(details));
+  }));
+
   app.use(oldUrlMiddleware);
 
   app.get('*', asyncCatch(async (req: $Request, res) => {
@@ -134,14 +173,14 @@ init().then((stores) => {
       applyMiddleware(batcher, thunk.withExtraArgument(api)),
     );
 
-    store.dispatch(updateLoggedInUserId(readAuthTokenFromCookies(req)));
+    await store.dispatch(selectLoggedInUserId(readAuthTokenFromCookies(req)));
     await store.dispatch(translateUrl(req.path, req.query) || throw404(req.path));
 
     const jsBundleName: string = bundles.js_bundle_name || 'public/bundle.js';
     const cssBundleName: string = bundles.css_bundle_name || 'public/bundle.css';
     res.send(
       layout(
-        'MockDraftable',
+        getTitle(store.getState()),
         renderToString(<Provider store={store}><App /></Provider>),
         store.getState(),
         jsBundleName,

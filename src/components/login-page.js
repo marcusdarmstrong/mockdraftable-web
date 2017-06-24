@@ -7,7 +7,7 @@ import type { Action } from '../redux/actions';
 import LoginForm from './login-form';
 import SignUpForm from './sign-up-form';
 import type { UserId } from '../types/state';
-import { updateLoggedInUserId, updateModalType } from '../redux/actions';
+import { selectLoggedInUserId, updateModalType } from '../redux/actions';
 
 type Props = {
   loginUser: (UserId) => void,
@@ -61,6 +61,6 @@ class LoginPage extends React.Component {
 export default connect(
   () => ({}),
   (dispatch: Dispatch<Action>) => ({
-    loginUser: userId => dispatch([updateLoggedInUserId(userId), updateModalType('None')]),
+    loginUser: userId => dispatch([selectLoggedInUserId(userId), updateModalType('None')]),
   }),
 )(LoginPage);

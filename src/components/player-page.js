@@ -14,7 +14,7 @@ type Props = {
 };
 
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-const PlayerPage = ({ showEmbedModal }: Props) =>
+const PlayerPage = ({ showEmbedModal }: Props) => (
   <div>
     <PlayerBar />
     <div className="window container-fluid col-12 col-lg-10 offset-lg-1">
@@ -32,7 +32,7 @@ const PlayerPage = ({ showEmbedModal }: Props) =>
       </div>
     </div>
   </div>
-;
+);
 /* eslint-enable jsx-a11y/no-static-element-interactions */
 
 export default connect(() => ({}), (dispatch: Dispatch<Action>) => ({

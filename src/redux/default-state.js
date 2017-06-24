@@ -8,6 +8,7 @@ import type { State } from '../types/state';
 const defaultState = (positionEligibilityStore: PositionEligibilityStore): State => {
   const validPositions = positions.filter(pos => !!positionEligibilityStore.get(pos.id));
   const posById = validPositions.reduce((a, pos) => Object.assign({}, a, { [pos.id]: pos }), {});
+
   return {
     page: 'HOME',
     measurables: measurablesByKey,
@@ -20,6 +21,9 @@ const defaultState = (positionEligibilityStore: PositionEligibilityStore): State
     embed: false,
     distributionStatistics: {},
     loggedInUserId: null,
+    schools: [],
+    isContributor: false,
+    isAdmin: false,
   };
 };
 

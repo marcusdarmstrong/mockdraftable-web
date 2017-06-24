@@ -15,36 +15,38 @@ type Props = {
   positions: { [PositionId]: Position }
 };
 
-const TypeAhead = ({ updateSearch, searchResults, positions }: Props) => <div>
-  <input
-    type="text"
-    className="form-control form-control-lg"
-    placeholder="Player Name..."
-    onChange={(event: SyntheticInputEvent) => updateSearch(event.target.value)}
-    autoFocus
-  />
-  <div className="list-group mt-2">
-    {searchResults.map(p =>
-      <Link
-        key={p.id}
-        href={`/player/${p.id}`}
-        className="list-group-item list-group-item-action justify-content-between"
-      >
-        <div className="list-group-item-text">
-          <h5 className="list-group-item-heading mb-0">{p.name}</h5>
-          <span
-            className="badge"
-            title={positions[p.positions.primary].name}
-            style={{ backgroundColor: positions[p.positions.primary].color, color: '#fff' }}
-          >
-            {positions[p.positions.primary].abbreviation}
-          </span>
-          <span className="align-middle ml-2">{p.school && `${p.school},`} {p.draft}</span>
-        </div>
-      </Link>,
-    )}
+const TypeAhead = ({ updateSearch, searchResults, positions }: Props) => (
+  <div>
+    <input
+      type="text"
+      className="form-control form-control-lg"
+      placeholder="Player Name..."
+      onChange={(event: SyntheticInputEvent) => updateSearch(event.target.value)}
+      autoFocus // eslint-disable-line jsx-a11y/no-autofocus
+    />
+    <div className="list-group mt-2">
+      {searchResults.map(p => (
+        <Link
+          key={p.id}
+          href={`/player/${p.id}`}
+          className="list-group-item list-group-item-action justify-content-between"
+        >
+          <div className="list-group-item-text">
+            <h5 className="list-group-item-heading mb-0">{p.name}</h5>
+            <span
+              className="badge"
+              title={positions[p.positions.primary].name}
+              style={{ backgroundColor: positions[p.positions.primary].color, color: '#fff' }}
+            >
+              {positions[p.positions.primary].abbreviation}
+            </span>
+            <span className="align-middle ml-2">{p.school && `${p.school},`} {p.draft}</span>
+          </div>
+        </Link>
+      ))}
+    </div>
   </div>
-</div>;
+);
 
 export default connect(
   (state: State) => ({

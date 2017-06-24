@@ -1,6 +1,6 @@
 // @flow
 
-import type { Id, PlayerId, PositionId, MeasurableId, Player, Position, Measurable, MeasurableKey, Percentiles, Comparisons, Sort, DistributionStatistics } from './domain';
+import type { Id, PlayerId, PositionId, MeasurableId, Player, Position, Measurable, MeasurableKey, Percentiles, Comparisons, Sort, DistributionStatistics, School } from './domain';
 
 export type UserId = Id;
 export type ValidationError = string;
@@ -23,6 +23,8 @@ export type SearchOptions = {
 type GlobalAppState = {
   selectedPositionId: PositionId,
   loggedInUserId: ?UserId,
+  isContributor: boolean,
+  isAdmin: boolean,
 };
 
 export type SearchResults = {
@@ -51,7 +53,8 @@ type Domain = {
   measurables: { [MeasurableKey]: Measurable },
   comparisons: { [PlayerId]: { [PositionId]: Comparisons } },
   percentiles: { [PlayerId]: { [PositionId]: Percentiles } },
-  distributionStatistics: { [PositionId]: { [MeasurableKey]: DistributionStatistics } };
+  distributionStatistics: { [PositionId]: { [MeasurableKey]: DistributionStatistics } },
+  schools: Array<School>,
 };
 
 export type SharedState = Domain & AppState & UiState;

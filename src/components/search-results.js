@@ -42,7 +42,7 @@ const SearchResults = ({
   toggleSortOrder,
   hasNextPage,
   selectPage,
-}: Props) =>
+}: Props) => (
   <div>
     <h3>Search Results</h3>
     <SearchControls
@@ -92,7 +92,8 @@ const SearchResults = ({
         selectPage={selectPage(searchOptions)}
       />
     )}
-  </div>;
+  </div>
+);
 
 export default connect(
   (state: SearchPageState) => ({

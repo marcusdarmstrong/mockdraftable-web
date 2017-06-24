@@ -3,7 +3,7 @@
 import type { Dispatch } from 'redux';
 import type { ThunkAction } from 'redux-thunk';
 
-import type { Player, PlayerId, PositionId, Comparisons, Percentiles, MeasurableKey, DistributionStatistics } from '../types/domain';
+import type { Player, PlayerId, PositionId, Comparisons, Percentiles, MeasurableKey, DistributionStatistics, School } from '../types/domain';
 import type { Api } from '../types/api';
 import type { UserId, State, SearchOptions, SearchResults, ModalType, EmbedPage } from '../types/state';
 
@@ -22,6 +22,7 @@ export const UPDATE_EMBED_PAGE = 'UPDATE_EMBED_PAGE';
 export const LOAD_DISTRIBUTION_STATISTICS = 'LOAD_DISTRIBUTION_STATISTICS';
 export const UPDATE_LOGGED_IN_USER = 'UPDATE_LOGGED_IN_USER';
 export const UPDATE_PAGE = 'UPDATE_PAGE';
+export const LOAD_SCHOOLS = 'LOAD_SCHOOLS';
 
 export const updateSelectedPlayer = (id: PlayerId, positionId: PositionId) => ({
   type: UPDATE_SELECTED_PLAYER,
@@ -107,14 +108,19 @@ export type UpdateEmbedPageAction = {
   state: EmbedPage,
 };
 
-export const updateLoggedInUserId = (userId: ?UserId) => ({
-  type: UPDATE_LOGGED_IN_USER,
-  userId,
-});
+export const updateLoggedInUserId = (userId: ?UserId, isAdmin: boolean, isContributor: boolean) =>
+  ({
+    type: UPDATE_LOGGED_IN_USER,
+    userId,
+    isAdmin,
+    isContributor,
+  });
 
 export type UpdateLoggedInUserIdAction = {
   type: 'UPDATE_LOGGED_IN_USER',
   userId: ?UserId,
+  isAdmin: boolean,
+  isContributor: boolean,
 };
 
 export const updatePage = (page: string) => ({
@@ -191,6 +197,16 @@ export type LoadDistributionStatisticsAction = {
   stats: DistributionStatistics,
 };
 
+export const loadSchools = (schools: Array<School>) => ({
+  type: LOAD_SCHOOLS,
+  schools,
+});
+
+export type LoadSchoolsAction = {
+  type: 'LOAD_SCHOOLS',
+  schools: Array<School>,
+};
+
 export type Action =
   UpdateSelectedPlayerAction
   | UpdateSelectedPositionAction
@@ -255,13 +271,15 @@ export const selectPlayer = (id: PlayerId, positionIdOverride: ?PositionId) =>
     const missingPlayers = getMissingPlayers(state, allPlayerIds);
     const missingPercentiles = getMissingPercentiles(state, positionId, allPlayerIds.concat(id));
 
-    const [players, percentiles] = await Promise.all([
-      api.fetchMultiplePlayers(missingPlayers),
-      api.fetchMultiplePercentiles(missingPercentiles, positionId),
-    ]);
+    if (missingPlayers.length > 0 || missingPercentiles.length > 0) {
+      const [players, percentiles] = await Promise.all([
+        api.fetchMultiplePlayers(missingPlayers),
+        api.fetchMultiplePercentiles(missingPercentiles, positionId),
+      ]);
 
-    dispatch(loadMultiplePlayers(players));
-    dispatch(loadMultiplePercentiles(percentiles, positionId));
+      dispatch(loadMultiplePlayers(players));
+      dispatch(loadMultiplePercentiles(percentiles, positionId));
+    }
     dispatch(updateSelectedPlayer(id, positionId));
   };
 
@@ -274,13 +292,15 @@ export const doSearch = (options: SearchOptions, positionId: PositionId) =>
       const missingPlayers = getMissingPlayers(newState, results.players);
       const missingPercentiles = getMissingPercentiles(newState, positionId, results.players);
 
-      const [players, percentiles] = await Promise.all([
-        api.fetchMultiplePlayers(missingPlayers),
-        api.fetchMultiplePercentiles(missingPercentiles, positionId),
-      ]);
+      if (missingPlayers.length > 0 || missingPercentiles.length > 0) {
+        const [players, percentiles] = await Promise.all([
+          api.fetchMultiplePlayers(missingPlayers),
+          api.fetchMultiplePercentiles(missingPercentiles, positionId),
+        ]);
 
-      dispatch(loadMultiplePlayers(players));
-      dispatch(loadMultiplePercentiles(percentiles, positionId));
+        dispatch(loadMultiplePlayers(players));
+        dispatch(loadMultiplePercentiles(percentiles, positionId));
+      }
       dispatch(updateSearchResults(results));
     }
   };
@@ -330,6 +350,19 @@ export const selectTypeAheadSearch = (search: string) =>
 
 export const logout = () =>
   async (dispatch: Dispatch<Action>, getState: () => State, api: Api) => {
-    dispatch(updateLoggedInUserId(null));
+    dispatch(updateLoggedInUserId(null, false, false));
     await api.logout();
+  };
+
+export const selectSchools = () =>
+  async (dispatch: Dispatch<Action>, getState: () => State, api: Api) => {
+    dispatch(loadSchools(await api.getSchools()));
+  };
+
+export const selectLoggedInUserId = (id: ?UserId) =>
+  async (dispatch: Dispatch<Action>, getState: () => State, api: Api) => {
+    if (id) {
+      const permissions = await api.getUserPermissions(id);
+      dispatch(updateLoggedInUserId(id, permissions.isAdmin, permissions.isContributor));
+    }
   };

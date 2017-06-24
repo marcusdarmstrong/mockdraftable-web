@@ -9,7 +9,7 @@ type Props = {
   positionName: string,
 };
 
-export default ({ positionName }: Props) =>
+export default ({ positionName }: Props) => (
   <div className="window container-fluid col-12 col-lg-10 offset-lg-1">
     <div className="row">
       <div className="col-12 col-lg-6 offset-lg-3">
@@ -19,4 +19,5 @@ export default ({ positionName }: Props) =>
         <PositionStatsSection />
       </div>
     </div>
-  </div>;
+  </div>
+);

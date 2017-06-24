@@ -33,7 +33,7 @@ const PositionSelector = ({
   );
 
   return (<div>
-    {parentPositions.map(position =>
+    {parentPositions.map(position => (
       <div key={position.id} className="mb-2">
         <button
           type="button"
@@ -48,8 +48,8 @@ const PositionSelector = ({
           {position.abbreviation}
         </button>
         {position.name}
-      </div>,
-    )}
+      </div>
+    ))}
     <div className="mb-2">
       <button
         type="button"
@@ -63,7 +63,7 @@ const PositionSelector = ({
       </button>
       <span className="h6">{selectedPosition.name}</span>
     </div>
-    {childPositions.map(position =>
+    {childPositions.map(position => (
       <div key={position.id} className="ml-2 mb-2">
         {'\u21b3'}
         <button
@@ -79,8 +79,8 @@ const PositionSelector = ({
           {position.abbreviation}
         </button>
         {position.name}
-      </div>,
-    )}
+      </div>
+    ))}
   </div>);
 };
 

@@ -16,7 +16,7 @@ type Props = {
   positionStats: Array<MeasurableStatistics>,
 };
 
-const PositionStatsSection = ({ positionStats }: Props) =>
+const PositionStatsSection = ({ positionStats }: Props) => (
   <table className="table table-sm">
     <thead>
       <tr>
@@ -27,14 +27,17 @@ const PositionStatsSection = ({ positionStats }: Props) =>
       </tr>
     </thead>
     <tbody>
-      {positionStats.map(s => <tr key={s.name}>
-        <td>{s.name}</td>
-        <td>{s.stats.count}</td>
-        <td>{round(s.stats.mean, 3)}</td>
-        <td>{round(s.stats.stddev, 3)}</td>
-      </tr>)}
+      {positionStats.map(s => (
+        <tr key={s.name}>
+          <td>{s.name}</td>
+          <td>{s.stats.count}</td>
+          <td>{round(s.stats.mean, 3)}</td>
+          <td>{round(s.stats.stddev, 3)}</td>
+        </tr>
+      ))}
     </tbody>
-  </table>;
+  </table>
+);
 
 export default connect((state: PositionPageState) => ({
   positionStats:

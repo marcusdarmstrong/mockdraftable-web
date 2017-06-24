@@ -1,10 +1,26 @@
 // @flow
 
-import type { Player, PlayerId, Comparisons, Percentiles, PositionId, MeasurableKey, DistributionStatistics } from './domain';
+import type { Player, PlayerId, Comparisons, Percentiles, PositionId, MeasurableKey, DistributionStatistics, SchoolKey, School } from './domain';
 import type { UserId, SearchOptions, SearchResults, ValidationError } from './state';
 
-export type LoginResponse =
-  { success: true, userId: UserId } | { success: false, error: ValidationError };
+export type LoginResponse = { success: true, userId: UserId }
+  | { success: false, error: ValidationError };
+
+export type AddPlayerResponse = { success: true, playerId: PlayerId, schoolKey?: SchoolKey }
+  | { success: false, error: ValidationError };
+
+export type UserPermissions = {
+  isAdmin: boolean,
+  isContributor: boolean,
+};
+
+export type AddPlayerDetails = {
+    firstName: string,
+    lastName: string,
+    draftYear: number,
+    schoolKey: SchoolKey,
+    newSchoolName: ?string,
+};
 
 export interface Api {
   fetchPlayer: (id: PlayerId) => Promise<Player>,
@@ -19,4 +35,7 @@ export interface Api {
   createUser: (email: string, password: string) => Promise<LoginResponse>,
   doesUserExist: (email: string) => Promise<LoginResponse>,
   logout: () => Promise<boolean>,
+  addPlayer: (details: AddPlayerDetails) => Promise<AddPlayerResponse>,
+  getSchools: () => Promise<Array<School>>,
+  getUserPermissions: (id: UserId) => Promise<UserPermissions>,
 }

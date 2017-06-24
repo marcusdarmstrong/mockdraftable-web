@@ -50,6 +50,7 @@ class LoginForm extends React.Component {
   };
 
   render() {
+    /* eslint-disable jsx-a11y/no-autofocus */
     return (
       <div className="mb-2">
         {this.state.error && (
@@ -68,6 +69,7 @@ class LoginForm extends React.Component {
         </form>
       </div>
     );
+    /* eslint-enable jsx-a11y/no-autofocus */
   }
 }
 

@@ -8,7 +8,7 @@ type Props = {
   measurements: DisplayableMeasurement[],
 };
 
-export default ({ measurements }: Props) =>
+export default ({ measurements }: Props) => (
   <table className="table table-sm mb-0">
     <thead>
       <tr>
@@ -18,10 +18,13 @@ export default ({ measurements }: Props) =>
       </tr>
     </thead>
     <tbody>
-      {measurements.map(m => <tr key={m.measurable.id}>
-        <td>{m.measurable.name}</td>
-        <td>{m.display}</td>
-        <td>{m.percentile}</td>
-      </tr>)}
+      {measurements.map(m => (
+        <tr key={m.measurable.id}>
+          <td>{m.measurable.name}</td>
+          <td>{m.display}</td>
+          <td>{m.percentile}</td>
+        </tr>
+      ))}
     </tbody>
-  </table>;
+  </table>
+);

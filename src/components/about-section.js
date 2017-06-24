@@ -13,7 +13,7 @@ type Props = {
   positions: Array<Position>,
 };
 
-const AboutSection = ({ selectedPlayer, selectedPositionId, positions }: Props) =>
+const AboutSection = ({ selectedPlayer, selectedPositionId, positions }: Props) => (
   <div>
     <h3>About</h3>
     <dl>
@@ -28,7 +28,7 @@ const AboutSection = ({ selectedPlayer, selectedPositionId, positions }: Props) 
       <dt>Position:</dt>
       <dd className="h4">
         <div className="list-inline">
-          {positions.map(p =>
+          {positions.map(p => (
             <Link
               href={
                 selectedPlayer.positions.primary === p.id
@@ -50,14 +50,15 @@ const AboutSection = ({ selectedPlayer, selectedPositionId, positions }: Props) 
               title={p.name}
             >
               {p.abbreviation}
-            </Link>,
-          )}
+            </Link>
+          ))}
         </div>
       </dd>
       {selectedPlayer.school && <dt>School:</dt>}
       {selectedPlayer.school && <dd>{selectedPlayer.school}</dd>}
     </dl>
-  </div>;
+  </div>
+);
 
 export default connect((state: PlayerPageState) => ({
   selectedPlayer: state.players[state.selectedPlayerId],
