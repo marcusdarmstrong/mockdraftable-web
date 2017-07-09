@@ -61,7 +61,7 @@ const EmbededPlayer = ({
   const baseUrl = `/embed/${selectedPlayer.id}?position=${selectedPosition.id}&page=`;
 
   /* eslint-disable jsx-a11y/href-no-hash */
-  return (<div className="card" style={{ maxWidth: '480px', height: '651px' }}>
+  return (<div className="card mx-auto" style={{ maxWidth: '480px', height: '651px' }}>
     <div className="card-header">
       <h4 className="card-title mb-1">
         {selectedPlayer.name}
