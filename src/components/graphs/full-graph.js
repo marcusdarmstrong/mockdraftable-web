@@ -38,7 +38,6 @@ export default ({ percentiles, color }: Props) => {
     <svg
       preserveAspectRatio="xMinYMin meet"
       viewBox={`0 0 ${2 * (scale + offset)} ${2 * (scale + offset)}`}
-      width="100%"
     >
       {[0.2, 0.4, 0.6, 0.8].map(f => (
         <SpiderGraph
