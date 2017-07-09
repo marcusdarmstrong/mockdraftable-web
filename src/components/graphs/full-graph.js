@@ -29,7 +29,7 @@ export default ({ percentiles, color }: Props) => {
     const y = round((factor * pointList[i].y) + scale + offset, 2);
     circles.push(<g className="percentileMarker" key={`g${i}`}>
       <circle key={`c${i}`} cx={x} cy={y} r={offset} style={{ stroke: color }} />
-      <text key={`t${i}`} x={x} y={y}>{points[i].percentile}</text>
+      <text key={`t${i}`} x={x} y={y} dy=".4em">{points[i].percentile}</text>
     </g>);
     i += 1;
   });
