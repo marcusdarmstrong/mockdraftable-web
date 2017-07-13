@@ -48,7 +48,7 @@
     "react": "15.6.1",
     "react-dom": "15.6.1",
     "react-redux": "5.0.5",
-    "redux": "3.7.0",
+    "redux": "3.7.2",
     "redux-shortcuts": "0.0.3",
     "redux-thunk": "2.2.0",
     "response-time": "2.3.2",
