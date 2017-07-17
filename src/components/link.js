@@ -10,7 +10,7 @@ export type Props = {
   href: string,
   title?: string,
   className?: string,
-  children: Element<any>,
+  children: React.Element<any>,
   callback: (string) => void,
   style?: { [string]: string },
 };

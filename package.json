@@ -35,7 +35,7 @@
   "dependencies": {
     "babel-polyfill": "6.23.0",
     "body-parser": "1.17.2",
-    "compression": "1.6.2",
+    "compression": "1.7.0",
     "cookie-parser": "1.4.3",
     "express": "4.15.3",
     "foreman": "2.0.0",
@@ -44,7 +44,7 @@
     "lodash": "4.17.4",
     "md5": "2.2.1",
     "multi-slider": "4.0.0",
-    "pg-promise": "5.9.6",
+    "pg-promise": "6.3.5",
     "react": "15.6.1",
     "react-dom": "15.6.1",
     "react-redux": "5.0.5",
@@ -67,15 +67,15 @@
     "bootstrap": "4.0.0-alpha.6",
     "browserify": "14.4.0",
     "eslint": "3.19.0",
-    "eslint-config-airbnb": "15.0.1",
-    "eslint-plugin-flowtype": "2.34.0",
-    "eslint-plugin-import": "2.6.0",
-    "eslint-plugin-jsx-a11y": "5.0.3",
+    "eslint-config-airbnb": "15.0.2",
+    "eslint-plugin-flowtype": "2.35.0",
+    "eslint-plugin-import": "2.7.0",
+    "eslint-plugin-jsx-a11y": "5.1.1",
     "eslint-plugin-react": "7.1.0",
-    "flow-bin": "0.48.0",
+    "flow-bin": "0.50.0",
     "hashmark": "5.0.0",
     "node-sass": "4.5.3",
     "node-sass-module-importer": "0.1.0",
-    "uglify-js": "3.0.19"
+    "uglify-js": "3.0.25"
   }
 }
