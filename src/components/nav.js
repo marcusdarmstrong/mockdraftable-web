@@ -20,10 +20,12 @@ type Props = {
   isAddPlayer: boolean,
 };
 
-class Nav extends React.Component {
-  state: {
-    isCollapsed: boolean,
-  } = {
+type CompState = {
+  isCollapsed: boolean,
+};
+
+class Nav extends React.Component<Props, CompState> {
+  state: CompState = {
     isCollapsed: true,
   };
 
@@ -43,7 +45,7 @@ class Nav extends React.Component {
     const togglerClasses = 'navbar-toggler navbar-toggler-right';
 
     return (
-      <nav className="navbar navbar-inverse fixed-top bg-faded navbar-toggleable-sm">
+      <nav className="navbar navbar-dark fixed-top bg-faded navbar-expand-sm">
         <button className={togglerClasses} type="button" onClick={this.toggleCollapsed}>
           <span className="navbar-toggler-icon" />
         </button>

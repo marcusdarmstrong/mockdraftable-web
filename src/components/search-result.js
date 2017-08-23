@@ -22,10 +22,10 @@ const SearchResult =
     (
       <Link
         href={`/player/${id}?position=${selectedPosition.id}`}
-        className="list-group-item list-group-item-action justify-content-between"
+        className="list-group-item list-group-item-action justify-content-between d-flex"
       >
-        <div className="list-group-item-text">
-          <h5 className="list-group-item-heading mb-0">{name}</h5>
+        <div className="list-group-item-text mt-1">
+          <h5 className="list-group-item-heading mb-0 text-dark">{name}</h5>
           <span
             className="badge"
             title={playerPosition.name}

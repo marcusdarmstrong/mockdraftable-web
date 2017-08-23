@@ -14,11 +14,7 @@ type Props = {
   selectPosition: PositionId => () => void,
 };
 
-const PositionSelector = ({
-  selectedPosition,
-  positions,
-  selectPosition,
-}: Props) => {
+const PositionSelector = ({ selectedPosition, positions, selectPosition }: Props) => {
   const parentPositions = positions.filter(
     position =>
       (selectedPosition.key.toString().startsWith(position.key.toString()) || position.id === 'ATH')

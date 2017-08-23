@@ -21,7 +21,7 @@ const TypeAhead = ({ updateSearch, searchResults, positions }: Props) => (
       type="text"
       className="form-control form-control-lg"
       placeholder="Player Name..."
-      onChange={(event: SyntheticInputEvent) => updateSearch(event.target.value)}
+      onChange={(event: SyntheticInputEvent<HTMLInputElement>) => updateSearch(event.target.value)}
       autoFocus // eslint-disable-line jsx-a11y/no-autofocus
     />
     <div className="list-group mt-2">

@@ -8,12 +8,14 @@ type Props = {
   loginUser: (UserId) => void,
 };
 
-class LoginForm extends React.Component {
-  state: {
-    email: string,
-    password: string,
-    error: ?string,
-  } = {
+type State = {
+  email: string,
+  password: string,
+  error: ?string,
+};
+
+class LoginForm extends React.Component<Props, State> {
+  state: State = {
     email: '',
     password: '',
     error: null,
@@ -21,15 +23,15 @@ class LoginForm extends React.Component {
 
   props: Props;
 
-  handleEmailChange = (e: SyntheticInputEvent) => {
+  handleEmailChange = (e: SyntheticInputEvent<HTMLInputElement>) => {
     this.setState({ email: e.target.value });
   };
 
-  handlePasswordChange = (e: SyntheticInputEvent) => {
+  handlePasswordChange = (e: SyntheticInputEvent<HTMLInputElement>) => {
     this.setState({ password: e.target.value });
   };
 
-  handleSubmit = async (e: SyntheticInputEvent) => {
+  handleSubmit = async (e: SyntheticInputEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (this.state.email === '') {
       this.setState({ error: 'Please provide an email.' });

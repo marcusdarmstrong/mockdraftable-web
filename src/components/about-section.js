@@ -39,13 +39,13 @@ const AboutSection = ({ selectedPlayer, selectedPositionId, positions }: Props) 
               className="list-inline-item btn btn-sm"
               style={
                 selectedPositionId === p.id ?
-                {
-                  backgroundColor: p.color,
-                  color: '#FFF',
-                } : {
-                  borderColor: p.color,
-                  color: p.color,
-                }
+                  {
+                    backgroundColor: p.color,
+                    color: '#FFF',
+                  } : {
+                    borderColor: p.color,
+                    color: p.color,
+                  }
               }
               title={p.name}
             >

@@ -65,7 +65,7 @@ export default connect(
   isPositionPage,
   positionName,
   isUserLoggedIn,
-}: Props) => {
+}: Props) => { // eslint-disable-line indent
   if (embed) {
     return <EmbededPlayer />;
   }
@@ -99,7 +99,7 @@ export default connect(
     {modalType !== 'None' && <div className="modal-backdrop show" onClick={() => closeModal()} />}
     {/* eslint-enable jsx-a11y/no-static-element-interactions */}
     {!embed &&
-      <div className="col-12 col-md-6 offset-md-3">
+      <div className="col-12 col-md-6 ml-auto mr-auto">
         <p className="text-muted text-center mt-2">
           <small>
             &copy; MockDraftable, 2011-2017.

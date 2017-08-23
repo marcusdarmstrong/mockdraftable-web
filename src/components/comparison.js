@@ -20,9 +20,9 @@ type Props = {
 const Comparison =
   ({ name, playerPosition, selectedPosition, id, percentiles, percentage, school, draft }: Props) =>
     (
-      <Link href={`/player/${id}`} className="list-group-item list-group-item-action justify-content-between">
-        <div className="list-group-item-text">
-          <h5 className="list-group-item-heading mb-0">{name}</h5>
+      <Link href={`/player/${id}`} className="list-group-item list-group-item-action d-flex justify-content-between">
+        <div className="list-group-item-text mt-1">
+          <h5 className="list-group-item-heading text-dark mb-0">{name}</h5>
           <span
             className="badge"
             title={playerPosition.name}

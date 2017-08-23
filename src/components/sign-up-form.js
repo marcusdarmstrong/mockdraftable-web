@@ -11,14 +11,16 @@ type Props = {
   loginUser: (UserId) => void,
 };
 
-class SignUpForm extends React.Component {
-  state: {
-    email: string,
-    password: string,
-    error: ?string,
-    emailError: ?boolean,
-    emailErrorMessage: ?string,
-  } = {
+type State = {
+  email: string,
+  password: string,
+  error: ?string,
+  emailError: ?boolean,
+  emailErrorMessage: ?string,
+};
+
+class SignUpForm extends React.Component<Props, State> {
+  state: State = {
     email: '',
     password: '',
     error: null,
@@ -28,7 +30,7 @@ class SignUpForm extends React.Component {
 
   props: Props;
 
-  handleEmailChange = async (e: SyntheticInputEvent) => {
+  handleEmailChange = async (e: SyntheticInputEvent<HTMLInputElement>) => {
     const email = e.target.value;
     this.setState({ email });
 
@@ -53,11 +55,11 @@ class SignUpForm extends React.Component {
     }
   };
 
-  handlePasswordChange = (e: SyntheticInputEvent) => {
+  handlePasswordChange = (e: SyntheticInputEvent<HTMLInputElement>) => {
     this.setState({ password: e.target.value });
   };
 
-  handleSubmit = async (e: SyntheticInputEvent) => {
+  handleSubmit = async (e: SyntheticInputEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (this.state.email === '' || !EMAIL_REX.test(this.state.email)) {
       this.setState({ error: 'Please provide a valid email.' });

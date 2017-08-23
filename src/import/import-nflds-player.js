@@ -256,8 +256,9 @@ fetch(`http://www.nfldraftscout.com/ratings/dsprofile.php?pyid=${nfldsId}&drafty
         await getPlayerIdIfPlayerAlreadyExists(firstName, lastName, combineYear, schoolId);
       if (!player || !player.id) {
         const urlString = await createPlayer(firstName, lastName, combineYear, schoolId);
-        player =
-          await db.one('select id from t_player where canonical_name=$(urlString)', { urlString });
+        player = await db.one('select id from t_player where canonical_name=$(urlString)', {
+          urlString: urlString ? urlString.id : '',
+        });
         console.log(`Added player id ${player.id}`);
       } else {
         console.log(`Found player id ${player.id}`);

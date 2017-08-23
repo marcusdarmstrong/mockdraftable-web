@@ -18,7 +18,7 @@ type Props = {
   loadSchool: (School) => void,
 };
 
-class AddPlayerPage extends React.Component {
+class AddPlayerPage extends React.Component<Props, AddPlayerDetails> {
   state: AddPlayerDetails = {
     firstName: '',
     lastName: '',
@@ -29,27 +29,27 @@ class AddPlayerPage extends React.Component {
 
   props: Props;
 
-  handleFirstName = (e: SyntheticInputEvent) => {
+  handleFirstName = (e: SyntheticInputEvent<HTMLInputElement>) => {
     this.setState({ firstName: e.target.value });
   };
 
-  handleLastName = (e: SyntheticInputEvent) => {
+  handleLastName = (e: SyntheticInputEvent<HTMLInputElement>) => {
     this.setState({ lastName: e.target.value });
   };
 
-  handleDraftYear = (e: SyntheticInputEvent) => {
+  handleDraftYear = (e: SyntheticInputEvent<HTMLInputElement>) => {
     this.setState({ draftYear: Number(e.target.value) });
   };
 
-  handleSchool = (e: SyntheticInputEvent) => {
+  handleSchool = (e: SyntheticInputEvent<HTMLInputElement>) => {
     this.setState({ schoolKey: Number(e.target.value) });
   };
 
-  handleNewSchool = (e: SyntheticInputEvent) => {
+  handleNewSchool = (e: SyntheticInputEvent<HTMLInputElement>) => {
     this.setState({ newSchoolName: e.target.value });
   };
 
-  handleSubmit = async (e: SyntheticInputEvent) => {
+  handleSubmit = async (e: SyntheticInputEvent<HTMLInputElement>) => {
     e.preventDefault();
     const details = this.state;
     const response = await api.addPlayer(details);

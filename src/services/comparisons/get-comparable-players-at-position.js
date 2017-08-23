@@ -68,7 +68,8 @@ const distance = (p1meas, p2meas, positionStats) =>
     0,
   );
 
-const getComparablePlayersAtPosition = (
+const getComparablePlayersAtPosition =
+  (
     playerStore: PlayerStore,
     statisticsStore: StatisticsStore,
     positionStore: PositionEligibilityStore,

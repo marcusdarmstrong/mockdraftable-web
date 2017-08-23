@@ -17,7 +17,7 @@ const updateHistory = (title, url) => {
   }
 };
 
-export default class Page extends React.Component {
+export default class Page extends React.Component<Props> {
   shouldComponentUpdate(nextProps: Props) {
     return typeof window !== 'undefined' && (
       this.props.url !== nextProps.url

@@ -1,4 +1,24 @@
-$brand-primary: #46B77B;
+$gray-100: #f8f9fa;
+$gray-600: #868e96;
+$gray-800: #343a40;
+$red:      #dc3545;
+$yellow:   #ffc107;
+$green:    #28a745;
+$cyan:     #17a2b8;
+
+$theme-colors: (
+  primary: #46B77B,
+  secondary: $gray-600,
+  success: $green,
+  info: $cyan,
+  warning: $yellow,
+  danger: $red,
+  light: $gray-100,
+  dark: $gray-800
+) !default;
+
+$btn-transition: background-color .05s ease-in-out, border-color .05s ease-in-out, box-shadow .05s ease-in-out;
+
 
 @import "~bootstrap/scss/bootstrap";
 @import "./loader";
@@ -19,18 +39,19 @@ $brand-primary: #46B77B;
   vertical-align: -.8rem;
 }
 
+$good-grey: #464a4c;
 
 text.measurable textpath {
   font-size: 1rem;
-  fill: $gray;
+  fill: $good-grey;
   text-shadow: 0px 0px 3px white;
-  color: $gray;
+  color: $good-grey;
 }
 
 path,
 .divider,
 .grid {
-  stroke: $gray;
+  stroke: $good-grey;
   stroke-width: 1;
   fill-opacity: 0.0;
   stroke-opacity: 1;
@@ -59,7 +80,7 @@ path,
   text-anchor: middle;
   /*dominant-baseline: central;*/
   font-size: .75rem;
-  fill: $gray;
+  fill: $good-grey;
   font-family: "Arvo";
 }
 

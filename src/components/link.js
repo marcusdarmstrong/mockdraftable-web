@@ -10,12 +10,12 @@ export type Props = {
   href: string,
   title?: string,
   className?: string,
-  children: React.Element<any>,
+  children: React$Element<any>,
   callback: (string) => void,
   style?: { [string]: string },
 };
 
-class Link extends React.Component {
+class Link extends React.Component<Props> {
   static defaultProps = {
     className: '',
     title: '',
@@ -24,7 +24,7 @@ class Link extends React.Component {
 
   props: Props;
 
-  click = (event: SyntheticEvent) => {
+  click = (event: SyntheticEvent<HTMLInputElement>) => {
     if (event.ctrlKey || event.metaKey) { return; }
     event.preventDefault();
     this.props.callback(this.props.href);

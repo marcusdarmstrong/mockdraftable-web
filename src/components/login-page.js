@@ -13,10 +13,12 @@ type Props = {
   loginUser: (UserId) => void,
 };
 
-class LoginPage extends React.Component {
-  state: {
-    isLogin: boolean,
-  } = {
+type State = {
+  isLogin: boolean,
+};
+
+class LoginPage extends React.Component<Props, State> {
+  state: State = {
     isLogin: true,
   };
 

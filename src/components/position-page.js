@@ -10,9 +10,9 @@ type Props = {
 };
 
 export default ({ positionName }: Props) => (
-  <div className="window container-fluid col-12 col-lg-10 offset-lg-1">
+  <div className="window container-fluid col-12 col-lg-10 ml-auto mr-auto">
     <div className="row">
-      <div className="col-12 col-lg-6 offset-lg-3">
+      <div className="col-12 col-lg-6 ml-auto mr-auto">
         <PositionSelector />
         <h3>Aggregate Statistics</h3>
         <h6 className="text-muted">{positionName}</h6>

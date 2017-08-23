@@ -33,16 +33,18 @@ type Props = {
   hasNextPage: boolean,
 };
 
-const SearchResults = ({
-  isSearching,
-  searchOptions,
-  selectedPosition,
-  players,
-  selectMeasurable,
-  toggleSortOrder,
-  hasNextPage,
-  selectPage,
-}: Props) => (
+const SearchResults = (
+  {
+    isSearching,
+    searchOptions,
+    selectedPosition,
+    players,
+    selectMeasurable,
+    toggleSortOrder,
+    hasNextPage,
+    selectPage,
+  }: Props, // eslint-disable-line indent
+) => (
   <div>
     <h3>Search Results</h3>
     <SearchControls
@@ -82,7 +84,8 @@ const SearchResults = ({
                 school={result.player.school}
                 draft={result.player.draft}
               />,
-        )}
+          )
+        }
       </div>
     }
     {players.length !== 0 && (

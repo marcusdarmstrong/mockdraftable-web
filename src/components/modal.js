@@ -1,11 +1,10 @@
 // @flow
 
 import React from 'react';
-import type { Element } from 'react';
 
 type Props = {
   title: string,
-  children?: Element<any>,
+  children?: any,
   closeModal: () => void
 };
 
