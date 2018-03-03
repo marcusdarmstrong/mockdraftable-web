@@ -13,7 +13,7 @@ export default () => (
         <h4>Draft Class</h4>
         <YearSelector
           min={1999}
-          max={2017}
+          max={2018}
         />
         <h4>Position</h4>
         <PositionSelector />

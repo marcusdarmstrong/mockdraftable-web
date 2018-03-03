@@ -25,7 +25,7 @@ const actions = (path: string, args: { [string]: string }) => {
   if (path === '/search') {
     const options: SearchOptions = {
       beginYear: Number(args.beginYear) || 1999,
-      endYear: Number(args.endYear) || 2017,
+      endYear: Number(args.endYear) || 2018,
       sortOrder: (args.sort === Sorts.ASC) ? Sorts.ASC : Sorts.DESC,
       page: Number(args.page) || 1,
     };

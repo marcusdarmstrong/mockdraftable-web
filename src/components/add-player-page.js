@@ -22,7 +22,7 @@ class AddPlayerPage extends React.Component<Props, AddPlayerDetails> {
   state: AddPlayerDetails = {
     firstName: '',
     lastName: '',
-    draftYear: 2017,
+    draftYear: 2018,
     schoolKey: 0,
     newSchoolName: null,
   };
@@ -81,7 +81,7 @@ class AddPlayerPage extends React.Component<Props, AddPlayerDetails> {
                 <label htmlFor="draft-year" className="col-4 col-form-label">Draft Year</label>
                 <div className="col-8">
                   <select className="form-control" id="draft-year" defaultValue="2017" onChange={this.handleDraftYear}>
-                    {range(1999, 2017 + 1)
+                    {range(1999, 2018 + 1)
                       .map(year => <option key={year} value={year}>{year}</option>)
                     }
                   </select>
