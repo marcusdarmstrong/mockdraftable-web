@@ -22,23 +22,20 @@ type Props = {
 };
 
 const ComparisonSection = ({ comparisons, selectedPosition, count }: Props) => (
-  <div>
-    <h3>Comparisons</h3>
-    <div className="list-group">
-      {comparisons && comparisons.slice(0, count).map(comp => (
-        <Comparison
-          key={comp.player.key}
-          name={comp.player.name}
-          playerPosition={comp.playerPosition}
-          selectedPosition={selectedPosition}
-          id={comp.player.id}
-          percentiles={comp.percentiles}
-          percentage={comp.score}
-          school={comp.player.school}
-          draft={comp.player.draft}
-        />
-      ))}
-    </div>
+  <div className="list-group">
+    {comparisons && comparisons.slice(0, count).map(comp => (
+      <Comparison
+        key={comp.player.key}
+        name={comp.player.name}
+        playerPosition={comp.playerPosition}
+        selectedPosition={selectedPosition}
+        id={comp.player.id}
+        percentiles={comp.percentiles}
+        percentage={comp.score}
+        school={comp.player.school}
+        draft={comp.player.draft}
+      />
+    ))}
   </div>
 );
 

@@ -44,13 +44,13 @@ const EmbededPlayer =
       );
     } else if (embedPage === 'COMPARISONS') {
       body = (
-        <div className="card-block">
+        <div className="card-block p-2">
           <ComparisonSection count={5} />
         </div>
       );
     } else {
       body = (
-        <div className="card-block">
+        <div className="card-block p-2">
           <Measurables measurements={zippedMeasurements} />
         </div>
       );
@@ -72,7 +72,7 @@ const EmbededPlayer =
         </h4>
       </div>
       {body}
-      <div className="card-footer text-muted">
+      <div className="card-footer text-muted h-100 px-3">
         <ul className="nav nav-pills card-footer-pills">
           <li className="nav-item">
             {embedPage === 'GRAPH'
@@ -82,8 +82,8 @@ const EmbededPlayer =
           </li>
           <li className="nav-item">
             {embedPage === 'MEASURABLES'
-              ? <span className="nav-link active" href="#">Measurables</span>
-              : <Link className="nav-link" href={`${baseUrl}MEASURABLES`}>Measurables</Link>
+              ? <span className="nav-link active" href="#">Numbers</span>
+              : <Link className="nav-link" href={`${baseUrl}MEASURABLES`}>Numbers</Link>
             }
           </li>
           <li className="nav-item">

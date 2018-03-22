@@ -24,7 +24,10 @@ const PlayerPage = ({ showEmbedModal }: Props) => (
         </div>
         <div className="col-12 col-md-5">
           <AboutSection />
-          <ComparisonSection />
+          <div>
+            <h3>Comparisons</h3>
+            <ComparisonSection />
+          </div>
         </div>
         <p className="col-12 text-center">
           <small>Want to display this data on your site? <span className="btn-link" onClick={showEmbedModal}>Get the code to embed!</span></small>
