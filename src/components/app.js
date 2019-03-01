@@ -102,7 +102,7 @@ export default connect(
       <div className="col-12 col-md-6 ml-auto mr-auto">
         <p className="text-muted text-center mt-2">
           <small>
-            &copy; MockDraftable, 2011-2018.
+            &copy; MockDraftable, 2011-2019.
             <br />
             {isUserLoggedIn
               ? <button className="btn btn-link btn-sm" onClick={logout}>Log out</button>
